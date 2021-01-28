@@ -14,51 +14,51 @@ func resourceCudaWAFService() *schema.Resource {
 		Delete: resourceCudaWAFServiceDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"port": &schema.Schema{
+			"port": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"vsite": &schema.Schema{
+			"vsite": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"group": &schema.Schema{
+			"group": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"mask": &schema.Schema{
+			"mask": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"ip_address": &schema.Schema{
+			"ip_address": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"certificate": &schema.Schema{
+			"certificate": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"address_version": &schema.Schema{
+			"address_version": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"comments": &schema.Schema{
+			"comments": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"enable_access_logs": &schema.Schema{
+			"enable_access_logs": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},

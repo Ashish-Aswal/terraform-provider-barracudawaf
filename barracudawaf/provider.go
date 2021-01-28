@@ -22,22 +22,22 @@ func Provider() *schema.Provider {
 	provider := &schema.Provider{
 
 		Schema: map[string]*schema.Schema{
-			"ip": &schema.Schema{
+			"ip": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "IP Address of the WAF to be configured",
 			},
-			"admin_port": &schema.Schema{
+			"admin_port": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Admin port on the WAF to be configured",
 			},
-			"username": &schema.Schema{
+			"username": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Username of the WAF to be configured",
 			},
-			"password": &schema.Schema{
+			"password": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Password of the WAF to be configured",

@@ -154,7 +154,7 @@ func mustOpen(f string) *os.File {
 
 func uploadCertificateContent(client *http.Client, url string, values map[string]io.Reader) (int, map[string]interface{}) {
 
-	Logfile, err := os.OpenFile("/Users/ashishaswal/go_project/provider2.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	Logfile, err := os.OpenFile("/Users/ashishaswal/go/barracuda_provider.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Printf("Failed to open Log file %s. err: %s", "File", err)
 	} else {
