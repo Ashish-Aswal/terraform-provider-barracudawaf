@@ -46,8 +46,8 @@ func Provider() *schema.Provider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"barracudawaf_service": resourceCudaWAFService(),
+			"barracudawaf_server":  resourceCudaWAFServer(),
 			/*
-				"barracudawaf_server":            resourceCudaWAFServer(),
 				"barracudawaf_rule_group":        resourceCudaWAFRuleGroup(),
 				"barracudawaf_certificate":       resourceCudaWAFCertificate(),
 				"barracudawaf_security_policy":   resourceCudaWAFSecurityPolicy(),
