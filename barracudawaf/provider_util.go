@@ -69,7 +69,7 @@ func getRestLoginToken() (int, map[string]interface{}) {
 
 func doRestAPICall(callData map[string]interface{}) (int, map[string]interface{}) {
 	// Logging for errors
-	Logfile, err := os.OpenFile("/Users/ashishaswal/go_project/provider1.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	Logfile, err := os.OpenFile("/Users/ashishaswal/go/barracuda_provider.log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Printf("Failed to open Log file %s. err: %s", "File", err)
 	} else {
