@@ -66,9 +66,10 @@ func resourceCudaWAFService() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadService(d *schema.ResourceData, m interface{}, oper string, endpoint string) error {
-	//Build Payload for the resource
-	payload := map[string]string{
+func makeRestAPIPayloadService(d *schema.ResourceData, resourceOperation string, resourceEndpoint string) error {
+
+	//build Payload for the resource
+	resourcePayload := map[string]string{
 		"name":               d.Get("name").(string),
 		"port":               d.Get("port").(string),
 		"type":               d.Get("type").(string),
@@ -83,38 +84,37 @@ func makeRestAPIPayloadService(d *schema.ResourceData, m interface{}, oper strin
 		"enable-access-logs": d.Get("enable_access_logs").(string),
 	}
 
-	for key, value := range payload {
-		if len(value) > 0 {
-			continue
-		} else {
-			delete(payload, key)
+	//sanitise the payload, removing empty keys
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
 		}
 	}
 
-	callData := map[string]interface{}{
-		"endpoint":  endpoint,
-		"payload":   payload,
-		"operation": oper,
+	resourceUpdateData := map[string]interface{}{
+		"endpoint":  resourceEndpoint,
+		"payload":   resourcePayload,
+		"operation": resourceOperation,
 		"name":      d.Get("name").(string),
 	}
 
-	callStatus, callRespBody := doRestAPICall(callData)
-	if callStatus == 200 || callStatus == 201 {
-		if oper != "DELETE" {
-			d.SetId(callRespBody["id"].(string))
+	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(resourceUpdateData)
+	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
+		if resourceOperation != "DELETE" {
+			d.SetId(resourceUpdateResponseBody["id"].(string))
 		}
 	} else {
-		return fmt.Errorf("some error occurred : %v", callRespBody["msg"])
+		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
 	}
 
 	return nil
 }
 
 func resourceCudaWAFServiceCreate(d *schema.ResourceData, m interface{}) error {
-	endpoint := "restapi/v3/services"
-	err := makeRestAPIPayloadService(d, m, "POST", endpoint)
-	if err != nil {
-		return fmt.Errorf("%v", err)
+	resourceEndpoint := "restapi/v3/services"
+	resourceCreateResponseError := makeRestAPIPayloadService(d, "POST", resourceEndpoint)
+	if resourceCreateResponseError != nil {
+		return fmt.Errorf("%v", resourceCreateResponseError)
 	}
 	return resourceCudaWAFServiceRead(d, m)
 }
@@ -125,20 +125,20 @@ func resourceCudaWAFServiceRead(d *schema.ResourceData, m interface{}) error {
 
 func resourceCudaWAFServiceUpdate(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
-	endpoint := "restapi/v3/services/" + name
-	err := makeRestAPIPayloadService(d, m, "PUT", endpoint)
-	if err != nil {
-		return fmt.Errorf("%v", err)
+	resourceEndpoint := "restapi/v3/services/" + name
+	resourceUpdateResponseError := makeRestAPIPayloadService(d, "PUT", resourceEndpoint)
+	if resourceUpdateResponseError != nil {
+		return fmt.Errorf("%v", resourceUpdateResponseError)
 	}
 	return resourceCudaWAFServiceRead(d, m)
 }
 
 func resourceCudaWAFServiceDelete(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
-	endpoint := "restapi/v3/services/" + name
-	err := makeRestAPIPayloadService(d, m, "DELETE", endpoint)
-	if err != nil {
-		return fmt.Errorf("error occurred : %v", err)
+	resourceEndpoint := "restapi/v3/services/" + name
+	resourceDeleteResponseError := makeRestAPIPayloadService(d, "DELETE", resourceEndpoint)
+	if resourceDeleteResponseError != nil {
+		return fmt.Errorf("%v", resourceDeleteResponseError)
 	}
 	return nil
 }

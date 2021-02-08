@@ -58,8 +58,10 @@ func resourceCudaWAFRuleGroupServer() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadRuleGroupServer(d *schema.ResourceData, m interface{}, oper string, endpoint string) error {
-	payload := map[string]string{
+func makeRestAPIPayloadRuleGroupServer(d *schema.ResourceData, m interface{}, resourceOperation string, resourceEndpoint string) error {
+
+	//build Payload for the resource
+	resourcePayload := map[string]string{
 		"name":            d.Get("name").(string),
 		"port":            d.Get("port").(string),
 		"status":          d.Get("status").(string),
@@ -70,28 +72,26 @@ func makeRestAPIPayloadRuleGroupServer(d *schema.ResourceData, m interface{}, op
 		"address-version": d.Get("address_version").(string),
 	}
 
-	for key, value := range payload {
-		if len(value) > 0 {
-			continue
-		} else {
-			delete(payload, key)
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
 		}
 	}
 
-	callData := map[string]interface{}{
-		"endpoint":  endpoint,
-		"payload":   payload,
-		"operation": oper,
+	resourceUpdateData := map[string]interface{}{
+		"endpoint":  resourceEndpoint,
+		"payload":   resourcePayload,
+		"operation": resourceOperation,
 		"name":      d.Get("name").(string),
 	}
 
-	callStatus, callRespBody := doRestAPICall(callData)
-	if callStatus == 200 || callStatus == 201 {
-		if oper != "DELETE" {
-			d.SetId(callRespBody["id"].(string))
+	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(resourceUpdateData)
+	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
+		if resourceOperation != "DELETE" {
+			d.SetId(resourceUpdateResponseBody["id"].(string))
 		}
 	} else {
-		return fmt.Errorf("some error occurred : %v", callRespBody["msg"])
+		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
 	}
 
 	return nil
@@ -100,10 +100,10 @@ func makeRestAPIPayloadRuleGroupServer(d *schema.ResourceData, m interface{}, op
 func resourceCudaWAFRuleGroupServerCreate(d *schema.ResourceData, m interface{}) error {
 	serviceName := d.Get("service_name").(string)
 	ruleGroupName := d.Get("rule_group_name").(string)
-	endpoint := "restapi/v3/services/" + serviceName + "/content-rules/" + ruleGroupName + "/content-rule-servers"
-	err := makeRestAPIPayloadRuleGroupServer(d, m, "POST", endpoint)
-	if err != nil {
-		return fmt.Errorf("%v", err)
+	resourceEndpoint := "restapi/v3/services/" + serviceName + "/content-rules/" + ruleGroupName + "/content-rule-servers"
+	resourceCreateResponseError := makeRestAPIPayloadRuleGroupServer(d, m, "POST", resourceEndpoint)
+	if resourceCreateResponseError != nil {
+		return fmt.Errorf("%v", resourceCreateResponseError)
 	}
 	return resourceCudaWAFRuleGroupServerRead(d, m)
 }
@@ -120,10 +120,10 @@ func resourceCudaWAFRuleGroupServerDelete(d *schema.ResourceData, m interface{})
 	name := d.Get("name").(string)
 	serviceName := d.Get("service_name").(string)
 	ruleGroupName := d.Get("rule_group_name").(string)
-	endpoint := "restapi/v3/services/" + serviceName + "/content-rules/" + ruleGroupName + "/content-rule-servers/" + name
-	err := makeRestAPIPayloadRuleGroupServer(d, m, "DELETE", endpoint)
-	if err != nil {
-		return fmt.Errorf("error occurred : %v", err)
+	resourceEndpoint := "restapi/v3/services/" + serviceName + "/content-rules/" + ruleGroupName + "/content-rule-servers/" + name
+	resourceDeleteResponseError := makeRestAPIPayloadRuleGroupServer(d, m, "DELETE", resourceEndpoint)
+	if resourceDeleteResponseError != nil {
+		return fmt.Errorf("%v", resourceDeleteResponseError)
 	}
 	return nil
 }

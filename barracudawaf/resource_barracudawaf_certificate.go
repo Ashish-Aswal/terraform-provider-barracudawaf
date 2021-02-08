@@ -102,7 +102,7 @@ func resourceCudaWAFCertificate() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadCertificate(d *schema.ResourceData, m interface{}, oper string, endpoint string) error {
+func makeRestAPIPayloadCertificate(d *schema.ResourceData, oper string, endpoint string) error {
 	payload := map[string]string{
 		"name":                       d.Get("name").(string),
 		"key":                        d.Get("key").(string),
@@ -141,7 +141,7 @@ func makeRestAPIPayloadCertificate(d *schema.ResourceData, m interface{}, oper s
 			"operation": oper,
 			"name":      d.Get("name").(string),
 		}
-		callStatus, callRespBody := doRestAPICall(callData)
+		callStatus, callRespBody := updateCudaWAFResourceObject(callData)
 		if callStatus != 200 && callStatus != 201 {
 			return fmt.Errorf("some error occurred : %v", callRespBody["msg"])
 		}
@@ -223,7 +223,7 @@ func makeRestAPIPayloadCertificate(d *schema.ResourceData, m interface{}, oper s
 			"operation": oper,
 			"name":      d.Get("name").(string),
 		}
-		callStatus, callRespBody := doRestAPICall(callData)
+		callStatus, callRespBody := updateCudaWAFResourceObject(callData)
 		if callStatus == 200 || callStatus == 201 {
 			if oper != "DELETE" {
 				d.SetId(callRespBody["id"].(string))
@@ -248,7 +248,7 @@ func resourceCudaWAFCertificateCreate(d *schema.ResourceData, m interface{}) err
 			remoteURL = remoteURL + "trusted_server"
 		}
 	}
-	err := makeRestAPIPayloadCertificate(d, m, "POST", remoteURL)
+	err := makeRestAPIPayloadCertificate(d, "POST", remoteURL)
 	if err != nil {
 		return fmt.Errorf("%v", err)
 	}
@@ -266,9 +266,9 @@ func resourceCudaWAFCertificateUpdate(d *schema.ResourceData, m interface{}) err
 func resourceCudaWAFCertificateDelete(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	endpoint := "restapi/v3/certificates/" + name
-	err := makeRestAPIPayloadCertificate(d, m, "DELETE", endpoint)
+	err := makeRestAPIPayloadCertificate(d, "DELETE", endpoint)
 	if err != nil {
-		return fmt.Errorf("error occurred : %v", err)
+		return fmt.Errorf("%v", err)
 	}
 	return nil
 }
