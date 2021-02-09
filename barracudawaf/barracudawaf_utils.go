@@ -4,6 +4,7 @@ import (
 	"bytes"
 	b64 "encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -13,21 +14,17 @@ import (
 )
 
 const (
-	//HTTP protocol for getCudaWAFResourceURI
-	HTTP = "http://"
-	//HTTPS protocol for getCudaWAFResourceURI
-	HTTPS = "https://"
 	//Auth Token Endpoint for cudaWAF resource's CRUD operations
 	cudaWAFResourceTokenEndpoint = "restapi/v3/login"
 )
 
 //getCudaWAFResourceURI : returns cudaWAF resource REST URI
 func getCudaWAFResourceURI(resourceEndpoint string) string {
-	var cudaWAFResourceURL string
+	cudaWAFResourceURL := fmt.Sprintf("://%s:%s/%s", WAFConfig.IPAddress, WAFConfig.AdminPort, resourceEndpoint)
 	if WAFConfig.AdminPort == "8443" {
-		cudaWAFResourceURL = HTTPS + WAFConfig.IPAddress + ":" + WAFConfig.AdminPort + "/" + resourceEndpoint
+		cudaWAFResourceURL = fmt.Sprintf("%s%s", "https", cudaWAFResourceURL)
 	} else {
-		cudaWAFResourceURL = HTTP + WAFConfig.IPAddress + ":" + WAFConfig.AdminPort + "/" + resourceEndpoint
+		cudaWAFResourceURL = fmt.Sprintf("%s%s", "http", cudaWAFResourceURL)
 	}
 	return cudaWAFResourceURL
 }
