@@ -88,6 +88,7 @@ func makeRestAPIPayloadRuleGroup(d *schema.ResourceData, m interface{}, resource
 	}
 
 	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(resourceUpdateData)
+
 	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
 		if resourceOperation != "DELETE" {
 			d.SetId(resourceUpdateResponseBody["id"].(string))
@@ -102,9 +103,11 @@ func makeRestAPIPayloadRuleGroup(d *schema.ResourceData, m interface{}, resource
 func resourceCudaWAFRuleGroupCreate(d *schema.ResourceData, m interface{}) error {
 	resourceEndpoint := "restapi/v3/services/" + d.Get("service_name").(string) + "/content-rules"
 	resourceUpdateResponseError := makeRestAPIPayloadRuleGroup(d, m, "POST", resourceEndpoint)
+
 	if resourceUpdateResponseError != nil {
 		return fmt.Errorf("%v", resourceUpdateResponseError)
 	}
+
 	return resourceCudaWAFRuleGroupRead(d, m)
 }
 
@@ -120,8 +123,10 @@ func resourceCudaWAFRuleGroupDelete(d *schema.ResourceData, m interface{}) error
 	name := d.Get("name").(string)
 	resourceEndpoint := "restapi/v3/services/" + d.Get("service_name").(string) + "/content-rules/" + name
 	resourceDeleteResponseError := makeRestAPIPayloadRuleGroup(d, m, "DELETE", resourceEndpoint)
+
 	if resourceDeleteResponseError != nil {
 		return fmt.Errorf("%v", resourceDeleteResponseError)
 	}
+
 	return nil
 }

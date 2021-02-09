@@ -99,6 +99,7 @@ func makeRestAPIPayloadService(d *schema.ResourceData, resourceOperation string,
 	}
 
 	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(resourceUpdateData)
+
 	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
 		if resourceOperation != "DELETE" {
 			d.SetId(resourceUpdateResponseBody["id"].(string))
@@ -113,9 +114,11 @@ func makeRestAPIPayloadService(d *schema.ResourceData, resourceOperation string,
 func resourceCudaWAFServiceCreate(d *schema.ResourceData, m interface{}) error {
 	resourceEndpoint := "restapi/v3/services"
 	resourceCreateResponseError := makeRestAPIPayloadService(d, "POST", resourceEndpoint)
+
 	if resourceCreateResponseError != nil {
 		return fmt.Errorf("%v", resourceCreateResponseError)
 	}
+
 	return resourceCudaWAFServiceRead(d, m)
 }
 
@@ -127,9 +130,11 @@ func resourceCudaWAFServiceUpdate(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	resourceEndpoint := "restapi/v3/services/" + name
 	resourceUpdateResponseError := makeRestAPIPayloadService(d, "PUT", resourceEndpoint)
+
 	if resourceUpdateResponseError != nil {
 		return fmt.Errorf("%v", resourceUpdateResponseError)
 	}
+
 	return resourceCudaWAFServiceRead(d, m)
 }
 
@@ -137,8 +142,10 @@ func resourceCudaWAFServiceDelete(d *schema.ResourceData, m interface{}) error {
 	name := d.Get("name").(string)
 	resourceEndpoint := "restapi/v3/services/" + name
 	resourceDeleteResponseError := makeRestAPIPayloadService(d, "DELETE", resourceEndpoint)
+
 	if resourceDeleteResponseError != nil {
 		return fmt.Errorf("%v", resourceDeleteResponseError)
 	}
+
 	return nil
 }
