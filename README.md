@@ -83,4 +83,4 @@ mv terraform-provider-barracudawaf $HOME/.terraform.d/plugins/registry.terraform
 This will place the binary under `$HOME/.terraform.d/plugins/registry.terraform.io/hashicorp/barracudawaf/0.0.1/darwin_amd64/`.  After installing you will need to run `terraform init` in any project using the plugin.
 
 
-# This project is auto-generated, incase of issues please reachout at email: aaswal@barracuda.com #
+#### This project is auto-generated, incase of issues please reachout at email: aaswal@barracuda.com ####
