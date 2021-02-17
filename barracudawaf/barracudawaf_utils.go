@@ -14,13 +14,18 @@ import (
 )
 
 const (
-	//Auth Token Endpoint for cudaWAF resource's CRUD operations
-	cudaWAFResourceTokenEndpoint = "restapi/v3/login"
+	baseURI                      = "restapi/v3.1"     //base URI for cudaWAF resources
+	cudaWAFResourceTokenEndpoint = "restapi/v3/login" //Auth Token Endpoint for cudaWAF resource's CRUD operations
 )
 
 //getCudaWAFResourceURI : returns cudaWAF resource REST URI
 func getCudaWAFResourceURI(resourceEndpoint string) string {
-	cudaWAFResourceURL := fmt.Sprintf("://%s:%s/%s", WAFConfig.IPAddress, WAFConfig.AdminPort, resourceEndpoint)
+	cudaWAFResourceURL := fmt.Sprintf(
+		"://%s:%s/%s",
+		WAFConfig.IPAddress,
+		WAFConfig.AdminPort,
+		resourceEndpoint,
+	)
 	if WAFConfig.AdminPort == "8443" {
 		cudaWAFResourceURL = fmt.Sprintf("%s%s", "https", cudaWAFResourceURL)
 	} else {
@@ -72,7 +77,9 @@ func getCudaWAFResourceToken() (int, map[string]interface{}) {
 }
 
 //updateCudaWAFResourceObject : REST calls to update cudaWAF resource objects
-func updateCudaWAFResourceObject(cudaWAFResourceData map[string]interface{}) (int, map[string]interface{}) {
+func updateCudaWAFResourceObject(
+	cudaWAFResourceData map[string]interface{},
+) (int, map[string]interface{}) {
 
 	//Get auth Token for cudaWAF API calls
 	loginStatus, loginResponseBody := getCudaWAFResourceToken()
@@ -147,7 +154,11 @@ func mustOpen(f string) *os.File {
 	return r
 }
 
-func uploadCertificateContent(client *http.Client, url string, values map[string]io.Reader) (int, map[string]interface{}) {
+func uploadCertificateContent(
+	client *http.Client,
+	url string,
+	values map[string]io.Reader,
+) (int, map[string]interface{}) {
 
 	// Prepare a form : will submit to that URL.
 	var b bytes.Buffer
