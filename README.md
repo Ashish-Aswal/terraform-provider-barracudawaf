@@ -53,7 +53,6 @@ Checkout the **main.tf** for more under **examples**
 
 
 
-
 ## Develop The Provider ##
 
 ### Dependencies for building from source ###
@@ -61,6 +60,7 @@ Checkout the **main.tf** for more under **examples**
 If you need to build from source, you should have a working Go environment setup.  If not check out the Go [getting started](http://golang.org/doc/install) guide.
 
 This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) for dependency management.  To fetch all dependencies run `go get` inside this repository.
+
 
 ### Build ###
 
@@ -72,7 +72,6 @@ cd $HOME/terraform-provider-barracudawaf/
 go build -o terraform-provider-barracudawaf
 ```
 
-The binary will then be available at ``.
 
 ### Install ###
 
@@ -82,3 +81,6 @@ mv terraform-provider-barracudawaf $HOME/.terraform.d/plugins/registry.terraform
 ```
 
 This will place the binary under `$HOME/.terraform.d/plugins/registry.terraform.io/hashicorp/barracudawaf/0.0.1/darwin_amd64/`.  After installing you will need to run `terraform init` in any project using the plugin.
+
+
+## This project is auto-generated, incase of issues please reachout at email: aaswal@barracuda.com ##
