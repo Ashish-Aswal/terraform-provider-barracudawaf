@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -24,13 +25,76 @@ func resourceCudaWAFTrustedCaCertificate() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadTrustedCaCertificate(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFTrustedCaCertificateCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/trusted-ca-certificate"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFTrustedCaCertificateResource(d, "post", resourceEndpoint),
+	)
+
+	d.SetId(name)
+	return resourceCudaWAFTrustedCaCertificateRead(d, m)
+}
+
+func resourceCudaWAFTrustedCaCertificateRead(d *schema.ResourceData, m interface{}) error {
+	return nil
+}
+
+func resourceCudaWAFTrustedCaCertificateUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	resourceEndpoint := "/trusted-ca-certificate/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFTrustedCaCertificateResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	return resourceCudaWAFTrustedCaCertificateRead(d, m)
+}
+
+func resourceCudaWAFTrustedCaCertificateDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/trusted-ca-certificate/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
+	}
+
+	return nil
+}
+
+func hydrateBarracudaWAFTrustedCaCertificateResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
 		"common-name":   d.Get("common_name").(string),
 		"expiry":        d.Get("expiry").(string),
@@ -40,8 +104,8 @@ func makeRestAPIPayloadTrustedCaCertificate(
 		"download-type": d.Get("download_type").(string),
 	}
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
+	// parameters not supported for updates
+	if method == "put" {
 		updatePayloadExceptions := [...]string{
 			"common-name",
 			"expiry",
@@ -54,82 +118,15 @@ func makeRestAPIPayloadTrustedCaCertificate(
 		}
 	}
 
-	//sanitise the resource payload
+	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
 		if len(val) <= 0 {
 			delete(resourcePayload, key)
 		}
 	}
 
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
 	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFTrustedCaCertificateCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/trusted-ca-certificate"
-	resourceCreateResponseError := makeRestAPIPayloadTrustedCaCertificate(
-		d,
-		"POST",
-		resourceEndpoint,
-	)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
-	return resourceCudaWAFTrustedCaCertificateRead(d, m)
-}
-
-func resourceCudaWAFTrustedCaCertificateRead(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func resourceCudaWAFTrustedCaCertificateUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/trusted-ca-certificate/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadTrustedCaCertificate(
-		d,
-		"PUT",
-		resourceEndpoint,
-	)
-
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
-	}
-
-	return resourceCudaWAFTrustedCaCertificateRead(d, m)
-}
-
-func resourceCudaWAFTrustedCaCertificateDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/trusted-ca-certificate/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadTrustedCaCertificate(
-		d,
-		"DELETE",
-		resourceEndpoint,
-	)
-
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
-	}
-
-	return nil
 }

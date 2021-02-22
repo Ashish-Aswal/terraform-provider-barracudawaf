@@ -1,19 +1,10 @@
 package barracudawaf
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
-
-// Config : init config struct
-type Config struct {
-	IPAddress string
-	Username  string
-	Password  string
-	AdminPort string
-}
-
-// WAFConfig : Provider Config struct
-var WAFConfig Config
 
 //Provider : Schema definition for barracudawaf provider
 func Provider() *schema.Provider {
@@ -22,12 +13,12 @@ func Provider() *schema.Provider {
 	provider := &schema.Provider{
 
 		Schema: map[string]*schema.Schema{
-			"ip": {
+			"address": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "IP Address of the WAF to be configured",
 			},
-			"admin_port": {
+			"port": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Admin port on the WAF to be configured",
@@ -144,20 +135,32 @@ func Provider() *schema.Provider {
 			"barracudawaf_vsites":                      resourceCudaWAFVsites(),
 			"barracudawaf_ldap_servers":                resourceCudaWAFLdapServers(),
 		},
+	}
 
-		ConfigureFunc: providerConfigure,
+	provider.ConfigureFunc = func(d *schema.ResourceData) (interface{}, error) {
+		terraformVersion := provider.TerraformVersion
+		if terraformVersion == "" {
+			// Terraform 0.12 introduced this field to the protocol
+			// We can therefore assume that if it's missing it's 0.10 or 0.11
+			terraformVersion = "0.11+compatible"
+		}
+		return providerConfigure(d, terraformVersion)
 	}
 
 	return provider
 }
 
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	WAFConfig = Config{
-		IPAddress: d.Get("ip").(string),
-		AdminPort: d.Get("admin_port").(string),
+func providerConfigure(d *schema.ResourceData, terraformVersion string) (interface{}, error) {
+	config := Config{
+		IPAddress: d.Get("address").(string),
+		AdminPort: d.Get("port").(string),
 		Username:  d.Get("username").(string),
 		Password:  d.Get("password").(string),
 	}
-
-	return &WAFConfig, nil
+	cfg, err := config.Client()
+	if err != nil {
+		return cfg, err
+	}
+	cfg.UserAgent = fmt.Sprintf("Terraform/%s", terraformVersion)
+	return cfg, err
 }

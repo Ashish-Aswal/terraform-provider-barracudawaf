@@ -1,7 +1,7 @@
 provider "barracudawaf" {
-    ip = "52.25.122.104"
+    address = "52.25.122.104"
     username = "admin"
-    admin_port = "8000"
+    port = "8443"
     password = "i-068e115398f17b347"
 }
 
@@ -23,7 +23,7 @@ resource "barracudawaf_servers" "TestServer1" {
     address_version = "IPv4"
     status = "In Service"
     ip_address = "107.191.119.130"
-    port = "80"
+    port = "90"
     comments = "Creating the Demo Server"
     parent = [ "DemoService1" ]
     depends_on = [barracudawaf_services.DemoService1]

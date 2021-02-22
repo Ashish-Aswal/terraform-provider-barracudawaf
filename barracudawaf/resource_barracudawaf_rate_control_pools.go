@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -22,67 +23,20 @@ func resourceCudaWAFRateControlPools() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadRateControlPools(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFRateControlPoolsCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
-	resourcePayload := map[string]string{
-		"name":                     d.Get("name").(string),
-		"max-active-requests":      d.Get("max_active_requests").(string),
-		"max-per-client-backlog":   d.Get("max_per_client_backlog").(string),
-		"max-unconfigured-clients": d.Get("max_unconfigured_clients").(string),
-	}
+	name := d.Get("name").(string)
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
-		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
-		}
-	}
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
-	//sanitise the resource payload
-	for key, val := range resourcePayload {
-		if len(val) <= 0 {
-			delete(resourcePayload, key)
-		}
-	}
-
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
-	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
+	resourceEndpoint := "/rate-control-pools"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFRateControlPoolsResource(d, "post", resourceEndpoint),
 	)
 
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFRateControlPoolsCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/rate-control-pools"
-	resourceCreateResponseError := makeRestAPIPayloadRateControlPools(d, "POST", resourceEndpoint)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
+	d.SetId(name)
 	return resourceCudaWAFRateControlPoolsRead(d, m)
 }
 
@@ -91,23 +45,78 @@ func resourceCudaWAFRateControlPoolsRead(d *schema.ResourceData, m interface{}) 
 }
 
 func resourceCudaWAFRateControlPoolsUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/rate-control-pools/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadRateControlPools(d, "PUT", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
+	name := d.Id()
+	resourceEndpoint := "/rate-control-pools/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFRateControlPoolsResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
 	}
 
 	return resourceCudaWAFRateControlPoolsRead(d, m)
 }
 
 func resourceCudaWAFRateControlPoolsDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/rate-control-pools/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadRateControlPools(d, "DELETE", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/rate-control-pools/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
 	}
 
 	return nil
+}
+
+func hydrateBarracudaWAFRateControlPoolsResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
+	resourcePayload := map[string]string{
+		"name":                     d.Get("name").(string),
+		"max-active-requests":      d.Get("max_active_requests").(string),
+		"max-per-client-backlog":   d.Get("max_per_client_backlog").(string),
+		"max-unconfigured-clients": d.Get("max_unconfigured_clients").(string),
+	}
+
+	// parameters not supported for updates
+	if method == "put" {
+		updatePayloadExceptions := [...]string{}
+		for item := range updatePayloadExceptions {
+			delete(resourcePayload, updatePayloadExceptions[item])
+		}
+	}
+
+	// remove empty parameters from resource payload
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
+		}
+	}
+
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
+	}
 }

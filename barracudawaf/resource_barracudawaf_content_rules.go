@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -34,13 +35,76 @@ func resourceCudaWAFContentRules() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadContentRules(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFContentRulesCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFContentRulesResource(d, "post", resourceEndpoint),
+	)
+
+	d.SetId(name)
+	return resourceCudaWAFContentRulesRead(d, m)
+}
+
+func resourceCudaWAFContentRulesRead(d *schema.ResourceData, m interface{}) error {
+	return nil
+}
+
+func resourceCudaWAFContentRulesUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFContentRulesResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	return resourceCudaWAFContentRulesRead(d, m)
+}
+
+func resourceCudaWAFContentRulesDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
+	}
+
+	return nil
+}
+
+func hydrateBarracudaWAFContentRulesResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
 		"access-log":              d.Get("access_log").(string),
 		"app-id":                  d.Get("app_id").(string),
@@ -55,78 +119,23 @@ func makeRestAPIPayloadContentRules(
 		"web-firewall-policy":     d.Get("web_firewall_policy").(string),
 	}
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
+	// parameters not supported for updates
+	if method == "put" {
 		updatePayloadExceptions := [...]string{}
 		for item := range updatePayloadExceptions {
 			delete(resourcePayload, updatePayloadExceptions[item])
 		}
 	}
 
-	//sanitise the resource payload
+	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
 		if len(val) <= 0 {
 			delete(resourcePayload, key)
 		}
 	}
 
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
 	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFContentRulesCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/content-rules"
-	resourceCreateResponseError := makeRestAPIPayloadContentRules(d, "POST", resourceEndpoint)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
-	return resourceCudaWAFContentRulesRead(d, m)
-}
-
-func resourceCudaWAFContentRulesRead(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func resourceCudaWAFContentRulesUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/content-rules/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadContentRules(d, "PUT", resourceEndpoint)
-
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
-	}
-
-	return resourceCudaWAFContentRulesRead(d, m)
-}
-
-func resourceCudaWAFContentRulesDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/content-rules/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadContentRules(d, "DELETE", resourceEndpoint)
-
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
-	}
-
-	return nil
 }

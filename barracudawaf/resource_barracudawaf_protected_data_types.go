@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -30,13 +31,76 @@ func resourceCudaWAFProtectedDataTypes() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadProtectedDataTypes(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFProtectedDataTypesCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFProtectedDataTypesResource(d, "post", resourceEndpoint),
+	)
+
+	d.SetId(name)
+	return resourceCudaWAFProtectedDataTypesRead(d, m)
+}
+
+func resourceCudaWAFProtectedDataTypesRead(d *schema.ResourceData, m interface{}) error {
+	return nil
+}
+
+func resourceCudaWAFProtectedDataTypesUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFProtectedDataTypesResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	return resourceCudaWAFProtectedDataTypesRead(d, m)
+}
+
+func resourceCudaWAFProtectedDataTypesDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
+	}
+
+	return nil
+}
+
+func hydrateBarracudaWAFProtectedDataTypesResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
 		"action":                      d.Get("action").(string),
 		"initial-characters-to-keep":  d.Get("initial_characters_to_keep").(string),
@@ -47,82 +111,23 @@ func makeRestAPIPayloadProtectedDataTypes(
 		"identity-theft-type":         d.Get("identity_theft_type").(string),
 	}
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
+	// parameters not supported for updates
+	if method == "put" {
 		updatePayloadExceptions := [...]string{}
 		for item := range updatePayloadExceptions {
 			delete(resourcePayload, updatePayloadExceptions[item])
 		}
 	}
 
-	//sanitise the resource payload
+	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
 		if len(val) <= 0 {
 			delete(resourcePayload, key)
 		}
 	}
 
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
 	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFProtectedDataTypesCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types"
-	resourceCreateResponseError := makeRestAPIPayloadProtectedDataTypes(d, "POST", resourceEndpoint)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
-	return resourceCudaWAFProtectedDataTypesRead(d, m)
-}
-
-func resourceCudaWAFProtectedDataTypesRead(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func resourceCudaWAFProtectedDataTypesUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadProtectedDataTypes(d, "PUT", resourceEndpoint)
-
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
-	}
-
-	return resourceCudaWAFProtectedDataTypesRead(d, m)
-}
-
-func resourceCudaWAFProtectedDataTypesDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadProtectedDataTypes(
-		d,
-		"DELETE",
-		resourceEndpoint,
-	)
-
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
-	}
-
-	return nil
 }

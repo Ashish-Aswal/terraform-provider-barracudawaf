@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -44,13 +45,76 @@ func resourceCudaWAFUrlProfiles() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadUrlProfiles(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFUrlProfilesCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFUrlProfilesResource(d, "post", resourceEndpoint),
+	)
+
+	d.SetId(name)
+	return resourceCudaWAFUrlProfilesRead(d, m)
+}
+
+func resourceCudaWAFUrlProfilesRead(d *schema.ResourceData, m interface{}) error {
+	return nil
+}
+
+func resourceCudaWAFUrlProfilesUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFUrlProfilesResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	return resourceCudaWAFUrlProfilesRead(d, m)
+}
+
+func resourceCudaWAFUrlProfilesDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
+	}
+
+	return nil
+}
+
+func hydrateBarracudaWAFUrlProfilesResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
 		"allowed-content-types":         d.Get("allowed_content_types").(string),
 		"allowed-methods":               d.Get("allowed_methods").(string),
@@ -75,78 +139,23 @@ func makeRestAPIPayloadUrlProfiles(
 		"url":                           d.Get("url").(string),
 	}
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
+	// parameters not supported for updates
+	if method == "put" {
 		updatePayloadExceptions := [...]string{}
 		for item := range updatePayloadExceptions {
 			delete(resourcePayload, updatePayloadExceptions[item])
 		}
 	}
 
-	//sanitise the resource payload
+	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
 		if len(val) <= 0 {
 			delete(resourcePayload, key)
 		}
 	}
 
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
 	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFUrlProfilesCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/url-profiles"
-	resourceCreateResponseError := makeRestAPIPayloadUrlProfiles(d, "POST", resourceEndpoint)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
-	return resourceCudaWAFUrlProfilesRead(d, m)
-}
-
-func resourceCudaWAFUrlProfilesRead(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func resourceCudaWAFUrlProfilesUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadUrlProfiles(d, "PUT", resourceEndpoint)
-
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
-	}
-
-	return resourceCudaWAFUrlProfilesRead(d, m)
-}
-
-func resourceCudaWAFUrlProfilesDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadUrlProfiles(d, "DELETE", resourceEndpoint)
-
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
-	}
-
-	return nil
 }
