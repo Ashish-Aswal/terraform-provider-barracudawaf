@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -20,69 +21,20 @@ func resourceCudaWAFImportConfiguration() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadImportConfiguration(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
-
-	//resourcePayload : Payload for the resource
-	resourcePayload := map[string]string{
-		"operation":         d.Get("operation").(string),
-		"json-file-content": d.Get("json_file_content").(string),
-	}
-
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
-		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
-		}
-	}
-
-	//sanitise the resource payload
-	for key, val := range resourcePayload {
-		if len(val) <= 0 {
-			delete(resourcePayload, key)
-		}
-	}
-
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
-	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
 func resourceCudaWAFImportConfigurationCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/import-configuration"
-	resourceCreateResponseError := makeRestAPIPayloadImportConfiguration(
-		d,
-		"POST",
-		resourceEndpoint,
+	client := m.(*BarracudaWAF)
+
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/import-configuration"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFImportConfigurationResource(d, "post", resourceEndpoint),
 	)
 
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
+	d.SetId(name)
 	return resourceCudaWAFImportConfigurationRead(d, m)
 }
 
@@ -91,27 +43,76 @@ func resourceCudaWAFImportConfigurationRead(d *schema.ResourceData, m interface{
 }
 
 func resourceCudaWAFImportConfigurationUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/import-configuration/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadImportConfiguration(d, "PUT", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
+	name := d.Id()
+	resourceEndpoint := "/import-configuration/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFImportConfigurationResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
 	}
 
 	return resourceCudaWAFImportConfigurationRead(d, m)
 }
 
 func resourceCudaWAFImportConfigurationDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/import-configuration/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadImportConfiguration(
-		d,
-		"DELETE",
-		resourceEndpoint,
-	)
+	client := m.(*BarracudaWAF)
 
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/import-configuration/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
 	}
 
 	return nil
+}
+
+func hydrateBarracudaWAFImportConfigurationResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
+	resourcePayload := map[string]string{
+		"operation":         d.Get("operation").(string),
+		"json-file-content": d.Get("json_file_content").(string),
+	}
+
+	// parameters not supported for updates
+	if method == "put" {
+		updatePayloadExceptions := [...]string{}
+		for item := range updatePayloadExceptions {
+			delete(resourcePayload, updatePayloadExceptions[item])
+		}
+	}
+
+	// remove empty parameters from resource payload
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
+		}
+	}
+
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
+	}
 }

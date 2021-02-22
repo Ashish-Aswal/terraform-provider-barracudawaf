@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -32,13 +33,76 @@ func resourceCudaWAFClientCertificateCrls() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadClientCertificateCrls(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFClientCertificateCrlsCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFClientCertificateCrlsResource(d, "post", resourceEndpoint),
+	)
+
+	d.SetId(name)
+	return resourceCudaWAFClientCertificateCrlsRead(d, m)
+}
+
+func resourceCudaWAFClientCertificateCrlsRead(d *schema.ResourceData, m interface{}) error {
+	return nil
+}
+
+func resourceCudaWAFClientCertificateCrlsUpdate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFClientCertificateCrlsResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	return resourceCudaWAFClientCertificateCrlsRead(d, m)
+}
+
+func resourceCudaWAFClientCertificateCrlsDelete(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
+	}
+
+	return nil
+}
+
+func hydrateBarracudaWAFClientCertificateCrlsResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
 		"auto-update-type":  d.Get("auto_update_type").(string),
 		"date-of-month":     d.Get("date_of_month").(string),
@@ -51,90 +115,23 @@ func makeRestAPIPayloadClientCertificateCrls(
 		"enable":            d.Get("enable").(string),
 	}
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
+	// parameters not supported for updates
+	if method == "put" {
 		updatePayloadExceptions := [...]string{}
 		for item := range updatePayloadExceptions {
 			delete(resourcePayload, updatePayloadExceptions[item])
 		}
 	}
 
-	//sanitise the resource payload
+	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
 		if len(val) <= 0 {
 			delete(resourcePayload, key)
 		}
 	}
 
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
 	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFClientCertificateCrlsCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls"
-	resourceCreateResponseError := makeRestAPIPayloadClientCertificateCrls(
-		d,
-		"POST",
-		resourceEndpoint,
-	)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
-	return resourceCudaWAFClientCertificateCrlsRead(d, m)
-}
-
-func resourceCudaWAFClientCertificateCrlsRead(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func resourceCudaWAFClientCertificateCrlsUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadClientCertificateCrls(
-		d,
-		"PUT",
-		resourceEndpoint,
-	)
-
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
-	}
-
-	return resourceCudaWAFClientCertificateCrlsRead(d, m)
-}
-
-func resourceCudaWAFClientCertificateCrlsDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadClientCertificateCrls(
-		d,
-		"DELETE",
-		resourceEndpoint,
-	)
-
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
-	}
-
-	return nil
 }

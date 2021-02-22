@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -25,69 +26,20 @@ func resourceCudaWAFParameterOptimizers() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadParameterOptimizers(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
-
-	//resourcePayload : Payload for the resource
-	resourcePayload := map[string]string{
-		"name":        d.Get("name").(string),
-		"start-token": d.Get("start_token").(string),
-	}
-
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
-		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
-		}
-	}
-
-	//sanitise the resource payload
-	for key, val := range resourcePayload {
-		if len(val) <= 0 {
-			delete(resourcePayload, key)
-		}
-	}
-
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
-	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
-	)
-
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
 func resourceCudaWAFParameterOptimizersCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers"
-	resourceCreateResponseError := makeRestAPIPayloadParameterOptimizers(
-		d,
-		"POST",
-		resourceEndpoint,
+	client := m.(*BarracudaWAF)
+
+	name := d.Get("name").(string)
+
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFParameterOptimizersResource(d, "post", resourceEndpoint),
 	)
 
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
+	d.SetId(name)
 	return resourceCudaWAFParameterOptimizersRead(d, m)
 }
 
@@ -96,27 +48,76 @@ func resourceCudaWAFParameterOptimizersRead(d *schema.ResourceData, m interface{
 }
 
 func resourceCudaWAFParameterOptimizersUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadParameterOptimizers(d, "PUT", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
+	name := d.Id()
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFParameterOptimizersResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
 	}
 
 	return resourceCudaWAFParameterOptimizersRead(d, m)
 }
 
 func resourceCudaWAFParameterOptimizersDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadParameterOptimizers(
-		d,
-		"DELETE",
-		resourceEndpoint,
-	)
+	client := m.(*BarracudaWAF)
 
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
 	}
 
 	return nil
+}
+
+func hydrateBarracudaWAFParameterOptimizersResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
+	resourcePayload := map[string]string{
+		"name":        d.Get("name").(string),
+		"start-token": d.Get("start_token").(string),
+	}
+
+	// parameters not supported for updates
+	if method == "put" {
+		updatePayloadExceptions := [...]string{}
+		for item := range updatePayloadExceptions {
+			delete(resourcePayload, updatePayloadExceptions[item])
+		}
+	}
+
+	// remove empty parameters from resource payload
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
+		}
+	}
+
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
+	}
 }

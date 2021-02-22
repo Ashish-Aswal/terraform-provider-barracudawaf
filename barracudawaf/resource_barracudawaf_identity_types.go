@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -17,62 +18,20 @@ func resourceCudaWAFIdentityTypes() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadIdentityTypes(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFIdentityTypesCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
-	resourcePayload := map[string]string{"name": d.Get("name").(string)}
+	name := d.Get("name").(string)
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
-		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
-		}
-	}
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
-	//sanitise the resource payload
-	for key, val := range resourcePayload {
-		if len(val) <= 0 {
-			delete(resourcePayload, key)
-		}
-	}
-
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
-	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
+	resourceEndpoint := "/identity-types"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFIdentityTypesResource(d, "post", resourceEndpoint),
 	)
 
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFIdentityTypesCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/identity-types"
-	resourceCreateResponseError := makeRestAPIPayloadIdentityTypes(d, "POST", resourceEndpoint)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
+	d.SetId(name)
 	return resourceCudaWAFIdentityTypesRead(d, m)
 }
 
@@ -81,23 +40,73 @@ func resourceCudaWAFIdentityTypesRead(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceCudaWAFIdentityTypesUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/identity-types/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadIdentityTypes(d, "PUT", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
+	name := d.Id()
+	resourceEndpoint := "/identity-types/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFIdentityTypesResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
 	}
 
 	return resourceCudaWAFIdentityTypesRead(d, m)
 }
 
 func resourceCudaWAFIdentityTypesDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/identity-types/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadIdentityTypes(d, "DELETE", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/identity-types/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
 	}
 
 	return nil
+}
+
+func hydrateBarracudaWAFIdentityTypesResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
+	resourcePayload := map[string]string{"name": d.Get("name").(string)}
+
+	// parameters not supported for updates
+	if method == "put" {
+		updatePayloadExceptions := [...]string{}
+		for item := range updatePayloadExceptions {
+			delete(resourcePayload, updatePayloadExceptions[item])
+		}
+	}
+
+	// remove empty parameters from resource payload
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
+		}
+	}
+
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
+	}
 }

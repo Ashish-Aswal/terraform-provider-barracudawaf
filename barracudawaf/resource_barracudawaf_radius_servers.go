@@ -2,6 +2,7 @@ package barracudawaf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -28,68 +29,20 @@ func resourceCudaWAFRadiusServers() *schema.Resource {
 	}
 }
 
-func makeRestAPIPayloadRadiusServers(
-	d *schema.ResourceData,
-	resourceOperation string,
-	resourceEndpoint string,
-) error {
+func resourceCudaWAFRadiusServersCreate(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
 
-	//resourcePayload : Payload for the resource
-	resourcePayload := map[string]string{
-		"shared-secret": d.Get("shared_secret").(string),
-		"ip-address":    d.Get("ip_address").(string),
-		"port":          d.Get("port").(string),
-		"timeout":       d.Get("timeout").(string),
-		"retries":       d.Get("retries").(string),
-	}
+	name := d.Get("name").(string)
 
-	//check resourcePayload for updates(modify) on the resource
-	if resourceOperation == "PUT" {
-		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
-		}
-	}
+	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
-	//sanitise the resource payload
-	for key, val := range resourcePayload {
-		if len(val) <= 0 {
-			delete(resourcePayload, key)
-		}
-	}
-
-	//resourceUpdateData : cudaWAF reource URI update data
-	resourceUpdateData := map[string]interface{}{
-		"endpoint":  resourceEndpoint,
-		"payload":   resourcePayload,
-		"operation": resourceOperation,
-		"name":      d.Get("name").(string),
-	}
-
-	//updateCudaWAFResourceObject : update cudaWAF resource object
-	resourceUpdateStatus, resourceUpdateResponseBody := updateCudaWAFResourceObject(
-		resourceUpdateData,
+	resourceEndpoint := "/radius-services/" + d.Get("parent.0").(string) + "/radius-servers"
+	client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFRadiusServersResource(d, "post", resourceEndpoint),
 	)
 
-	if resourceUpdateStatus == 200 || resourceUpdateStatus == 201 {
-		if resourceOperation != "DELETE" {
-			d.SetId(resourceUpdateResponseBody["id"].(string))
-		}
-	} else {
-		return fmt.Errorf("some error occurred : %v", resourceUpdateResponseBody["msg"])
-	}
-
-	return nil
-}
-
-func resourceCudaWAFRadiusServersCreate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/radius-services/" + d.Get("parent.0").(string) + "/radius-servers"
-	resourceCreateResponseError := makeRestAPIPayloadRadiusServers(d, "POST", resourceEndpoint)
-
-	if resourceCreateResponseError != nil {
-		return fmt.Errorf("%v", resourceCreateResponseError)
-	}
-
+	d.SetId(name)
 	return resourceCudaWAFRadiusServersRead(d, m)
 }
 
@@ -98,23 +51,79 @@ func resourceCudaWAFRadiusServersRead(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceCudaWAFRadiusServersUpdate(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/radius-services/" + d.Get("parent.0").(string) + "/radius-servers/" + d.Get("name").(string)
-	resourceUpdateResponseError := makeRestAPIPayloadRadiusServers(d, "PUT", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceUpdateResponseError != nil {
-		return fmt.Errorf("%v", resourceUpdateResponseError)
+	name := d.Id()
+	resourceEndpoint := "/radius-services/" + d.Get("parent.0").(string) + "/radius-servers/"
+	log.Println("[INFO] Updating Barracuda WAF resource " + name)
+
+	err := client.UpdateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFRadiusServersResource(d, "put", resourceEndpoint),
+	)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
 	}
 
 	return resourceCudaWAFRadiusServersRead(d, m)
 }
 
 func resourceCudaWAFRadiusServersDelete(d *schema.ResourceData, m interface{}) error {
-	resourceEndpoint := baseURI + "/radius-services/" + d.Get("parent.0").(string) + "/radius-servers/" + d.Get("name").(string)
-	resourceDeleteResponseError := makeRestAPIPayloadRadiusServers(d, "DELETE", resourceEndpoint)
+	client := m.(*BarracudaWAF)
 
-	if resourceDeleteResponseError != nil {
-		return fmt.Errorf("%v", resourceDeleteResponseError)
+	name := d.Id()
+
+	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/radius-services/" + d.Get("parent.0").(string) + "/radius-servers/"
+	request := &APIRequest{
+		Method: "delete",
+		URL:    resourceEndpoint,
+	}
+
+	err := client.DeleteBarracudaWAFResource(name, request)
+
+	if err != nil {
+		return fmt.Errorf("%v", err)
 	}
 
 	return nil
+}
+
+func hydrateBarracudaWAFRadiusServersResource(
+	d *schema.ResourceData,
+	method string,
+	endpoint string,
+) *APIRequest {
+
+	//resourcePayload : payload for the resource
+	resourcePayload := map[string]string{
+		"shared-secret": d.Get("shared_secret").(string),
+		"ip-address":    d.Get("ip_address").(string),
+		"port":          d.Get("port").(string),
+		"timeout":       d.Get("timeout").(string),
+		"retries":       d.Get("retries").(string),
+	}
+
+	// parameters not supported for updates
+	if method == "put" {
+		updatePayloadExceptions := [...]string{}
+		for item := range updatePayloadExceptions {
+			delete(resourcePayload, updatePayloadExceptions[item])
+		}
+	}
+
+	// remove empty parameters from resource payload
+	for key, val := range resourcePayload {
+		if len(val) <= 0 {
+			delete(resourcePayload, key)
+		}
+	}
+
+	return &APIRequest{
+		URL:  endpoint,
+		Body: resourcePayload,
+	}
 }
