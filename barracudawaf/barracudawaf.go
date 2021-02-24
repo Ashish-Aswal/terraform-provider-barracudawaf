@@ -18,7 +18,7 @@ const (
 	baseURI = "restapi/v3.1" // baseURI : base endpoint for APICall
 )
 
-// BarracudaWAF : container for barracuda's session state.
+// BarracudaWAF : container for barracuda's WAF session state.
 type BarracudaWAF struct {
 	Host      string
 	User      string
@@ -36,11 +36,18 @@ type APIRequest struct {
 	ContentType string
 }
 
+//WAFResouceData : Container for barracuda WAF resource's data
+type WAFResouceData struct {
+	Token  string                            `json:"token,omitempty"`
+	Object string                            `json:"object,omitempty"`
+	Data   map[string]map[string]interface{} `json:"data,omitempty"`
+}
+
 // RequestError : contains information about any error from a request.
 type RequestError struct {
-	Code       int      `json:"code,omitempty"`
-	Message    string   `json:"message,omitempty"`
-	ErrorStack []string `json:"errorStack,omitempty"`
+	Code    int    `json:"code,omitempty"`
+	Message string `json:"msg,omitempty"`
+	Token   string `json:"token,omitempty"`
 }
 
 // Error : returns the error message.
@@ -139,18 +146,23 @@ func (b *BarracudaWAF) DeleteBarracudaWAFResource(name string, request *APIReque
 }
 
 // GetBarracudaWAFResource : Updates Barracuda WAF resource
-func (b *BarracudaWAF) GetBarracudaWAFResource(request *APIRequest) (map[string]interface{}, error) {
+func (b *BarracudaWAF) GetBarracudaWAFResource(name string, request *APIRequest) (*WAFResouceData, error) {
 	data, err := b.getReq(request.URL)
 
-	var dataMap map[string]interface{}
-	unmarshalErr := json.Unmarshal(data, &dataMap)
-
-	if unmarshalErr != nil {
-		log.Printf("[INFO] Unable to fetch the Barracuda resource %v", err)
+	if err != nil {
+		log.Printf("[INFO] Unable to fetch the Barracuda's resource %v", err)
 		return nil, err
 	}
 
-	return dataMap, err
+	var resourceData *WAFResouceData
+	err = json.Unmarshal(data, &resourceData)
+
+	if err != nil {
+		log.Printf("[INFO] Unable to unmarshal Barracuda's resource data %v", err)
+		return nil, err
+	}
+
+	return resourceData, nil
 }
 
 // deleteReq : delete APIs
@@ -239,7 +251,6 @@ func (b *BarracudaWAF) APICall(options *APIRequest) ([]byte, error) {
 	}
 
 	url := fmt.Sprintf("%s/%s%s", b.Host, baseURI, options.URL)
-	log.Printf("URL : %v", url)
 
 	if options.Body != nil {
 		body := bytes.NewReader([]byte(options.Body.(string)))

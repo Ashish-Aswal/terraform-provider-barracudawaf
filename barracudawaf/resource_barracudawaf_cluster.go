@@ -46,6 +46,42 @@ func resourceCudaWAFClusterCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceCudaWAFClusterRead(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	log.Println("[INFO] Fetching Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/cluster"
+	request := &APIRequest{
+		Method: "get",
+		URL:    resourceEndpoint,
+	}
+
+	var dataItems map[string]interface{}
+	resources, err := client.GetBarracudaWAFResource(name, request)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to Retrieve Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	if resources.Data == nil {
+		log.Printf("[WARN] Barracuda WAF resource (%s) not found, removing from state", d.Id())
+		d.SetId("")
+		return nil
+	}
+
+	for _, dataItems = range resources.Data {
+		if dataItems["name"] == name {
+			break
+		}
+	}
+
+	if dataItems["name"] != name {
+		return fmt.Errorf("Barracuda WAF resource (%s) not found on the system", name)
+	}
+
+	d.Set("name", name)
 	return nil
 }
 
@@ -53,9 +89,10 @@ func resourceCudaWAFClusterUpdate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*BarracudaWAF)
 
 	name := d.Id()
-	resourceEndpoint := "/cluster/"
+
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
+	resourceEndpoint := "/cluster/"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFClusterResource(d, "put", resourceEndpoint),
@@ -85,7 +122,7 @@ func resourceCudaWAFClusterDelete(d *schema.ResourceData, m interface{}) error {
 	err := client.DeleteBarracudaWAFResource(name, request)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Unable to delete the Barracuda WAF resource (%s) (%v)", name, err)
 	}
 
 	return nil
