@@ -61,6 +61,42 @@ func resourceCudaWAFParameterProfilesCreate(d *schema.ResourceData, m interface{
 }
 
 func resourceCudaWAFParameterProfilesRead(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	log.Println("[INFO] Fetching Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("parent.1").(string) + "/parameter-profiles"
+	request := &APIRequest{
+		Method: "get",
+		URL:    resourceEndpoint,
+	}
+
+	var dataItems map[string]interface{}
+	resources, err := client.GetBarracudaWAFResource(name, request)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to Retrieve Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	if resources.Data == nil {
+		log.Printf("[WARN] Barracuda WAF resource (%s) not found, removing from state", d.Id())
+		d.SetId("")
+		return nil
+	}
+
+	for _, dataItems = range resources.Data {
+		if dataItems["name"] == name {
+			break
+		}
+	}
+
+	if dataItems["name"] != name {
+		return fmt.Errorf("Barracuda WAF resource (%s) not found on the system", name)
+	}
+
+	d.Set("name", name)
 	return nil
 }
 
@@ -68,9 +104,10 @@ func resourceCudaWAFParameterProfilesUpdate(d *schema.ResourceData, m interface{
 	client := m.(*BarracudaWAF)
 
 	name := d.Id()
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("parent.1").(string) + "/parameter-profiles/"
+
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("parent.1").(string) + "/parameter-profiles/"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFParameterProfilesResource(d, "put", resourceEndpoint),
@@ -100,7 +137,7 @@ func resourceCudaWAFParameterProfilesDelete(d *schema.ResourceData, m interface{
 	err := client.DeleteBarracudaWAFResource(name, request)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Unable to delete the Barracuda WAF resource (%s) (%v)", name, err)
 	}
 
 	return nil

@@ -42,6 +42,42 @@ func resourceCudaWAFSessionIdentifiersCreate(d *schema.ResourceData, m interface
 }
 
 func resourceCudaWAFSessionIdentifiersRead(d *schema.ResourceData, m interface{}) error {
+	client := m.(*BarracudaWAF)
+
+	name := d.Id()
+	log.Println("[INFO] Fetching Barracuda WAF resource " + name)
+
+	resourceEndpoint := "/session-identifiers"
+	request := &APIRequest{
+		Method: "get",
+		URL:    resourceEndpoint,
+	}
+
+	var dataItems map[string]interface{}
+	resources, err := client.GetBarracudaWAFResource(name, request)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to Retrieve Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	if resources.Data == nil {
+		log.Printf("[WARN] Barracuda WAF resource (%s) not found, removing from state", d.Id())
+		d.SetId("")
+		return nil
+	}
+
+	for _, dataItems = range resources.Data {
+		if dataItems["name"] == name {
+			break
+		}
+	}
+
+	if dataItems["name"] != name {
+		return fmt.Errorf("Barracuda WAF resource (%s) not found on the system", name)
+	}
+
+	d.Set("name", name)
 	return nil
 }
 
@@ -49,9 +85,10 @@ func resourceCudaWAFSessionIdentifiersUpdate(d *schema.ResourceData, m interface
 	client := m.(*BarracudaWAF)
 
 	name := d.Id()
-	resourceEndpoint := "/session-identifiers/"
+
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
+	resourceEndpoint := "/session-identifiers/"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFSessionIdentifiersResource(d, "put", resourceEndpoint),
@@ -81,7 +118,7 @@ func resourceCudaWAFSessionIdentifiersDelete(d *schema.ResourceData, m interface
 	err := client.DeleteBarracudaWAFResource(name, request)
 
 	if err != nil {
-		return fmt.Errorf("%v", err)
+		return fmt.Errorf("Unable to delete the Barracuda WAF resource (%s) (%v)", name, err)
 	}
 
 	return nil
