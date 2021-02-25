@@ -14,10 +14,11 @@ TF_PLUGIN_PATH := $(HOME)/.terraform.d/plugins/registry.terraform.io/hashicorp/$
 default: build
 
 build: fmtcheck
+	go get -d
 	go build -o $(PLUGIN_NAME)
 
 install: build
-	install -d $(TF_PLUGIN_PATH) && install $(PLUGIN_NAME) $(TF_PLUGIN_PATH)
+	install -d $(TF_PLUGIN_PATH) && mv $(PLUGIN_NAME) $(TF_PLUGIN_PATH)
 
 test: fmtcheck
 	go test $(TEST) -v || exit 1
