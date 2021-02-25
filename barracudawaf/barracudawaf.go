@@ -45,7 +45,6 @@ type WAFResouceData struct {
 
 // RequestError : contains information about any error from a request.
 type RequestError struct {
-	Code    int    `json:"code,omitempty"`
 	Message string `json:"msg,omitempty"`
 	Token   string `json:"token,omitempty"`
 }
