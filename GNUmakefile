@@ -5,7 +5,7 @@ GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
 COVER_TEST?=$$(go list ./... |grep -v 'vendor')
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 
-TAG := 0.0.1
+TAG := 0.1.0
 GOOS := $(shell go env GOOS)
 GOARCH := $(shell go env GOARCH)
 PLUGIN_NAME := terraform-provider-$(PKG_NAME)
@@ -18,6 +18,9 @@ build: fmtcheck
 	go build -o $(PLUGIN_NAME)
 
 install: build
+	install -d $(TF_PLUGIN_PATH) && mv $(PLUGIN_NAME) $(TF_PLUGIN_PATH)
+
+plugin: 
 	install -d $(TF_PLUGIN_PATH) && mv $(PLUGIN_NAME) $(TF_PLUGIN_PATH)
 
 test: fmtcheck
@@ -69,4 +72,4 @@ test-compile: fmtcheck
 	fi
 	go test -c $(TEST) $(TESTARGS)
 
-.PHONY: build install test testacc testrace cover vet fmt fmtcheck errcheck test-compile
+.PHONY: build install plugin test testacc testrace cover vet fmt fmtcheck errcheck test-compile
