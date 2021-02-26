@@ -120,7 +120,7 @@ make build
 
 ```shell
 $ cd $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
-$ make insatll
+$ make install
 
 ```
 
