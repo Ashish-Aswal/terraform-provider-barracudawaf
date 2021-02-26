@@ -1,13 +1,13 @@
-# terraform-provider-barracudawaf #
+# Overview #
 
 A [Terraform](terraform.io) provider for Barracuda Web Application Firewall.
 
+&nbsp;
 ## Requirements ##
 -	[Terraform](https://www.terraform.io/downloads.html) v0.14.x
 -	[Go](https://golang.org/doc/install) 1.15 (to build the provider plugin)
 
-<br/><br/>
-
+&nbsp;
 ## Usage ##
 
 **Use provider**
@@ -34,8 +34,7 @@ resource "barracudawaf_services" "DemoService1" {
     comments = "Demo Service with Terraform"
 }
 ```
-<br/><br/>
-**Servers**
+**Create Servers**
 
 ```hcl
 resource "barracudawaf_servers" "TestServer1" {
@@ -55,8 +54,6 @@ resource "barracudawaf_servers" "TestServer1" {
 ## Building The Provider ##
 
 ### Dependencies for building from source ###
-&nbsp;&nbsp;
-
 If you need to build from source, you should have a working Go environment setup.  If not check out the Go [getting started](http://golang.org/doc/install) guide.
 
 This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) for dependency management.  To fetch all dependencies run `go get` inside this repository.
@@ -85,8 +82,6 @@ $ make insatll
 
 ```
 
-This will place the binary under `$HOME/.terraform.d/plugins/registry.terraform.io/hashicorp/barracudawaf/0.1.0/darwin_amd64/`.  After installing you will need to run `terraform init` in any project using the plugin.
-
 &nbsp;&nbsp;
 # Using the Provider
 
@@ -95,9 +90,9 @@ If you're building the provider, follow the instructions to install it as a plug
 &nbsp;&nbsp;
 # Developing the Provider
 
-If you wish to work on the provider, you'll first need Go installed on your machine (version 1.15 is required). You'll also need to correctly setup a GOPATH, as well as adding $GOPATH/bin to your $PATH.
+If you wish to work on the provider, you'll first need Go installed on your machine (version 1.15 is required). You'll also need to correctly setup a GOPATH, as well as adding `$GOPATH/bin` to your `$PATH`.
 
-To compile the provider, run make build. This will create a binary terraform-provider-barracudawaf in $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf directory.
+To compile the provider, run make build. This will create a binary with name `terraform-provider-barracudawaf` in `$GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf directory`.
 
 ```shell
 $ make build
@@ -108,7 +103,7 @@ $ $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
 ```
 
 &nbsp;
-# Use binary direclty instead building the provider from source #
+# Use binary direclty instead of building the provider from source #
 
 Download the binary added under [releases](https://github.com/Ashish-Aswal/terraform-provider-barracudawaf/releases), and follow below :
 
@@ -118,7 +113,7 @@ $ git clone https://github.com/Ashish-Aswal/terraform-provider-barracudawaf.git
 
 ```
 
-Copy the downloded binary into terraform-provider-barracudawaf directory created with aboe git clone command.
+Copy the downloded binary into `terraform-provider-barracudawaf` directory created with aboe git clone command.
 ```shell
 cd terraform-provider-barracudawaf/
 make plugin
