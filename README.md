@@ -1,23 +1,24 @@
-# terraform-provider-barracudawaf #
+# Overview #
 
-Manage Barracuda WAF config resources
+A [Terraform](terraform.io) provider for Barracuda Web Application Firewall.
 
+&nbsp;
 ## Requirements ##
-* Terraform v0.14.x
-* Go 1.15 (to build the provider plugin)
+-	[Terraform](https://www.terraform.io/downloads.html) v0.14.x
+-	[Go](https://golang.org/doc/install) 1.15 (to build the provider plugin)
 
+&nbsp;
 ## Usage ##
 
 **Use provider**
 ```hcl
 provider "barracudawaf" {
-    ip = "x.x.x.x"
-    username = "admin"
-    admin_port = "8000"
+    address  = "x.x.x.x"
+    username = "xxxxxxx"
+    port     = "8443"
     password = "xxxxxxx"
 }
 ```
-
 **Create Service**
 ```hcl
 resource "barracudawaf_services" "DemoService1" {
@@ -32,9 +33,7 @@ resource "barracudawaf_services" "DemoService1" {
     comments = "Demo Service with Terraform"
 }
 ```
-
-**Servers**
-
+**Create Servers**
 ```hcl
 resource "barracudawaf_servers" "TestServer1" {
     name = "TestServer1"
@@ -48,40 +47,116 @@ resource "barracudawaf_servers" "TestServer1" {
     depends_on = [barracudawaf_services.DemoService1]
 }
 ```
+**Create Self Signed Certificates**
+```hcl
+resource "barracudawaf_self_signed_certificate" "DemoSelfSignedCert1" {
+    name  = "DemoSelfSignedCert1"
+    allow_private_key_export = "Yes"
+    city   = "xxxx"
+    common_name = "xxxxx"
+    country_code = "xx"
+    key_size = "1024"
+    key_type = "rsa"
+    organization_name = "xxxxxxx"
+    organizational_unit = "xxxxxx"
+    state = "xxxxxxx"
+    depends_on = [barracudawaf_servers.TestServer1]
+}
+```
+**Create Security Policies**
+```hcl
+resource "barracudawaf_security_policies" "DemoPolicy1" {
+    name = "DemoPolicy1"
+    based_on = "Create New"
+}
+```
+**Create Rule Groups**
+```hcl
+resource "barracudawaf_content_rules" "DemoRuleGroup1" {
+    name = "DemoRuleGroup1"
+    url_match = "/xxxx.xxx"
+    host_match = "xxxxxx"
+    web_firewall_policy = "DemoPolicy1"
+    parent = [ "DemoService1" ]
+    depends_on = [barracudawaf_security_policies.DemoPolicy1]
+}
+```
+**Create Rule Group Servers**
+```hcl
+resource "barracudawaf_content_rule_servers" "DemoRgServer1" {
+    name = "DemoRgServer1"
+    identifier = "Hostname"
+    hostname = "xxxxxx"
+    parent = [ "DemoService1", "DemoRuleGroup1" ]
+    depends_on = [barracudawaf_content_rules.DemoRuleGroup1]
+}
+```
 
-Checkout the **main.tf** for more under **examples**
-
-
-
-## Develop The Provider ##
+&nbsp;&nbsp;
+## Building The Provider ##
 
 ### Dependencies for building from source ###
-
 If you need to build from source, you should have a working Go environment setup.  If not check out the Go [getting started](http://golang.org/doc/install) guide.
 
 This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) for dependency management.  To fetch all dependencies run `go get` inside this repository.
 
-
+&nbsp;&nbsp;
 ### Build ###
 
-```go
-git clone https://github.com/Ashish-Aswal/terraform-provider-barracudawaf.git
-
-cd $HOME/terraform-provider-barracudawaf/
-
-go build -o terraform-provider-barracudawaf
+Clone repository to: $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
+```shell
+$ mkdir -p $GOPATH/src/github.com/Ashish-Aswal; cd $GOPATH/src/github.com/Ashish-Aswal
+$ git clone https://github.com/Ashish-Aswal/terraform-provider-barracudawaf.git
 ```
 
+Enter the provider directory and build the provider
+```shell
+cd $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
+make build
+```
 
+&nbsp;&nbsp;
 ### Install ###
 
-```sh
-mkdir $HOME/.terraform.d/plugins/registry.terraform.io/hashicorp/barracudawaf/0.0.1/darwin_amd64/ 
-mv terraform-provider-barracudawaf $HOME/.terraform.d/plugins/registry.terraform.io/hashicorp/barracudawaf/0.0.1/darwin_amd64/terraform-provider-barracudawaf
+```shell
+$ cd $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
+$ make insatll
+
 ```
 
-This will place the binary under `$HOME/.terraform.d/plugins/registry.terraform.io/hashicorp/barracudawaf/0.0.1/darwin_amd64/`.  After installing you will need to run `terraform init` in any project using the plugin.
+&nbsp;&nbsp;
+# Using the Provider
+
+If you're building the provider, follow the instructions to install it as a plugin. After placing it into your plugins directory, run terraform init to initialize it.
+
+&nbsp;&nbsp;
+# Developing the Provider
+
+If you wish to work on the provider, you'll first need Go installed on your machine (version 1.15 is required). You'll also need to correctly setup a GOPATH, as well as adding `$GOPATH/bin` to your `$PATH`.
+
+To compile the provider, run make build. This will create a binary with name `terraform-provider-barracudawaf` in `$GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf` directory.
+
+```shell
+$ make build
+...
+$ $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
+...
+
+```
+
+&nbsp;
+# Use binary direclty instead of building the provider from source #
+
+Download the binary added under [releases](https://github.com/Ashish-Aswal/terraform-provider-barracudawaf/releases), and follow below :
 
 
-### Note: ###
-#### This project is auto-generated, incase of issues please reachout at email: aaswal@barracuda.com ####
+```shell
+$ git clone https://github.com/Ashish-Aswal/terraform-provider-barracudawaf.git
+
+```
+
+Copy the downloded binary into `terraform-provider-barracudawaf` directory created with abvoe git clone command.
+```shell
+cd terraform-provider-barracudawaf/
+make plugin
+```
