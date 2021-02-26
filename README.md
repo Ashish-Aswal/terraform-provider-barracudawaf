@@ -13,13 +13,12 @@ A [Terraform](terraform.io) provider for Barracuda Web Application Firewall.
 **Use provider**
 ```hcl
 provider "barracudawaf" {
-    ip = "x.x.x.x"
-    username = "admin"
-    admin_port = "8000"
+    address  = "x.x.x.x"
+    username = "xxxxxxx"
+    port     = "8443"
     password = "xxxxxxx"
 }
 ```
-<br/><br/>
 **Create Service**
 ```hcl
 resource "barracudawaf_services" "DemoService1" {
@@ -35,7 +34,6 @@ resource "barracudawaf_services" "DemoService1" {
 }
 ```
 **Create Servers**
-
 ```hcl
 resource "barracudawaf_servers" "TestServer1" {
     name = "TestServer1"
@@ -47,6 +45,50 @@ resource "barracudawaf_servers" "TestServer1" {
     comments = "Creating the Demo Server"
     parent = [ "DemoService1" ]
     depends_on = [barracudawaf_services.DemoService1]
+}
+```
+**Create Self Signed Certificates**
+```hcl
+resource "barracudawaf_self_signed_certificate" "DemoSelfSignedCert1" {
+    name  = "DemoSelfSignedCert1"
+    allow_private_key_export = "Yes"
+    city   = "xxxx"
+    common_name = "xxxxx"
+    country_code = "xx"
+    key_size = "1024"
+    key_type = "rsa"
+    organization_name = "xxxxxxx"
+    organizational_unit = "xxxxxx"
+    state = "xxxxxxx"
+    depends_on = [barracudawaf_servers.TestServer1]
+}
+```
+**Create Security Policies**
+```hcl
+resource "barracudawaf_security_policies" "DemoPolicy1" {
+    name = "DemoPolicy1"
+    based_on = "Create New"
+}
+```
+**Create Rule Groups**
+```hcl
+resource "barracudawaf_content_rules" "DemoRuleGroup1" {
+    name = "DemoRuleGroup1"
+    url_match = "/xxxx.xxx"
+    host_match = "xxxxxx"
+    web_firewall_policy = "DemoPolicy1"
+    parent = [ "DemoService1" ]
+    depends_on = [barracudawaf_security_policies.DemoPolicy1]
+}
+```
+**Create Rule Group Servers**
+```hcl
+resource "barracudawaf_content_rule_servers" "DemoRgServer1" {
+    name = "DemoRgServer1"
+    identifier = "Hostname"
+    hostname = "xxxxxx"
+    parent = [ "DemoService1", "DemoRuleGroup1" ]
+    depends_on = [barracudawaf_content_rules.DemoRuleGroup1]
 }
 ```
 
@@ -92,7 +134,7 @@ If you're building the provider, follow the instructions to install it as a plug
 
 If you wish to work on the provider, you'll first need Go installed on your machine (version 1.15 is required). You'll also need to correctly setup a GOPATH, as well as adding `$GOPATH/bin` to your `$PATH`.
 
-To compile the provider, run make build. This will create a binary with name `terraform-provider-barracudawaf` in `$GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf directory`.
+To compile the provider, run make build. This will create a binary with name `terraform-provider-barracudawaf` in `$GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf` directory.
 
 ```shell
 $ make build
@@ -113,7 +155,7 @@ $ git clone https://github.com/Ashish-Aswal/terraform-provider-barracudawaf.git
 
 ```
 
-Copy the downloded binary into `terraform-provider-barracudawaf` directory created with aboe git clone command.
+Copy the downloded binary into `terraform-provider-barracudawaf` directory created with abvoe git clone command.
 ```shell
 cd terraform-provider-barracudawaf/
 make plugin
