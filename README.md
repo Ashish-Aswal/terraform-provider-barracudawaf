@@ -145,7 +145,7 @@ $ $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
 ```
 
 &nbsp;
-# Use binary direclty instead of building the provider from source #
+# Using the binary instead of building it from source #
 
 Download the binary added under [releases](https://github.com/Ashish-Aswal/terraform-provider-barracudawaf/releases), and follow below :
 
