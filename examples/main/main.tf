@@ -45,6 +45,11 @@ resource "barracudawaf_servers" "TestServer1" {
     comments = "Creating the Demo Server"
     parent = [ "DemoService1" ]
     depends_on = [barracudawaf_services.DemoService1]
+
+    out_of_band_health_checks {
+      enable_oob_health_checks = "Yes"
+      interval = "900"
+    }
 }
 
 resource "barracudawaf_self_signed_certificate" "DemoSelfSignedCert1" {
@@ -102,6 +107,11 @@ resource "barracudawaf_servers" "TestServer2" {
     comments = "Creating the Demo Server"
     parent = [ "DemoService2" ]
     depends_on = [barracudawaf_services.DemoService2]
+
+    out_of_band_health_checks {
+      enable_oob_health_checks = "Yes"
+      interval = "900"
+    }
 }
 
 resource "barracudawaf_security_policies" "DemoPolicy1" {
@@ -125,4 +135,11 @@ resource "barracudawaf_content_rule_servers" "DemoRgServer1" {
     hostname = "imdb.com"
     parent = [ "DemoService2", "DemoRuleGroup1" ]
     depends_on = [barracudawaf_content_rules.DemoRuleGroup1]
+}
+
+resource "barracudawaf_url_acls" "ACL_1" {
+    redirect_url = "http://www.example.com/index.html"
+    action = "Allow and Log"
+    name = "ACL_1"
+    parent = [ "DemoService1" ]
 }
