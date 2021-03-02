@@ -3,6 +3,7 @@ package barracudawaf
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -50,6 +51,8 @@ func resourceCudaWAFExternalLdapServicesCreate(d *schema.ResourceData, m interfa
 		name,
 		hydrateBarracudaWAFExternalLdapServicesResource(d, "post", resourceEndpoint),
 	)
+
+	client.hydrateBarracudaWAFExternalLdapServicesSubResource(d, name, resourceEndpoint)
 
 	d.SetId(name)
 	return resourceCudaWAFExternalLdapServicesRead(d, m)
@@ -102,7 +105,7 @@ func resourceCudaWAFExternalLdapServicesUpdate(d *schema.ResourceData, m interfa
 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/external-ldap-services/"
+	resourceEndpoint := "/external-ldap-services"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFExternalLdapServicesResource(d, "put", resourceEndpoint),
@@ -110,6 +113,13 @@ func resourceCudaWAFExternalLdapServicesUpdate(d *schema.ResourceData, m interfa
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFExternalLdapServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF sub resource (%s) (%v)", name, err)
 		return err
 	}
 
@@ -123,7 +133,7 @@ func resourceCudaWAFExternalLdapServicesDelete(d *schema.ResourceData, m interfa
 
 	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/external-ldap-services/"
+	resourceEndpoint := "/external-ldap-services"
 	request := &APIRequest{
 		Method: "delete",
 		URL:    resourceEndpoint,
@@ -170,14 +180,14 @@ func hydrateBarracudaWAFExternalLdapServicesResource(
 	// parameters not supported for updates
 	if method == "put" {
 		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
+		for _, param := range updatePayloadExceptions {
+			delete(resourcePayload, param)
 		}
 	}
 
 	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
-		if len(val) <= 0 {
+		if len(val) == 0 {
 			delete(resourcePayload, key)
 		}
 	}
@@ -186,4 +196,50 @@ func hydrateBarracudaWAFExternalLdapServicesResource(
 		URL:  endpoint,
 		Body: resourcePayload,
 	}
+}
+
+func (b *BarracudaWAF) hydrateBarracudaWAFExternalLdapServicesSubResource(
+	d *schema.ResourceData,
+	name string,
+	endpoint string,
+) error {
+	subResourceObjects := map[string][]string{}
+
+	for subResource, subResourceParams := range subResourceObjects {
+		subResourceParamsLength := d.Get(subResource + ".#").(int)
+
+		if subResourceParamsLength > 0 {
+			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+
+			for i := 0; i < subResourceParamsLength; i++ {
+				subResourcePayload := map[string]string{}
+				suffix := fmt.Sprintf(".%d", i)
+
+				for _, param := range subResourceParams {
+					paramSuffix := fmt.Sprintf(".%s", param)
+					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+
+					param = strings.Replace(param, "_", "-", -1)
+					subResourcePayload[param] = paramVaule
+				}
+
+				for key, val := range subResourcePayload {
+					if len(val) == 0 {
+						delete(subResourcePayload, key)
+					}
+				}
+
+				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+					URL:  strings.Replace(subResource, "_", "-", -1),
+					Body: subResourcePayload,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }

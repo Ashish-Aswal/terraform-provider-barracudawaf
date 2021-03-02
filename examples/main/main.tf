@@ -15,6 +15,24 @@ resource "barracudawaf_services" "DemoService1" {
     status = "On"
     group = "default"
     comments = "Demo Service with Terraform"
+
+    basic_security {
+      mode = "Active"
+    }
+
+    caching {
+      max_size = "6656"
+      min_size = "6815744"
+    }
+
+    exception_profiling {
+      exception_profiling_level = "High"
+      exception_profiling_learn_from_trusted_host = "Yes"
+    }
+
+    adaptive_profiling {
+      status = "On"
+    }
 }
 
 resource "barracudawaf_servers" "TestServer1" {
@@ -54,6 +72,24 @@ resource "barracudawaf_services" "DemoService2" {
     group = "default"
     comments = "Demo Service with Terraform"
     depends_on = [barracudawaf_self_signed_certificate.DemoSelfSignedCert1]
+
+    basic_security {
+      mode = "Active"
+    }
+
+    caching {
+      max_size = "6656"
+      min_size = "6815744"
+    }
+
+    exception_profiling {
+      exception_profiling_level = "Medium"
+      exception_profiling_learn_from_trusted_host = "Yes"
+    }
+
+    adaptive_profiling {
+      status = "On"
+    }
 }
 
 resource "barracudawaf_servers" "TestServer2" {

@@ -3,6 +3,7 @@ package barracudawaf
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -24,6 +25,17 @@ func resourceCudaWAFCluster() *schema.Resource {
 			"cluster_name":                  {Type: schema.TypeString, Required: true},
 			"data_path_failure_action":      {Type: schema.TypeString, Optional: true},
 			"vx_aa_enable":                  {Type: schema.TypeString, Optional: true},
+			"nodes": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip_address": {Type: schema.TypeString, Required: true},
+						"mode":       {Type: schema.TypeString, Required: true},
+						"serial":     {Type: schema.TypeString, Required: true},
+					},
+				},
+			},
 		},
 	}
 }
@@ -40,6 +52,8 @@ func resourceCudaWAFClusterCreate(d *schema.ResourceData, m interface{}) error {
 		name,
 		hydrateBarracudaWAFClusterResource(d, "post", resourceEndpoint),
 	)
+
+	client.hydrateBarracudaWAFClusterSubResource(d, name, resourceEndpoint)
 
 	d.SetId(name)
 	return resourceCudaWAFClusterRead(d, m)
@@ -92,7 +106,7 @@ func resourceCudaWAFClusterUpdate(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/cluster/"
+	resourceEndpoint := "/cluster"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFClusterResource(d, "put", resourceEndpoint),
@@ -100,6 +114,13 @@ func resourceCudaWAFClusterUpdate(d *schema.ResourceData, m interface{}) error {
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFClusterSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF sub resource (%s) (%v)", name, err)
 		return err
 	}
 
@@ -113,7 +134,7 @@ func resourceCudaWAFClusterDelete(d *schema.ResourceData, m interface{}) error {
 
 	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/cluster/"
+	resourceEndpoint := "/cluster"
 	request := &APIRequest{
 		Method: "delete",
 		URL:    resourceEndpoint,
@@ -150,14 +171,14 @@ func hydrateBarracudaWAFClusterResource(
 	// parameters not supported for updates
 	if method == "put" {
 		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
+		for _, param := range updatePayloadExceptions {
+			delete(resourcePayload, param)
 		}
 	}
 
 	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
-		if len(val) <= 0 {
+		if len(val) == 0 {
 			delete(resourcePayload, key)
 		}
 	}
@@ -166,4 +187,50 @@ func hydrateBarracudaWAFClusterResource(
 		URL:  endpoint,
 		Body: resourcePayload,
 	}
+}
+
+func (b *BarracudaWAF) hydrateBarracudaWAFClusterSubResource(
+	d *schema.ResourceData,
+	name string,
+	endpoint string,
+) error {
+	subResourceObjects := map[string][]string{"nodes": {"ip_address", "mode", "serial"}}
+
+	for subResource, subResourceParams := range subResourceObjects {
+		subResourceParamsLength := d.Get(subResource + ".#").(int)
+
+		if subResourceParamsLength > 0 {
+			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+
+			for i := 0; i < subResourceParamsLength; i++ {
+				subResourcePayload := map[string]string{}
+				suffix := fmt.Sprintf(".%d", i)
+
+				for _, param := range subResourceParams {
+					paramSuffix := fmt.Sprintf(".%s", param)
+					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+
+					param = strings.Replace(param, "_", "-", -1)
+					subResourcePayload[param] = paramVaule
+				}
+
+				for key, val := range subResourcePayload {
+					if len(val) == 0 {
+						delete(subResourcePayload, key)
+					}
+				}
+
+				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+					URL:  strings.Replace(subResource, "_", "-", -1),
+					Body: subResourcePayload,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }

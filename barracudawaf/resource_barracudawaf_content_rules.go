@@ -3,6 +3,7 @@ package barracudawaf
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -26,6 +27,74 @@ func resourceCudaWAFContentRules() *schema.Resource {
 			"mode":                    {Type: schema.TypeString, Optional: true},
 			"url_match":               {Type: schema.TypeString, Required: true},
 			"web_firewall_policy":     {Type: schema.TypeString, Optional: true},
+			"caching": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"expiry_age":               {Type: schema.TypeString, Optional: true},
+						"file_extensions":          {Type: schema.TypeString, Optional: true},
+						"max_size":                 {Type: schema.TypeString, Optional: true},
+						"min_size":                 {Type: schema.TypeString, Optional: true},
+						"cache_negative_responses": {Type: schema.TypeString, Optional: true},
+						"ignore_request_headers":   {Type: schema.TypeString, Optional: true},
+						"ignore_response_headers":  {Type: schema.TypeString, Optional: true},
+						"status":                   {Type: schema.TypeString, Optional: true},
+					},
+				},
+			},
+			"compression": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"content_types":                  {Type: schema.TypeString, Optional: true},
+						"min_size":                       {Type: schema.TypeString, Optional: true},
+						"status":                         {Type: schema.TypeString, Optional: true},
+						"compress_unknown_content_types": {Type: schema.TypeString, Optional: true},
+					},
+				},
+			},
+			"load_balancing": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"lb_algorithm":              {Type: schema.TypeString, Optional: true},
+						"persistence_cookie_domain": {Type: schema.TypeString, Optional: true},
+						"cookie_age":                {Type: schema.TypeString, Optional: true},
+						"persistence_cookie_name":   {Type: schema.TypeString, Optional: true},
+						"persistence_cookie_path":   {Type: schema.TypeString, Optional: true},
+						"failover_method":           {Type: schema.TypeString, Optional: true},
+						"header_name":               {Type: schema.TypeString, Optional: true},
+						"persistence_idle_timeout":  {Type: schema.TypeString, Optional: true},
+						"persistence_method":        {Type: schema.TypeString, Optional: true},
+						"source_ip_netmask":         {Type: schema.TypeString, Optional: true},
+						"parameter_name":            {Type: schema.TypeString, Optional: true},
+					},
+				},
+			},
+			"captcha_settings": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"recaptcha_type":           {Type: schema.TypeString, Optional: true},
+						"rg_recaptcha_domain":      {Type: schema.TypeString, Optional: true},
+						"rg_recaptcha_site_key":    {Type: schema.TypeString, Optional: true},
+						"rg_recaptcha_site_secret": {Type: schema.TypeString, Optional: true},
+					},
+				},
+			},
+			"advanced_client_analysis": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"advanced_analysis": {Type: schema.TypeString, Optional: true},
+					},
+				},
+			},
 			"parent": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -47,6 +116,8 @@ func resourceCudaWAFContentRulesCreate(d *schema.ResourceData, m interface{}) er
 		name,
 		hydrateBarracudaWAFContentRulesResource(d, "post", resourceEndpoint),
 	)
+
+	client.hydrateBarracudaWAFContentRulesSubResource(d, name, resourceEndpoint)
 
 	d.SetId(name)
 	return resourceCudaWAFContentRulesRead(d, m)
@@ -99,7 +170,7 @@ func resourceCudaWAFContentRulesUpdate(d *schema.ResourceData, m interface{}) er
 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules/"
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFContentRulesResource(d, "put", resourceEndpoint),
@@ -107,6 +178,13 @@ func resourceCudaWAFContentRulesUpdate(d *schema.ResourceData, m interface{}) er
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFContentRulesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF sub resource (%s) (%v)", name, err)
 		return err
 	}
 
@@ -120,7 +198,7 @@ func resourceCudaWAFContentRulesDelete(d *schema.ResourceData, m interface{}) er
 
 	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules/"
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules"
 	request := &APIRequest{
 		Method: "delete",
 		URL:    resourceEndpoint,
@@ -159,14 +237,14 @@ func hydrateBarracudaWAFContentRulesResource(
 	// parameters not supported for updates
 	if method == "put" {
 		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
+		for _, param := range updatePayloadExceptions {
+			delete(resourcePayload, param)
 		}
 	}
 
 	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
-		if len(val) <= 0 {
+		if len(val) == 0 {
 			delete(resourcePayload, key)
 		}
 	}
@@ -175,4 +253,87 @@ func hydrateBarracudaWAFContentRulesResource(
 		URL:  endpoint,
 		Body: resourcePayload,
 	}
+}
+
+func (b *BarracudaWAF) hydrateBarracudaWAFContentRulesSubResource(
+	d *schema.ResourceData,
+	name string,
+	endpoint string,
+) error {
+	subResourceObjects := map[string][]string{
+		"caching": {
+			"expiry_age",
+			"file_extensions",
+			"max_size",
+			"min_size",
+			"cache_negative_responses",
+			"ignore_request_headers",
+			"ignore_response_headers",
+			"status",
+		},
+		"compression": {
+			"content_types",
+			"min_size",
+			"status",
+			"compress_unknown_content_types",
+		},
+		"load_balancing": {
+			"lb_algorithm",
+			"persistence_cookie_domain",
+			"cookie_age",
+			"persistence_cookie_name",
+			"persistence_cookie_path",
+			"failover_method",
+			"header_name",
+			"persistence_idle_timeout",
+			"persistence_method",
+			"source_ip_netmask",
+			"parameter_name",
+		},
+		"captcha_settings": {
+			"recaptcha_type",
+			"rg_recaptcha_domain",
+			"rg_recaptcha_site_key",
+			"rg_recaptcha_site_secret",
+		},
+		"advanced_client_analysis": {"advanced_analysis"},
+	}
+
+	for subResource, subResourceParams := range subResourceObjects {
+		subResourceParamsLength := d.Get(subResource + ".#").(int)
+
+		if subResourceParamsLength > 0 {
+			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+
+			for i := 0; i < subResourceParamsLength; i++ {
+				subResourcePayload := map[string]string{}
+				suffix := fmt.Sprintf(".%d", i)
+
+				for _, param := range subResourceParams {
+					paramSuffix := fmt.Sprintf(".%s", param)
+					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+
+					param = strings.Replace(param, "_", "-", -1)
+					subResourcePayload[param] = paramVaule
+				}
+
+				for key, val := range subResourcePayload {
+					if len(val) == 0 {
+						delete(subResourcePayload, key)
+					}
+				}
+
+				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+					URL:  strings.Replace(subResource, "_", "-", -1),
+					Body: subResourcePayload,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }

@@ -3,6 +3,7 @@ package barracudawaf
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -31,6 +32,21 @@ func resourceCudaWAFSignedCertificate() *schema.Resource {
 			"allow_private_key_export":  {Type: schema.TypeString, Optional: true},
 			"schedule_renewal_day":      {Type: schema.TypeString, Optional: true},
 			"serial":                    {Type: schema.TypeString, Optional: true},
+			"ocsp_stapling": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cache_timeout":           {Type: schema.TypeString, Required: true},
+						"clock_skew":              {Type: schema.TypeString, Optional: true},
+						"error_timeout":           {Type: schema.TypeString, Optional: true},
+						"issuer_certificate":      {Type: schema.TypeString, Optional: true},
+						"ocsp_stapling":           {Type: schema.TypeString, Optional: true},
+						"override_ocsp_responder": {Type: schema.TypeString, Optional: true},
+						"ocsp_issuer_certificate": {Type: schema.TypeString, Optional: true},
+					},
+				},
+			},
 		},
 	}
 }
@@ -47,6 +63,8 @@ func resourceCudaWAFSignedCertificateCreate(d *schema.ResourceData, m interface{
 		name,
 		hydrateBarracudaWAFSignedCertificateResource(d, "post", resourceEndpoint),
 	)
+
+	client.hydrateBarracudaWAFSignedCertificateSubResource(d, name, resourceEndpoint)
 
 	d.SetId(name)
 	return resourceCudaWAFSignedCertificateRead(d, m)
@@ -99,7 +117,7 @@ func resourceCudaWAFSignedCertificateUpdate(d *schema.ResourceData, m interface{
 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/signed-certificate/"
+	resourceEndpoint := "/signed-certificate"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFSignedCertificateResource(d, "put", resourceEndpoint),
@@ -107,6 +125,13 @@ func resourceCudaWAFSignedCertificateUpdate(d *schema.ResourceData, m interface{
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFSignedCertificateSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF sub resource (%s) (%v)", name, err)
 		return err
 	}
 
@@ -120,7 +145,7 @@ func resourceCudaWAFSignedCertificateDelete(d *schema.ResourceData, m interface{
 
 	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/signed-certificate/"
+	resourceEndpoint := "/signed-certificate"
 	request := &APIRequest{
 		Method: "delete",
 		URL:    resourceEndpoint,
@@ -177,14 +202,14 @@ func hydrateBarracudaWAFSignedCertificateResource(
 			"allow-private-key-export",
 			"serial",
 		}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
+		for _, param := range updatePayloadExceptions {
+			delete(resourcePayload, param)
 		}
 	}
 
 	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
-		if len(val) <= 0 {
+		if len(val) == 0 {
 			delete(resourcePayload, key)
 		}
 	}
@@ -193,4 +218,60 @@ func hydrateBarracudaWAFSignedCertificateResource(
 		URL:  endpoint,
 		Body: resourcePayload,
 	}
+}
+
+func (b *BarracudaWAF) hydrateBarracudaWAFSignedCertificateSubResource(
+	d *schema.ResourceData,
+	name string,
+	endpoint string,
+) error {
+	subResourceObjects := map[string][]string{
+		"ocsp_stapling": {
+			"cache_timeout",
+			"clock_skew",
+			"error_timeout",
+			"issuer_certificate",
+			"ocsp_stapling",
+			"override_ocsp_responder",
+			"ocsp_issuer_certificate",
+		},
+	}
+
+	for subResource, subResourceParams := range subResourceObjects {
+		subResourceParamsLength := d.Get(subResource + ".#").(int)
+
+		if subResourceParamsLength > 0 {
+			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+
+			for i := 0; i < subResourceParamsLength; i++ {
+				subResourcePayload := map[string]string{}
+				suffix := fmt.Sprintf(".%d", i)
+
+				for _, param := range subResourceParams {
+					paramSuffix := fmt.Sprintf(".%s", param)
+					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+
+					param = strings.Replace(param, "_", "-", -1)
+					subResourcePayload[param] = paramVaule
+				}
+
+				for key, val := range subResourcePayload {
+					if len(val) == 0 {
+						delete(subResourcePayload, key)
+					}
+				}
+
+				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+					URL:  strings.Replace(subResource, "_", "-", -1),
+					Body: subResourcePayload,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }

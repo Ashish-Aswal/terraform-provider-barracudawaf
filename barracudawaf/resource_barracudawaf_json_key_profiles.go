@@ -3,6 +3,7 @@ package barracudawaf
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -51,6 +52,8 @@ func resourceCudaWAFJsonKeyProfilesCreate(d *schema.ResourceData, m interface{})
 		name,
 		hydrateBarracudaWAFJsonKeyProfilesResource(d, "post", resourceEndpoint),
 	)
+
+	client.hydrateBarracudaWAFJsonKeyProfilesSubResource(d, name, resourceEndpoint)
 
 	d.SetId(name)
 	return resourceCudaWAFJsonKeyProfilesRead(d, m)
@@ -103,7 +106,7 @@ func resourceCudaWAFJsonKeyProfilesUpdate(d *schema.ResourceData, m interface{})
 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles/" + d.Get("parent.1").(string) + "/json-key-profiles/"
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles/" + d.Get("parent.1").(string) + "/json-key-profiles"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFJsonKeyProfilesResource(d, "put", resourceEndpoint),
@@ -111,6 +114,13 @@ func resourceCudaWAFJsonKeyProfilesUpdate(d *schema.ResourceData, m interface{})
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFJsonKeyProfilesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF sub resource (%s) (%v)", name, err)
 		return err
 	}
 
@@ -124,7 +134,7 @@ func resourceCudaWAFJsonKeyProfilesDelete(d *schema.ResourceData, m interface{})
 
 	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles/" + d.Get("parent.1").(string) + "/json-key-profiles/"
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles/" + d.Get("parent.1").(string) + "/json-key-profiles"
 	request := &APIRequest{
 		Method: "delete",
 		URL:    resourceEndpoint,
@@ -167,14 +177,14 @@ func hydrateBarracudaWAFJsonKeyProfilesResource(
 	// parameters not supported for updates
 	if method == "put" {
 		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
+		for _, param := range updatePayloadExceptions {
+			delete(resourcePayload, param)
 		}
 	}
 
 	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
-		if len(val) <= 0 {
+		if len(val) == 0 {
 			delete(resourcePayload, key)
 		}
 	}
@@ -183,4 +193,50 @@ func hydrateBarracudaWAFJsonKeyProfilesResource(
 		URL:  endpoint,
 		Body: resourcePayload,
 	}
+}
+
+func (b *BarracudaWAF) hydrateBarracudaWAFJsonKeyProfilesSubResource(
+	d *schema.ResourceData,
+	name string,
+	endpoint string,
+) error {
+	subResourceObjects := map[string][]string{}
+
+	for subResource, subResourceParams := range subResourceObjects {
+		subResourceParamsLength := d.Get(subResource + ".#").(int)
+
+		if subResourceParamsLength > 0 {
+			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+
+			for i := 0; i < subResourceParamsLength; i++ {
+				subResourcePayload := map[string]string{}
+				suffix := fmt.Sprintf(".%d", i)
+
+				for _, param := range subResourceParams {
+					paramSuffix := fmt.Sprintf(".%s", param)
+					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+
+					param = strings.Replace(param, "_", "-", -1)
+					subResourcePayload[param] = paramVaule
+				}
+
+				for key, val := range subResourcePayload {
+					if len(val) == 0 {
+						delete(subResourcePayload, key)
+					}
+				}
+
+				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+					URL:  strings.Replace(subResource, "_", "-", -1),
+					Body: subResourcePayload,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }
