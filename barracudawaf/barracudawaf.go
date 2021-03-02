@@ -132,14 +132,21 @@ func (b *BarracudaWAF) CreateBarracudaWAFResource(name string, request *APIReque
 
 // UpdateBarracudaWAFResource : Updates Barracuda WAF resource
 func (b *BarracudaWAF) UpdateBarracudaWAFResource(name string, request *APIRequest) error {
-	_, err := b.putReq(request.Body, request.URL+name)
+	_, err := b.putReq(request.Body, fmt.Sprintf("%s/%s", request.URL, name))
+
+	return err
+}
+
+// UpdateBarracudaWAFSubResource : Updates Barracuda WAF sub resource
+func (b *BarracudaWAF) UpdateBarracudaWAFSubResource(name string, resourceEndpoint string, request *APIRequest) error {
+	_, err := b.putReq(request.Body, fmt.Sprintf("%s/%s/%s", resourceEndpoint, name, request.URL))
 
 	return err
 }
 
 // DeleteBarracudaWAFResource : Delete Barracuda WAF resource
 func (b *BarracudaWAF) DeleteBarracudaWAFResource(name string, request *APIRequest) error {
-	_, err := b.deleteReq(request.URL + name)
+	_, err := b.deleteReq(fmt.Sprintf("%s/%s", request.URL, name))
 
 	return err
 }

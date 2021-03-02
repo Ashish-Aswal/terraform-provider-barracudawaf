@@ -3,6 +3,7 @@ package barracudawaf
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -39,6 +40,8 @@ func resourceCudaWAFGeoipAllowedNetworksCreate(d *schema.ResourceData, m interfa
 		name,
 		hydrateBarracudaWAFGeoipAllowedNetworksResource(d, "post", resourceEndpoint),
 	)
+
+	client.hydrateBarracudaWAFGeoipAllowedNetworksSubResource(d, name, resourceEndpoint)
 
 	d.SetId(name)
 	return resourceCudaWAFGeoipAllowedNetworksRead(d, m)
@@ -91,7 +94,7 @@ func resourceCudaWAFGeoipAllowedNetworksUpdate(d *schema.ResourceData, m interfa
 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/geoip-allowed-networks/"
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/geoip-allowed-networks"
 	err := client.UpdateBarracudaWAFResource(
 		name,
 		hydrateBarracudaWAFGeoipAllowedNetworksResource(d, "put", resourceEndpoint),
@@ -99,6 +102,13 @@ func resourceCudaWAFGeoipAllowedNetworksUpdate(d *schema.ResourceData, m interfa
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFGeoipAllowedNetworksSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to update the Barracuda WAF sub resource (%s) (%v)", name, err)
 		return err
 	}
 
@@ -112,7 +122,7 @@ func resourceCudaWAFGeoipAllowedNetworksDelete(d *schema.ResourceData, m interfa
 
 	log.Println("[INFO] Deleting Barracuda WAF resource " + name)
 
-	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/geoip-allowed-networks/"
+	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/geoip-allowed-networks"
 	request := &APIRequest{
 		Method: "delete",
 		URL:    resourceEndpoint,
@@ -143,14 +153,14 @@ func hydrateBarracudaWAFGeoipAllowedNetworksResource(
 	// parameters not supported for updates
 	if method == "put" {
 		updatePayloadExceptions := [...]string{}
-		for item := range updatePayloadExceptions {
-			delete(resourcePayload, updatePayloadExceptions[item])
+		for _, param := range updatePayloadExceptions {
+			delete(resourcePayload, param)
 		}
 	}
 
 	// remove empty parameters from resource payload
 	for key, val := range resourcePayload {
-		if len(val) <= 0 {
+		if len(val) == 0 {
 			delete(resourcePayload, key)
 		}
 	}
@@ -159,4 +169,50 @@ func hydrateBarracudaWAFGeoipAllowedNetworksResource(
 		URL:  endpoint,
 		Body: resourcePayload,
 	}
+}
+
+func (b *BarracudaWAF) hydrateBarracudaWAFGeoipAllowedNetworksSubResource(
+	d *schema.ResourceData,
+	name string,
+	endpoint string,
+) error {
+	subResourceObjects := map[string][]string{}
+
+	for subResource, subResourceParams := range subResourceObjects {
+		subResourceParamsLength := d.Get(subResource + ".#").(int)
+
+		if subResourceParamsLength > 0 {
+			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+
+			for i := 0; i < subResourceParamsLength; i++ {
+				subResourcePayload := map[string]string{}
+				suffix := fmt.Sprintf(".%d", i)
+
+				for _, param := range subResourceParams {
+					paramSuffix := fmt.Sprintf(".%s", param)
+					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+
+					param = strings.Replace(param, "_", "-", -1)
+					subResourcePayload[param] = paramVaule
+				}
+
+				for key, val := range subResourcePayload {
+					if len(val) == 0 {
+						delete(subResourcePayload, key)
+					}
+				}
+
+				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+					URL:  strings.Replace(subResource, "_", "-", -1),
+					Body: subResourcePayload,
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }
