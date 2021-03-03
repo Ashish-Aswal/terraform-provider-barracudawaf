@@ -22,14 +22,111 @@ description: |-
 ### Optional
 
 - **address_version** (String)
+- **advanced_configuration** (Block List) (see [below for nested schema](#nestedblock--advanced_configuration))
+- **application_layer_health_checks** (Block List) (see [below for nested schema](#nestedblock--application_layer_health_checks))
 - **comments** (String)
+- **connection_pooling** (Block List) (see [below for nested schema](#nestedblock--connection_pooling))
 - **hostname** (String)
 - **id** (String) The ID of this resource.
 - **identifier** (String)
+- **in_band_health_checks** (Block List) (see [below for nested schema](#nestedblock--in_band_health_checks))
 - **ip_address** (String)
+- **load_balancing** (Block List) (see [below for nested schema](#nestedblock--load_balancing))
 - **name** (String)
+- **out_of_band_health_checks** (Block List) (see [below for nested schema](#nestedblock--out_of_band_health_checks))
 - **port** (String)
 - **resolved_ips** (String)
+- **ssl_policy** (Block List) (see [below for nested schema](#nestedblock--ssl_policy))
 - **status** (String)
+
+### Read-Only
+
+- **redirect** (Block List) (see [below for nested schema](#nestedblock--redirect))
+
+<a id="nestedblock--advanced_configuration"></a>
+### Nested Schema for `advanced_configuration`
+
+Optional:
+
+- **client_impersonation** (String)
+- **max_connections** (String)
+- **max_establishing_connections** (String)
+- **max_keepalive_requests** (String)
+- **max_requests** (String)
+- **max_spare_connections** (String)
+- **source_ip_to_connect** (String)
+- **timeout** (String)
+
+
+<a id="nestedblock--application_layer_health_checks"></a>
+### Nested Schema for `application_layer_health_checks`
+
+Optional:
+
+- **additional_headers** (String)
+- **domain** (String)
+- **match_content_string** (String)
+- **method** (String)
+- **status_code** (String)
+- **url** (String)
+
+
+<a id="nestedblock--connection_pooling"></a>
+### Nested Schema for `connection_pooling`
+
+Optional:
+
+- **enable_connection_pooling** (String)
+- **keepalive_timeout** (String)
+
+
+<a id="nestedblock--in_band_health_checks"></a>
+### Nested Schema for `in_band_health_checks`
+
+Optional:
+
+- **max_http_errors** (String)
+- **max_other_failure** (String)
+- **max_refused** (String)
+- **max_timeout_failure** (String)
+
+
+<a id="nestedblock--load_balancing"></a>
+### Nested Schema for `load_balancing`
+
+Optional:
+
+- **backup_server** (String)
+- **weight** (String)
+
+
+<a id="nestedblock--out_of_band_health_checks"></a>
+### Nested Schema for `out_of_band_health_checks`
+
+Optional:
+
+- **enable_oob_health_checks** (String)
+- **interval** (String)
+
+
+<a id="nestedblock--ssl_policy"></a>
+### Nested Schema for `ssl_policy`
+
+Optional:
+
+- **client_certificate** (String)
+- **enable_https** (String)
+- **enable_sni** (String)
+- **enable_ssl_3** (String)
+- **enable_ssl_compatibility_mode** (String)
+- **enable_tls_1** (String)
+- **enable_tls_1_1** (String)
+- **enable_tls_1_2** (String)
+- **enable_tls_1_3** (String)
+- **validate_certificate** (String)
+
+
+<a id="nestedblock--redirect"></a>
+### Nested Schema for `redirect`
 
 

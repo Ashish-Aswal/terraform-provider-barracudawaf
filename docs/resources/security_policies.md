@@ -22,6 +22,135 @@ description: |-
 ### Optional
 
 - **based_on** (String)
+- **client_profile** (Block List) (see [below for nested schema](#nestedblock--client_profile))
+- **cloaking** (Block List) (see [below for nested schema](#nestedblock--cloaking))
+- **cookie_security** (Block List) (see [below for nested schema](#nestedblock--cookie_security))
 - **id** (String) The ID of this resource.
+- **parameter_protection** (Block List) (see [below for nested schema](#nestedblock--parameter_protection))
+- **request_limits** (Block List) (see [below for nested schema](#nestedblock--request_limits))
+- **tarpit_profile** (Block List) (see [below for nested schema](#nestedblock--tarpit_profile))
+- **url_normalization** (Block List) (see [below for nested schema](#nestedblock--url_normalization))
+- **url_protection** (Block List) (see [below for nested schema](#nestedblock--url_protection))
+
+<a id="nestedblock--client_profile"></a>
+### Nested Schema for `client_profile`
+
+Optional:
+
+- **client_profile** (String)
+- **exception_client_fingerprints** (String)
+- **high_risk_score** (String)
+- **medium_risk_score** (String)
+
+
+<a id="nestedblock--cloaking"></a>
+### Nested Schema for `cloaking`
+
+Required:
+
+- **headers_to_filter** (String)
+
+Optional:
+
+- **filter_response_header** (String)
+- **return_codes_to_exempt** (String)
+- **suppress_return_code** (String)
+
+
+<a id="nestedblock--cookie_security"></a>
+### Nested Schema for `cookie_security`
+
+Optional:
+
+- **allow_unrecognized_cookies** (String)
+- **cookie_max_age** (String)
+- **cookie_replay_protection_type** (String)
+- **cookies_exempted** (String)
+- **custom_headers** (String)
+- **days_allowed** (String)
+- **http_only** (String)
+- **secure_cookie** (String)
+- **tamper_proof_mode** (String)
+
+
+<a id="nestedblock--parameter_protection"></a>
+### Nested Schema for `parameter_protection`
+
+Optional:
+
+- **allowed_file_upload_type** (String)
+- **base64_decode_parameter_value** (String)
+- **blocked_attack_types** (String)
+- **custom_blocked_attack_types** (String)
+- **denied_metacharacters** (String)
+- **enable** (String)
+- **exception_patterns** (String)
+- **file_upload_extensions** (String)
+- **file_upload_mime_types** (String)
+- **ignore_parameters** (String)
+- **maximum_instances** (String)
+- **maximum_parameter_value_length** (String)
+- **maximum_upload_file_size** (String)
+- **validate_parameter_name** (String)
+
+
+<a id="nestedblock--request_limits"></a>
+### Nested Schema for `request_limits`
+
+Optional:
+
+- **enable** (String)
+- **max_cookie_name_length** (String)
+- **max_cookie_value_length** (String)
+- **max_header_name_length** (String)
+- **max_header_value_length** (String)
+- **max_number_of_cookies** (String)
+- **max_number_of_headers** (String)
+- **max_query_length** (String)
+- **max_request_length** (String)
+- **max_request_line_length** (String)
+- **max_url_length** (String)
+
+
+<a id="nestedblock--tarpit_profile"></a>
+### Nested Schema for `tarpit_profile`
+
+Optional:
+
+- **backlog_requests_limit** (String)
+- **tarpit_inactivity_timeout** (String)
+
+
+<a id="nestedblock--url_normalization"></a>
+### Nested Schema for `url_normalization`
+
+Optional:
+
+- **apply_double_decoding** (String)
+- **default_charset** (String)
+- **detect_response_charset** (String)
+- **normalize_special_chars** (String)
+- **parameter_separators** (String)
+
+
+<a id="nestedblock--url_protection"></a>
+### Nested Schema for `url_protection`
+
+Required:
+
+- **allowed_methods** (String)
+
+Optional:
+
+- **allowed_content_types** (String)
+- **blocked_attack_types** (String)
+- **csrf_prevention** (String)
+- **custom_blocked_attack_types** (String)
+- **enable** (String)
+- **exception_patterns** (String)
+- **max_content_length** (String)
+- **max_parameters** (String)
+- **maximum_parameter_name_length** (String)
+- **maximum_upload_files** (String)
 
 

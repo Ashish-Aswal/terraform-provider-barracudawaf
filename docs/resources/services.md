@@ -6,7 +6,7 @@ description: |-
   
 ---
 
-#  Resource `barracudawaf_services`
+# barracudawaf_services (Resource)
 
 
 
@@ -42,22 +42,443 @@ resource "barracudawaf_services" "DemoService1" {
 
 ### Optional
 
+- **adaptive_profiling** (Block List) (see [below for nested schema](#nestedblock--adaptive_profiling))
 - **address_version** (String)
+- **advanced_client_analysis** (Block List) (see [below for nested schema](#nestedblock--advanced_client_analysis))
+- **advanced_configuration** (Block List) (see [below for nested schema](#nestedblock--advanced_configuration))
 - **app_id** (String)
+- **authentication** (Block List) (see [below for nested schema](#nestedblock--authentication))
+- **basic_security** (Block List) (see [below for nested schema](#nestedblock--basic_security))
+- **caching** (Block List) (see [below for nested schema](#nestedblock--caching))
+- **captcha_settings** (Block List) (see [below for nested schema](#nestedblock--captcha_settings))
+- **clickjacking** (Block List) (see [below for nested schema](#nestedblock--clickjacking))
 - **cloud_ip_select** (String)
+- **comment_spam** (Block List) (see [below for nested schema](#nestedblock--comment_spam))
 - **comments** (String)
+- **compression** (Block List) (see [below for nested schema](#nestedblock--compression))
 - **dps_enabled** (String)
 - **enable_access_logs** (String)
+- **exception_profiling** (Block List) (see [below for nested schema](#nestedblock--exception_profiling))
+- **form_spam** (Block List) (see [below for nested schema](#nestedblock--form_spam))
+- **ftp_security** (Block List) (see [below for nested schema](#nestedblock--ftp_security))
 - **group** (String)
 - **id** (String) The ID of this resource.
+- **instant_ssl** (Block List) (see [below for nested schema](#nestedblock--instant_ssl))
 - **ip_address** (String)
+- **ip_reputation** (Block List) (see [below for nested schema](#nestedblock--ip_reputation))
 - **linked_service_name** (String)
+- **load_balancing** (Block List) (see [below for nested schema](#nestedblock--load_balancing))
 - **mask** (String)
 - **port** (String)
+- **referer_spam** (Block List) (see [below for nested schema](#nestedblock--referer_spam))
+- **sensitive_parameter_names** (Block List) (see [below for nested schema](#nestedblock--sensitive_parameter_names))
 - **service_id** (String)
 - **session_timeout** (String)
+- **session_tracking** (Block List) (see [below for nested schema](#nestedblock--session_tracking))
+- **slow_client_attack** (Block List) (see [below for nested schema](#nestedblock--slow_client_attack))
+- **ssl_client_authentication** (Block List) (see [below for nested schema](#nestedblock--ssl_client_authentication))
+- **ssl_ocsp** (Block List) (see [below for nested schema](#nestedblock--ssl_ocsp))
+- **ssl_security** (Block List) (see [below for nested schema](#nestedblock--ssl_security))
 - **status** (String)
 - **type** (String)
+- **url_encryption** (Block List) (see [below for nested schema](#nestedblock--url_encryption))
 - **vsite** (String)
+- **waas_account** (Block List) (see [below for nested schema](#nestedblock--waas_account))
+- **website_profile** (Block List) (see [below for nested schema](#nestedblock--website_profile))
+
+<a id="nestedblock--adaptive_profiling"></a>
+### Nested Schema for `adaptive_profiling`
+
+Optional:
+
+- **content_types** (String)
+- **ignore_parameters** (String)
+- **navigation_parameters** (String)
+- **request_learning** (String)
+- **response_learning** (String)
+- **status** (String)
+- **trusted_host_group** (String)
+
+
+<a id="nestedblock--advanced_client_analysis"></a>
+### Nested Schema for `advanced_client_analysis`
+
+Optional:
+
+- **advanced_analysis** (String)
+- **exclude_url_patterns** (String)
+
+
+<a id="nestedblock--advanced_configuration"></a>
+### Nested Schema for `advanced_configuration`
+
+Optional:
+
+- **accept_list** (String)
+- **accept_list_status** (String)
+- **ddos_exception_list** (String)
+- **enable_fingerprint** (String)
+- **enable_http2** (String)
+- **enable_proxy_protocol** (String)
+- **enable_vdi** (String)
+- **enable_web_application_firewall** (String)
+- **enable_websocket** (String)
+- **keepalive_requests** (String)
+- **ntlm_ignore_extra_data** (String)
+- **proxy_list** (String)
+- **proxy_list_status** (String)
+
+
+<a id="nestedblock--authentication"></a>
+### Nested Schema for `authentication`
+
+Optional:
+
+- **access_denied_page** (String)
+- **action** (String)
+- **attribute_format** (String)
+- **attribute_id** (String)
+- **attribute_name** (String)
+- **attribute_type** (String)
+- **authentication_service** (String)
+- **challenge_prompt_field** (String)
+- **challenge_user_field** (String)
+- **cookie_domain** (String)
+- **cookie_path** (String)
+- **count_window** (String)
+- **creation_timeout** (String)
+- **dual_authentication** (String)
+- **dual_login_page** (String)
+- **enable_bruteforce_prevention** (String)
+- **encryption_certificate** (String)
+- **groups** (String)
+- **idle_timeout** (String)
+- **kerberos_debug_status** (String)
+- **kerberos_enable_delegation** (String)
+- **kerberos_ldap_authorization** (String)
+- **krb_authorization_policy** (String)
+- **login_challenge_page** (String)
+- **login_failed_page** (String)
+- **login_failure_url** (String)
+- **login_page** (String)
+- **login_processor_path** (String)
+- **login_success_url** (String)
+- **login_successful_page** (String)
+- **logout_page** (String)
+- **logout_processor_path** (String)
+- **logout_success_url** (String)
+- **logout_successful_page** (String)
+- **master_service** (String)
+- **master_service_url** (String)
+- **max_failed_attempts** (String)
+- **openidc_attribute_name** (String)
+- **openidc_local_id** (String)
+- **openidc_redirect_url** (String)
+- **password_expired_url** (String)
+- **post_processor_path** (String)
+- **saml_logout_url** (String)
+- **secondary_authentication_service** (String)
+- **send_domain_name** (String)
+- **service_provider_display_name** (String)
+- **service_provider_entity_id** (String)
+- **service_provider_org_name** (String)
+- **service_provider_org_url** (String)
+- **session_replay_protection_status** (String)
+- **session_timeout_for_activesync** (String)
+- **signing_certificate** (String)
+- **sso_cookie_update_interval** (String)
+- **status** (String)
+
+
+<a id="nestedblock--basic_security"></a>
+### Nested Schema for `basic_security`
+
+Optional:
+
+- **client_ip_addr_header** (String)
+- **ignore_case** (String)
+- **mode** (String)
+- **rate_control_pool** (String)
+- **rate_control_status** (String)
+- **trusted_hosts_action** (String)
+- **trusted_hosts_group** (String)
+- **web_firewall_log_level** (String)
+- **web_firewall_policy** (String)
+
+
+<a id="nestedblock--caching"></a>
+### Nested Schema for `caching`
+
+Optional:
+
+- **cache_negative_response** (String)
+- **expiry_age** (String)
+- **file_extensions** (String)
+- **ignore_request_headers** (String)
+- **ignore_response_headers** (String)
+- **max_size** (String)
+- **min_size** (String)
+- **status** (String)
+
+
+<a id="nestedblock--captcha_settings"></a>
+### Nested Schema for `captcha_settings`
+
+Optional:
+
+- **recaptcha_domain** (String)
+- **recaptcha_site_key** (String)
+- **recaptcha_site_secret** (String)
+- **recaptcha_type** (String)
+
+
+<a id="nestedblock--clickjacking"></a>
+### Nested Schema for `clickjacking`
+
+Optional:
+
+- **allowed_origin** (String)
+- **options** (String)
+- **status** (String)
+
+
+<a id="nestedblock--comment_spam"></a>
+### Nested Schema for `comment_spam`
+
+Optional:
+
+- **exception_patterns** (String)
+- **parameter** (String)
+
+
+<a id="nestedblock--compression"></a>
+### Nested Schema for `compression`
+
+Optional:
+
+- **content_types** (String)
+- **min_size** (String)
+- **status** (String)
+- **unknown_content_types** (String)
+
+
+<a id="nestedblock--exception_profiling"></a>
+### Nested Schema for `exception_profiling`
+
+Optional:
+
+- **exception_profiling_learn_from_trusted_host** (String)
+- **exception_profiling_level** (String)
+- **exception_profiling_trusted_host_group** (String)
+
+
+<a id="nestedblock--form_spam"></a>
+### Nested Schema for `form_spam`
+
+Optional:
+
+- **autoconfigure_status** (String)
+- **honeypot_status** (String)
+- **status** (String)
+
+
+<a id="nestedblock--ftp_security"></a>
+### Nested Schema for `ftp_security`
+
+Optional:
+
+- **allowed_verb_status** (String)
+- **allowed_verbs** (String)
+- **attack_prevention_status** (String)
+- **pasv_ip_address** (String)
+- **pasv_ports** (String)
+
+
+<a id="nestedblock--instant_ssl"></a>
+### Nested Schema for `instant_ssl`
+
+Optional:
+
+- **secure_site_domain** (String)
+- **sharepoint_rewrite_support** (String)
+- **status** (String)
+
+
+<a id="nestedblock--ip_reputation"></a>
+### Nested Schema for `ip_reputation`
+
+Optional:
+
+- **anonymous_proxy** (String)
+- **apply_policy_at** (String)
+- **barracuda_reputation_blocklist** (String)
+- **block_unclassified_ips** (String)
+- **check_registered_country** (String)
+- **custom_blacklisted_ip_status** (String)
+- **datacenter_ip** (String)
+- **enable_ip_reputation_filter** (String)
+- **fake_crawler** (String)
+- **geo_pool** (String)
+- **geoip_action** (String)
+- **geoip_enable_logging** (String)
+- **known_http_attack_sources** (String)
+- **known_ssh_attack_sources** (String)
+- **public_proxy** (String)
+- **satellite_provider** (String)
+- **tor_nodes** (String)
+
+
+<a id="nestedblock--load_balancing"></a>
+### Nested Schema for `load_balancing`
+
+Optional:
+
+- **algorithm** (String)
+- **cookie_age** (String)
+- **failover_method** (String)
+- **header_name** (String)
+- **parameter_name** (String)
+- **persistence_cookie_domain** (String)
+- **persistence_cookie_name** (String)
+- **persistence_cookie_path** (String)
+- **persistence_idle_timeout** (String)
+- **persistence_method** (String)
+- **source_ip_netmask** (String)
+
+
+<a id="nestedblock--referer_spam"></a>
+### Nested Schema for `referer_spam`
+
+Optional:
+
+- **custom_blocked_patterns** (String)
+- **exception_patterns** (String)
+- **status** (String)
+
+
+<a id="nestedblock--sensitive_parameter_names"></a>
+### Nested Schema for `sensitive_parameter_names`
+
+Optional:
+
+- **sensitive_parameter_names** (String)
+
+
+<a id="nestedblock--session_tracking"></a>
+### Nested Schema for `session_tracking`
+
+Optional:
+
+- **exception_clients** (String)
+- **identifiers** (String)
+- **max_interval** (String)
+- **max_sessions_per_ip** (String)
+- **status** (String)
+
+
+<a id="nestedblock--slow_client_attack"></a>
+### Nested Schema for `slow_client_attack`
+
+Optional:
+
+- **data_transfer_rate** (String)
+- **exception_clients** (String)
+- **incremental_request_timeout** (String)
+- **incremental_response_timeout** (String)
+- **max_request_timeout** (String)
+- **max_response_timeout** (String)
+- **status** (String)
+
+
+<a id="nestedblock--ssl_client_authentication"></a>
+### Nested Schema for `ssl_client_authentication`
+
+Required:
+
+- **client_authentication_rule_count** (String)
+
+Optional:
+
+- **client_authentication** (String)
+- **client_certificate_for_rule** (String)
+- **enforce_client_certificate** (String)
+- **trusted_certificates** (String)
+
+
+<a id="nestedblock--ssl_ocsp"></a>
+### Nested Schema for `ssl_ocsp`
+
+Optional:
+
+- **certificate** (String)
+- **enable** (String)
+- **responder_url** (String)
+
+
+<a id="nestedblock--ssl_security"></a>
+### Nested Schema for `ssl_security`
+
+Optional:
+
+- **certificate** (String)
+- **ciphers** (String)
+- **create_hsts_redirect_service** (String)
+- **domain** (String)
+- **ecdsa_certificate** (String)
+- **enable_hsts** (String)
+- **enable_ocsp_stapling** (String)
+- **enable_pfs** (String)
+- **enable_sni** (String)
+- **enable_ssl_3** (String)
+- **enable_strict_sni_check** (String)
+- **enable_tls_1** (String)
+- **enable_tls_1_1** (String)
+- **enable_tls_1_2** (String)
+- **enable_tls_1_3** (String)
+- **hsts_max_age** (String)
+- **include_hsts_sub_domains** (String)
+- **override_ciphers_ssl3** (String)
+- **override_ciphers_tls_1** (String)
+- **override_ciphers_tls_1_1** (String)
+- **override_ciphers_tls_1_2** (String)
+- **override_ciphers_tls_1_3** (String)
+- **selected_ciphers** (String)
+- **sni_certificate** (String)
+- **sni_ecdsa_certificate** (String)
+- **ssl_tls_presets** (String)
+- **status** (String)
+
+
+<a id="nestedblock--url_encryption"></a>
+### Nested Schema for `url_encryption`
+
+Optional:
+
+- **status** (String)
+
+
+<a id="nestedblock--waas_account"></a>
+### Nested Schema for `waas_account`
+
+Required:
+
+- **waas_account_id** (String)
+
+Optional:
+
+- **waas_account_serial** (String)
+
+
+<a id="nestedblock--website_profile"></a>
+### Nested Schema for `website_profile`
+
+Optional:
+
+- **allowed_domains** (String)
+- **exclude_url_patterns** (String)
+- **include_url_patterns** (String)
+- **mode** (String)
+- **strict_profile_check** (String)
+- **use_profile** (String)
 
 

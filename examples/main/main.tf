@@ -135,6 +135,12 @@ resource "barracudawaf_content_rule_servers" "DemoRgServer1" {
     hostname = "imdb.com"
     parent = [ "DemoService2", "DemoRuleGroup1" ]
     depends_on = [barracudawaf_content_rules.DemoRuleGroup1]
+
+    application_layer_health_checks {
+        method = "POST"
+        match_content_string = "index"
+        domain = "site1.com"
+    }
 }
 
 resource "barracudawaf_url_acls" "ACL_1" {
