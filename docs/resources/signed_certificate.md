@@ -31,8 +31,25 @@ description: |-
 - **intermediary_certificates** (String)
 - **key_type** (String)
 - **name** (String)
+- **ocsp_stapling** (Block List) (see [below for nested schema](#nestedblock--ocsp_stapling))
 - **schedule_renewal_day** (String)
 - **serial** (String)
 - **signed_certificate** (String)
+
+<a id="nestedblock--ocsp_stapling"></a>
+### Nested Schema for `ocsp_stapling`
+
+Required:
+
+- **cache_timeout** (String)
+
+Optional:
+
+- **clock_skew** (String)
+- **error_timeout** (String)
+- **issuer_certificate** (String)
+- **ocsp_issuer_certificate** (String)
+- **ocsp_stapling** (String)
+- **override_ocsp_responder** (String)
 
 

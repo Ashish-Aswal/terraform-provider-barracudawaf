@@ -25,13 +25,80 @@ description: |-
 ### Optional
 
 - **access_log** (String)
+- **advanced_client_analysis** (Block List) (see [below for nested schema](#nestedblock--advanced_client_analysis))
 - **app_id** (String)
+- **caching** (Block List) (see [below for nested schema](#nestedblock--caching))
+- **captcha_settings** (Block List) (see [below for nested schema](#nestedblock--captcha_settings))
 - **comments** (String)
+- **compression** (Block List) (see [below for nested schema](#nestedblock--compression))
 - **extended_match** (String)
 - **extended_match_sequence** (String)
 - **id** (String) The ID of this resource.
+- **load_balancing** (Block List) (see [below for nested schema](#nestedblock--load_balancing))
 - **mode** (String)
 - **status** (String)
 - **web_firewall_policy** (String)
+
+<a id="nestedblock--advanced_client_analysis"></a>
+### Nested Schema for `advanced_client_analysis`
+
+Optional:
+
+- **advanced_analysis** (String)
+
+
+<a id="nestedblock--caching"></a>
+### Nested Schema for `caching`
+
+Optional:
+
+- **cache_negative_responses** (String)
+- **expiry_age** (String)
+- **file_extensions** (String)
+- **ignore_request_headers** (String)
+- **ignore_response_headers** (String)
+- **max_size** (String)
+- **min_size** (String)
+- **status** (String)
+
+
+<a id="nestedblock--captcha_settings"></a>
+### Nested Schema for `captcha_settings`
+
+Optional:
+
+- **recaptcha_type** (String)
+- **rg_recaptcha_domain** (String)
+- **rg_recaptcha_site_key** (String)
+- **rg_recaptcha_site_secret** (String)
+
+
+<a id="nestedblock--compression"></a>
+### Nested Schema for `compression`
+
+Optional:
+
+- **compress_unknown_content_types** (String)
+- **content_types** (String)
+- **min_size** (String)
+- **status** (String)
+
+
+<a id="nestedblock--load_balancing"></a>
+### Nested Schema for `load_balancing`
+
+Optional:
+
+- **cookie_age** (String)
+- **failover_method** (String)
+- **header_name** (String)
+- **lb_algorithm** (String)
+- **parameter_name** (String)
+- **persistence_cookie_domain** (String)
+- **persistence_cookie_name** (String)
+- **persistence_cookie_path** (String)
+- **persistence_idle_timeout** (String)
+- **persistence_method** (String)
+- **source_ip_netmask** (String)
 
 
