@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceResponseBodyRewriteRulesParams = map[string][]string{}
+)
+
 func resourceCudaWAFResponseBodyRewriteRules() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFResponseBodyRewriteRulesCreate,
@@ -23,11 +27,7 @@ func resourceCudaWAFResponseBodyRewriteRules() *schema.Resource {
 			"search_string":   {Type: schema.TypeString, Required: true},
 			"sequence_number": {Type: schema.TypeString, Required: true},
 			"url":             {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":          {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -40,10 +40,7 @@ func resourceCudaWAFResponseBodyRewriteRulesCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/response-body-rewrite-rules"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFResponseBodyRewriteRulesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFResponseBodyRewriteRulesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFResponseBodyRewriteRulesSubResource(d, name, resourceEndpoint)
 
@@ -184,9 +181,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFResponseBodyRewriteRulesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceResponseBodyRewriteRulesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

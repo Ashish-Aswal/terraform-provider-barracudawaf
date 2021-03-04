@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceInputTypesParams = map[string][]string{}
+)
+
 func resourceCudaWAFInputTypes() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFInputTypesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFInputTypesCreate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/input-types"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFInputTypesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFInputTypesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFInputTypesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFInputTypesUpdate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/input-types"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFInputTypesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFInputTypesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFInputTypesDelete(d *schema.ResourceData, m interface{}) erro
 	return nil
 }
 
-func hydrateBarracudaWAFInputTypesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFInputTypesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -158,14 +152,9 @@ func hydrateBarracudaWAFInputTypesResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFInputTypesSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFInputTypesSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceInputTypesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

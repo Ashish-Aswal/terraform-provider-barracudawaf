@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceNetworkAclsParams = map[string][]string{}
+)
+
 func resourceCudaWAFNetworkAcls() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFNetworkAclsCreate,
@@ -51,10 +55,7 @@ func resourceCudaWAFNetworkAclsCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/network-acls"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFNetworkAclsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFNetworkAclsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFNetworkAclsSubResource(d, name, resourceEndpoint)
 
@@ -110,10 +111,7 @@ func resourceCudaWAFNetworkAclsUpdate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/network-acls"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFNetworkAclsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFNetworkAclsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -152,11 +150,7 @@ func resourceCudaWAFNetworkAclsDelete(d *schema.ResourceData, m interface{}) err
 	return nil
 }
 
-func hydrateBarracudaWAFNetworkAclsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFNetworkAclsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -211,9 +205,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFNetworkAclsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceNetworkAclsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceNetworkInterfacesParams = map[string][]string{}
+)
+
 func resourceCudaWAFNetworkInterfaces() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFNetworkInterfacesCreate,
@@ -32,10 +36,7 @@ func resourceCudaWAFNetworkInterfacesCreate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/network-interfaces"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFNetworkInterfacesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFNetworkInterfacesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFNetworkInterfacesSubResource(d, name, resourceEndpoint)
 
@@ -91,10 +92,7 @@ func resourceCudaWAFNetworkInterfacesUpdate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/network-interfaces"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFNetworkInterfacesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFNetworkInterfacesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -133,11 +131,7 @@ func resourceCudaWAFNetworkInterfacesDelete(d *schema.ResourceData, m interface{
 	return nil
 }
 
-func hydrateBarracudaWAFNetworkInterfacesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFNetworkInterfacesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -173,9 +167,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFNetworkInterfacesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceNetworkInterfacesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

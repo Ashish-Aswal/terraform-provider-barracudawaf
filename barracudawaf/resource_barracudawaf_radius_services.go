@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceRadiusServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFRadiusServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFRadiusServicesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFRadiusServicesCreate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/radius-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFRadiusServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFRadiusServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFRadiusServicesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFRadiusServicesUpdate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/radius-services"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFRadiusServicesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFRadiusServicesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFRadiusServicesDelete(d *schema.ResourceData, m interface{}) 
 	return nil
 }
 
-func hydrateBarracudaWAFRadiusServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFRadiusServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFRadiusServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceRadiusServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

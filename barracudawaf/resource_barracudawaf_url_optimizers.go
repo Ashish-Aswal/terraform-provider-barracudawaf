@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceUrlOptimizersParams = map[string][]string{}
+)
+
 func resourceCudaWAFUrlOptimizers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFUrlOptimizersCreate,
@@ -19,11 +23,7 @@ func resourceCudaWAFUrlOptimizers() *schema.Resource {
 			"end_delimiter": {Type: schema.TypeString, Optional: true},
 			"name":          {Type: schema.TypeString, Required: true},
 			"start_token":   {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":        {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -36,10 +36,7 @@ func resourceCudaWAFUrlOptimizersCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-optimizers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlOptimizersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlOptimizersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFUrlOptimizersSubResource(d, name, resourceEndpoint)
 
@@ -95,10 +92,7 @@ func resourceCudaWAFUrlOptimizersUpdate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-optimizers"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlOptimizersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFUrlOptimizersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -137,11 +131,7 @@ func resourceCudaWAFUrlOptimizersDelete(d *schema.ResourceData, m interface{}) e
 	return nil
 }
 
-func hydrateBarracudaWAFUrlOptimizersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFUrlOptimizersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -176,9 +166,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFUrlOptimizersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceUrlOptimizersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

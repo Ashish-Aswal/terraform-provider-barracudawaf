@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceTrustedCaCertificateParams = map[string][]string{}
+)
+
 func resourceCudaWAFTrustedCaCertificate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFTrustedCaCertificateCreate,
@@ -34,10 +38,7 @@ func resourceCudaWAFTrustedCaCertificateCreate(d *schema.ResourceData, m interfa
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-ca-certificate"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFTrustedCaCertificateResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedCaCertificateResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFTrustedCaCertificateSubResource(d, name, resourceEndpoint)
 
@@ -135,11 +136,7 @@ func resourceCudaWAFTrustedCaCertificateDelete(d *schema.ResourceData, m interfa
 	return nil
 }
 
-func hydrateBarracudaWAFTrustedCaCertificateResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFTrustedCaCertificateResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -153,13 +150,7 @@ func hydrateBarracudaWAFTrustedCaCertificateResource(
 
 	// parameters not supported for updates
 	if method == "put" {
-		updatePayloadExceptions := [...]string{
-			"common-name",
-			"expiry",
-			"name",
-			"serial",
-			"certificate",
-		}
+		updatePayloadExceptions := [...]string{"common-name", "expiry", "name", "serial", "certificate"}
 		for _, param := range updatePayloadExceptions {
 			delete(resourcePayload, param)
 		}
@@ -183,9 +174,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFTrustedCaCertificateSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceTrustedCaCertificateParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

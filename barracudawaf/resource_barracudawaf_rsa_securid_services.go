@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceRsaSecuridServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFRsaSecuridServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFRsaSecuridServicesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFRsaSecuridServicesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rsa-securid-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFRsaSecuridServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFRsaSecuridServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFRsaSecuridServicesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFRsaSecuridServicesUpdate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rsa-securid-services"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFRsaSecuridServicesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFRsaSecuridServicesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFRsaSecuridServicesDelete(d *schema.ResourceData, m interface
 	return nil
 }
 
-func hydrateBarracudaWAFRsaSecuridServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFRsaSecuridServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFRsaSecuridServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceRsaSecuridServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

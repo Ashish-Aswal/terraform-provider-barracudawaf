@@ -8,6 +8,42 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceContentRulesParams = map[string][]string{
+		"caching": {
+			"expiry_age",
+			"file_extensions",
+			"max_size",
+			"min_size",
+			"cache_negative_responses",
+			"ignore_request_headers",
+			"ignore_response_headers",
+			"status",
+		},
+		"compression": {"content_types", "min_size", "status", "compress_unknown_content_types"},
+		"load_balancing": {
+			"lb_algorithm",
+			"persistence_cookie_domain",
+			"cookie_age",
+			"persistence_cookie_name",
+			"persistence_cookie_path",
+			"failover_method",
+			"header_name",
+			"persistence_idle_timeout",
+			"persistence_method",
+			"source_ip_netmask",
+			"parameter_name",
+		},
+		"captcha_settings": {
+			"recaptcha_type",
+			"rg_recaptcha_domain",
+			"rg_recaptcha_site_key",
+			"rg_recaptcha_site_secret",
+		},
+		"advanced_client_analysis": {"advanced_analysis"},
+	}
+)
+
 func resourceCudaWAFContentRules() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFContentRulesCreate,
@@ -90,9 +126,7 @@ func resourceCudaWAFContentRules() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"advanced_analysis": {Type: schema.TypeString, Optional: true},
-					},
+					Schema: map[string]*schema.Schema{"advanced_analysis": {Type: schema.TypeString, Optional: true}},
 				},
 			},
 			"parent": {
@@ -112,10 +146,7 @@ func resourceCudaWAFContentRulesCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFContentRulesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFContentRulesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFContentRulesSubResource(d, name, resourceEndpoint)
 
@@ -171,10 +202,7 @@ func resourceCudaWAFContentRulesUpdate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFContentRulesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFContentRulesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -213,11 +241,7 @@ func resourceCudaWAFContentRulesDelete(d *schema.ResourceData, m interface{}) er
 	return nil
 }
 
-func hydrateBarracudaWAFContentRulesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFContentRulesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -260,46 +284,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFContentRulesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{
-		"caching": {
-			"expiry_age",
-			"file_extensions",
-			"max_size",
-			"min_size",
-			"cache_negative_responses",
-			"ignore_request_headers",
-			"ignore_response_headers",
-			"status",
-		},
-		"compression": {
-			"content_types",
-			"min_size",
-			"status",
-			"compress_unknown_content_types",
-		},
-		"load_balancing": {
-			"lb_algorithm",
-			"persistence_cookie_domain",
-			"cookie_age",
-			"persistence_cookie_name",
-			"persistence_cookie_path",
-			"failover_method",
-			"header_name",
-			"persistence_idle_timeout",
-			"persistence_method",
-			"source_ip_netmask",
-			"parameter_name",
-		},
-		"captcha_settings": {
-			"recaptcha_type",
-			"rg_recaptcha_domain",
-			"rg_recaptcha_site_key",
-			"rg_recaptcha_site_secret",
-		},
-		"advanced_client_analysis": {"advanced_analysis"},
-	}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceContentRulesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

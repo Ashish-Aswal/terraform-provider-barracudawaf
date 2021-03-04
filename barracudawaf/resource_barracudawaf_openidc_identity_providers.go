@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceOpenidcIdentityProvidersParams = map[string][]string{}
+)
+
 func resourceCudaWAFOpenidcIdentityProviders() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFOpenidcIdentityProvidersCreate,
@@ -28,11 +32,7 @@ func resourceCudaWAFOpenidcIdentityProviders() *schema.Resource {
 			"token_endpoint":         {Type: schema.TypeString, Required: true},
 			"userinfo_endpoint":      {Type: schema.TypeString, Optional: true},
 			"type_openidc":           {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":                 {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -45,10 +45,7 @@ func resourceCudaWAFOpenidcIdentityProvidersCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/openidc-services/" + d.Get("parent.0").(string) + "/openidc-identity-providers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFOpenidcIdentityProvidersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFOpenidcIdentityProvidersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFOpenidcIdentityProvidersSubResource(d, name, resourceEndpoint)
 
@@ -194,9 +191,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFOpenidcIdentityProvidersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceOpenidcIdentityProvidersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

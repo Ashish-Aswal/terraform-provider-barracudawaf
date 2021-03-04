@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceCustomParameterClassesParams = map[string][]string{}
+)
+
 func resourceCudaWAFCustomParameterClasses() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFCustomParameterClassesCreate,
@@ -34,10 +38,7 @@ func resourceCudaWAFCustomParameterClassesCreate(d *schema.ResourceData, m inter
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/custom-parameter-classes"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFCustomParameterClassesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFCustomParameterClassesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFCustomParameterClassesSubResource(d, name, resourceEndpoint)
 
@@ -135,11 +136,7 @@ func resourceCudaWAFCustomParameterClassesDelete(d *schema.ResourceData, m inter
 	return nil
 }
 
-func hydrateBarracudaWAFCustomParameterClassesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFCustomParameterClassesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -177,9 +174,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFCustomParameterClassesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceCustomParameterClassesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

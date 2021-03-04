@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceBondsParams = map[string][]string{}
+)
+
 func resourceCudaWAFBonds() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFBondsCreate,
@@ -35,10 +39,7 @@ func resourceCudaWAFBondsCreate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/bonds"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFBondsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFBondsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFBondsSubResource(d, name, resourceEndpoint)
 
@@ -94,10 +95,7 @@ func resourceCudaWAFBondsUpdate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/bonds"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFBondsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFBondsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -136,11 +134,7 @@ func resourceCudaWAFBondsDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func hydrateBarracudaWAFBondsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFBondsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -174,14 +168,9 @@ func hydrateBarracudaWAFBondsResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFBondsSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFBondsSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceBondsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

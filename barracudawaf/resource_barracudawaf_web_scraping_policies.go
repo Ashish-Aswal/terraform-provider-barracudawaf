@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceWebScrapingPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFWebScrapingPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFWebScrapingPoliciesCreate,
@@ -38,10 +42,7 @@ func resourceCudaWAFWebScrapingPoliciesCreate(d *schema.ResourceData, m interfac
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/web-scraping-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFWebScrapingPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFWebScrapingPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFWebScrapingPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -139,11 +140,7 @@ func resourceCudaWAFWebScrapingPoliciesDelete(d *schema.ResourceData, m interfac
 	return nil
 }
 
-func hydrateBarracudaWAFWebScrapingPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFWebScrapingPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -185,9 +182,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFWebScrapingPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceWebScrapingPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

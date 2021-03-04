@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceResponsePagesParams = map[string][]string{}
+)
+
 func resourceCudaWAFResponsePages() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFResponsePagesCreate,
@@ -33,10 +37,7 @@ func resourceCudaWAFResponsePagesCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/response-pages"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFResponsePagesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFResponsePagesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFResponsePagesSubResource(d, name, resourceEndpoint)
 
@@ -92,10 +93,7 @@ func resourceCudaWAFResponsePagesUpdate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/response-pages"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFResponsePagesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFResponsePagesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -134,11 +132,7 @@ func resourceCudaWAFResponsePagesDelete(d *schema.ResourceData, m interface{}) e
 	return nil
 }
 
-func hydrateBarracudaWAFResponsePagesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFResponsePagesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -175,9 +169,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFResponsePagesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceResponsePagesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

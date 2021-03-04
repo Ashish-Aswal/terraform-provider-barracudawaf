@@ -25,11 +25,6 @@ resource "barracudawaf_services" "DemoService1" {
       min_size = "6815744"
     }
 
-    exception_profiling {
-      exception_profiling_level                   = "High"
-      exception_profiling_learn_from_trusted_host = "Yes"
-    }
-
     adaptive_profiling {
       status = "On"
     }
@@ -40,7 +35,7 @@ resource "barracudawaf_servers" "TestServer1" {
     identifier      = "IP Address"
     address_version = "IPv4"
     status          = "In Service"
-    ip_address      = "107.191.119.130"
+    ip_address      = "104.43.130.86"
     port            = "80"
     comments        = "Creating the Demo Server"
     parent          = [ "DemoService1" ]
@@ -68,7 +63,7 @@ resource "barracudawaf_self_signed_certificate" "DemoSelfSignedCert1" {
 
 resource "barracudawaf_services" "DemoService2" {
     name            = "DemoService2"
-    ip_address      = "172.31.49.71"
+    ip_address      = "172.31.89.13"
     port            = "90"
     type            = "HTTP"
     vsite           = "default"
@@ -87,11 +82,6 @@ resource "barracudawaf_services" "DemoService2" {
       min_size = "6815744"
     }
 
-    exception_profiling {
-      exception_profiling_level                   = "Medium"
-      exception_profiling_learn_from_trusted_host = "Yes"
-    }
-
     adaptive_profiling {
       status = "On"
     }
@@ -102,7 +92,7 @@ resource "barracudawaf_servers" "TestServer2" {
     identifier      = "IP Address"
     address_version = "IPv4"
     status          = "In Service"
-    ip_address      = "107.191.119.130"
+    ip_address      = "104.43.130.86"
     port            = "80"
     comments        = "Creating the Demo Server"
     parent          = [ "DemoService2" ]

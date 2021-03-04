@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceAutoSystemAclsParams = map[string][]string{}
+)
+
 func resourceCudaWAFAutoSystemAcls() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFAutoSystemAclsCreate,
@@ -44,10 +48,7 @@ func resourceCudaWAFAutoSystemAclsCreate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/auto-system-acls"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAutoSystemAclsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAutoSystemAclsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFAutoSystemAclsSubResource(d, name, resourceEndpoint)
 
@@ -103,10 +104,7 @@ func resourceCudaWAFAutoSystemAclsUpdate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/auto-system-acls"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAutoSystemAclsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFAutoSystemAclsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -145,11 +143,7 @@ func resourceCudaWAFAutoSystemAclsDelete(d *schema.ResourceData, m interface{}) 
 	return nil
 }
 
-func hydrateBarracudaWAFAutoSystemAclsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFAutoSystemAclsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -207,9 +201,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFAutoSystemAclsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceAutoSystemAclsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

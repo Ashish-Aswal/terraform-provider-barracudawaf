@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceAuthorizationPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFAuthorizationPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFAuthorizationPoliciesCreate,
@@ -55,10 +59,7 @@ func resourceCudaWAFAuthorizationPoliciesCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/authorization-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAuthorizationPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAuthorizationPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFAuthorizationPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -156,11 +157,7 @@ func resourceCudaWAFAuthorizationPoliciesDelete(d *schema.ResourceData, m interf
 	return nil
 }
 
-func hydrateBarracudaWAFAuthorizationPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFAuthorizationPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -214,9 +211,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFAuthorizationPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceAuthorizationPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

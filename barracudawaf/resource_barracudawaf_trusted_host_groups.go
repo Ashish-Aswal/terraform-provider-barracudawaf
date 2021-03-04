@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceTrustedHostGroupsParams = map[string][]string{}
+)
+
 func resourceCudaWAFTrustedHostGroups() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFTrustedHostGroupsCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFTrustedHostGroupsCreate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-host-groups"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFTrustedHostGroupsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedHostGroupsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFTrustedHostGroupsSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFTrustedHostGroupsUpdate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-host-groups"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFTrustedHostGroupsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedHostGroupsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFTrustedHostGroupsDelete(d *schema.ResourceData, m interface{
 	return nil
 }
 
-func hydrateBarracudaWAFTrustedHostGroupsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFTrustedHostGroupsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFTrustedHostGroupsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceTrustedHostGroupsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

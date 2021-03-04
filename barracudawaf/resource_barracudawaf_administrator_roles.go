@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceAdministratorRolesParams = map[string][]string{}
+)
+
 func resourceCudaWAFAdministratorRoles() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFAdministratorRolesCreate,
@@ -38,10 +42,7 @@ func resourceCudaWAFAdministratorRolesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/administrator-roles"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAdministratorRolesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAdministratorRolesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFAdministratorRolesSubResource(d, name, resourceEndpoint)
 
@@ -97,10 +98,7 @@ func resourceCudaWAFAdministratorRolesUpdate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/administrator-roles"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAdministratorRolesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFAdministratorRolesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -139,11 +137,7 @@ func resourceCudaWAFAdministratorRolesDelete(d *schema.ResourceData, m interface
 	return nil
 }
 
-func hydrateBarracudaWAFAdministratorRolesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFAdministratorRolesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -185,9 +179,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFAdministratorRolesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceAdministratorRolesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

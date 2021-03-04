@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceExternalRadiusServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFExternalRadiusServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFExternalRadiusServicesCreate,
@@ -34,10 +38,7 @@ func resourceCudaWAFExternalRadiusServicesCreate(d *schema.ResourceData, m inter
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/external-radius-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFExternalRadiusServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFExternalRadiusServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFExternalRadiusServicesSubResource(d, name, resourceEndpoint)
 
@@ -135,11 +136,7 @@ func resourceCudaWAFExternalRadiusServicesDelete(d *schema.ResourceData, m inter
 	return nil
 }
 
-func hydrateBarracudaWAFExternalRadiusServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFExternalRadiusServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -177,9 +174,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFExternalRadiusServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceExternalRadiusServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

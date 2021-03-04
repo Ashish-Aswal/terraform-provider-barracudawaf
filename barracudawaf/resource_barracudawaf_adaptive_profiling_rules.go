@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceAdaptiveProfilingRulesParams = map[string][]string{}
+)
+
 func resourceCudaWAFAdaptiveProfilingRules() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFAdaptiveProfilingRulesCreate,
@@ -22,11 +26,7 @@ func resourceCudaWAFAdaptiveProfilingRules() *schema.Resource {
 			"name":                {Type: schema.TypeString, Required: true},
 			"status":              {Type: schema.TypeString, Optional: true},
 			"url":                 {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -39,10 +39,7 @@ func resourceCudaWAFAdaptiveProfilingRulesCreate(d *schema.ResourceData, m inter
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/adaptive-profiling-rules"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAdaptiveProfilingRulesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAdaptiveProfilingRulesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFAdaptiveProfilingRulesSubResource(d, name, resourceEndpoint)
 
@@ -140,11 +137,7 @@ func resourceCudaWAFAdaptiveProfilingRulesDelete(d *schema.ResourceData, m inter
 	return nil
 }
 
-func hydrateBarracudaWAFAdaptiveProfilingRulesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFAdaptiveProfilingRulesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +175,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFAdaptiveProfilingRulesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceAdaptiveProfilingRulesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

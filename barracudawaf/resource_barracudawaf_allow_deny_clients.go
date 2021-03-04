@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceAllowDenyClientsParams = map[string][]string{}
+)
+
 func resourceCudaWAFAllowDenyClients() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFAllowDenyClientsCreate,
@@ -27,11 +31,7 @@ func resourceCudaWAFAllowDenyClients() *schema.Resource {
 			"organizational_unit": {Type: schema.TypeString, Optional: true},
 			"state":               {Type: schema.TypeString, Optional: true},
 			"status":              {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -44,10 +44,7 @@ func resourceCudaWAFAllowDenyClientsCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/allow-deny-clients"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAllowDenyClientsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAllowDenyClientsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFAllowDenyClientsSubResource(d, name, resourceEndpoint)
 
@@ -103,10 +100,7 @@ func resourceCudaWAFAllowDenyClientsUpdate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/allow-deny-clients"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAllowDenyClientsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFAllowDenyClientsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -145,11 +139,7 @@ func resourceCudaWAFAllowDenyClientsDelete(d *schema.ResourceData, m interface{}
 	return nil
 }
 
-func hydrateBarracudaWAFAllowDenyClientsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFAllowDenyClientsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -192,9 +182,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFAllowDenyClientsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceAllowDenyClientsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceReportsParams = map[string][]string{}
+)
+
 func resourceCudaWAFReports() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFReportsCreate,
@@ -39,10 +43,7 @@ func resourceCudaWAFReportsCreate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/reports"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFReportsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFReportsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFReportsSubResource(d, name, resourceEndpoint)
 
@@ -98,10 +99,7 @@ func resourceCudaWAFReportsUpdate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/reports"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFReportsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFReportsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -140,11 +138,7 @@ func resourceCudaWAFReportsDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func hydrateBarracudaWAFReportsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFReportsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,14 +176,9 @@ func hydrateBarracudaWAFReportsResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFReportsSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFReportsSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceReportsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

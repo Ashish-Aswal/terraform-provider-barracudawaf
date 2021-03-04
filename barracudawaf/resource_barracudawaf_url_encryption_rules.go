@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceUrlEncryptionRulesParams = map[string][]string{}
+)
+
 func resourceCudaWAFUrlEncryptionRules() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFUrlEncryptionRulesCreate,
@@ -39,10 +43,7 @@ func resourceCudaWAFUrlEncryptionRulesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-encryption-rules"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlEncryptionRulesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlEncryptionRulesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFUrlEncryptionRulesSubResource(d, name, resourceEndpoint)
 
@@ -98,10 +99,7 @@ func resourceCudaWAFUrlEncryptionRulesUpdate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-encryption-rules"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlEncryptionRulesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFUrlEncryptionRulesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -140,11 +138,7 @@ func resourceCudaWAFUrlEncryptionRulesDelete(d *schema.ResourceData, m interface
 	return nil
 }
 
-func hydrateBarracudaWAFUrlEncryptionRulesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFUrlEncryptionRulesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +176,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFUrlEncryptionRulesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceUrlEncryptionRulesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

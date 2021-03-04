@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceKerberosServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFKerberosServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFKerberosServicesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFKerberosServicesCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/kerberos-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFKerberosServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFKerberosServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFKerberosServicesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFKerberosServicesUpdate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/kerberos-services"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFKerberosServicesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFKerberosServicesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFKerberosServicesDelete(d *schema.ResourceData, m interface{}
 	return nil
 }
 
-func hydrateBarracudaWAFKerberosServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFKerberosServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFKerberosServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceKerberosServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

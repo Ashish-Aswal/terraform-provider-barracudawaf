@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceActionPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFActionPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFActionPoliciesCreate,
@@ -25,11 +29,7 @@ func resourceCudaWAFActionPolicies() *schema.Resource {
 			"response_page":         {Type: schema.TypeString, Optional: true},
 			"risk_score":            {Type: schema.TypeString, Optional: true},
 			"numeric_id":            {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":                {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -42,10 +42,7 @@ func resourceCudaWAFActionPoliciesCreate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/action-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFActionPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFActionPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFActionPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -101,10 +98,7 @@ func resourceCudaWAFActionPoliciesUpdate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/action-policies"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFActionPoliciesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFActionPoliciesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -143,11 +137,7 @@ func resourceCudaWAFActionPoliciesDelete(d *schema.ResourceData, m interface{}) 
 	return nil
 }
 
-func hydrateBarracudaWAFActionPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFActionPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -188,9 +178,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFActionPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceActionPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

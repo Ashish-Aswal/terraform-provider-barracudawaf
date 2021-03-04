@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceDdosPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFDdosPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFDdosPoliciesCreate,
@@ -45,10 +49,7 @@ func resourceCudaWAFDdosPoliciesCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/ddos-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFDdosPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFDdosPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFDdosPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -104,10 +105,7 @@ func resourceCudaWAFDdosPoliciesUpdate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/ddos-policies"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFDdosPoliciesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFDdosPoliciesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -146,11 +144,7 @@ func resourceCudaWAFDdosPoliciesDelete(d *schema.ResourceData, m interface{}) er
 	return nil
 }
 
-func hydrateBarracudaWAFDdosPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFDdosPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -194,9 +188,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFDdosPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceDdosPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

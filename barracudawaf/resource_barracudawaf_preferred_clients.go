@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourcePreferredClientsParams = map[string][]string{}
+)
+
 func resourceCudaWAFPreferredClients() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFPreferredClientsCreate,
@@ -20,11 +24,7 @@ func resourceCudaWAFPreferredClients() *schema.Resource {
 			"ip_range": {Type: schema.TypeString, Required: true},
 			"status":   {Type: schema.TypeString, Optional: true},
 			"weight":   {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":   {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -37,10 +37,7 @@ func resourceCudaWAFPreferredClientsCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rate-control-pools/" + d.Get("parent.0").(string) + "/preferred-clients"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFPreferredClientsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFPreferredClientsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFPreferredClientsSubResource(d, name, resourceEndpoint)
 
@@ -96,10 +93,7 @@ func resourceCudaWAFPreferredClientsUpdate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rate-control-pools/" + d.Get("parent.0").(string) + "/preferred-clients"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFPreferredClientsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFPreferredClientsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -138,11 +132,7 @@ func resourceCudaWAFPreferredClientsDelete(d *schema.ResourceData, m interface{}
 	return nil
 }
 
-func hydrateBarracudaWAFPreferredClientsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFPreferredClientsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -178,9 +168,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFPreferredClientsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourcePreferredClientsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

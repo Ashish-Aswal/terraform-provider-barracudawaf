@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceParameterProfilesParams = map[string][]string{}
+)
+
 func resourceCudaWAFParameterProfiles() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFParameterProfilesCreate,
@@ -52,10 +56,7 @@ func resourceCudaWAFParameterProfilesCreate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("parent.1").(string) + "/parameter-profiles"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFParameterProfilesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFParameterProfilesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFParameterProfilesSubResource(d, name, resourceEndpoint)
 
@@ -111,10 +112,7 @@ func resourceCudaWAFParameterProfilesUpdate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles/" + d.Get("parent.1").(string) + "/parameter-profiles"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFParameterProfilesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFParameterProfilesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -153,11 +151,7 @@ func resourceCudaWAFParameterProfilesDelete(d *schema.ResourceData, m interface{
 	return nil
 }
 
-func hydrateBarracudaWAFParameterProfilesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFParameterProfilesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -208,9 +202,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFParameterProfilesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceParameterProfilesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

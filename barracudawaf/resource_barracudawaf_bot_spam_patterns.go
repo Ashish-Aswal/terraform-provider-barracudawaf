@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceBotSpamPatternsParams = map[string][]string{}
+)
+
 func resourceCudaWAFBotSpamPatterns() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFBotSpamPatternsCreate,
@@ -22,11 +26,7 @@ func resourceCudaWAFBotSpamPatterns() *schema.Resource {
 			"mode":           {Type: schema.TypeString, Optional: true},
 			"name":           {Type: schema.TypeString, Required: true},
 			"regex":          {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -39,10 +39,7 @@ func resourceCudaWAFBotSpamPatternsCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/bot-spam-types/" + d.Get("parent.0").(string) + "/bot-spam-patterns"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFBotSpamPatternsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFBotSpamPatternsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFBotSpamPatternsSubResource(d, name, resourceEndpoint)
 
@@ -98,10 +95,7 @@ func resourceCudaWAFBotSpamPatternsUpdate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/bot-spam-types/" + d.Get("parent.0").(string) + "/bot-spam-patterns"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFBotSpamPatternsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFBotSpamPatternsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -140,11 +134,7 @@ func resourceCudaWAFBotSpamPatternsDelete(d *schema.ResourceData, m interface{})
 	return nil
 }
 
-func hydrateBarracudaWAFBotSpamPatternsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFBotSpamPatternsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +172,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFBotSpamPatternsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceBotSpamPatternsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

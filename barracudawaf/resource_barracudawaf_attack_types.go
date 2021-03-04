@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceAttackTypesParams = map[string][]string{}
+)
+
 func resourceCudaWAFAttackTypes() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFAttackTypesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFAttackTypesCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/attack-types"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAttackTypesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAttackTypesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFAttackTypesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFAttackTypesUpdate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/attack-types"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFAttackTypesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFAttackTypesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFAttackTypesDelete(d *schema.ResourceData, m interface{}) err
 	return nil
 }
 
-func hydrateBarracudaWAFAttackTypesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFAttackTypesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFAttackTypesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceAttackTypesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

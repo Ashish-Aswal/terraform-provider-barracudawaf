@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceLocalUsersParams = map[string][]string{}
+)
+
 func resourceCudaWAFLocalUsers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFLocalUsersCreate,
@@ -31,10 +35,7 @@ func resourceCudaWAFLocalUsersCreate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/local-users"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFLocalUsersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFLocalUsersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFLocalUsersSubResource(d, name, resourceEndpoint)
 
@@ -90,10 +91,7 @@ func resourceCudaWAFLocalUsersUpdate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/local-users"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFLocalUsersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFLocalUsersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -132,11 +130,7 @@ func resourceCudaWAFLocalUsersDelete(d *schema.ResourceData, m interface{}) erro
 	return nil
 }
 
-func hydrateBarracudaWAFLocalUsersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFLocalUsersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -166,14 +160,9 @@ func hydrateBarracudaWAFLocalUsersResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFLocalUsersSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFLocalUsersSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceLocalUsersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

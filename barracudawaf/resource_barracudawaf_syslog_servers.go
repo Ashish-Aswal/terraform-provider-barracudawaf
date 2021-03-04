@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSyslogServersParams = map[string][]string{}
+)
+
 func resourceCudaWAFSyslogServers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSyslogServersCreate,
@@ -53,10 +57,7 @@ func resourceCudaWAFSyslogServersCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/syslog-servers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSyslogServersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSyslogServersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSyslogServersSubResource(d, name, resourceEndpoint)
 
@@ -112,10 +113,7 @@ func resourceCudaWAFSyslogServersUpdate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/syslog-servers"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSyslogServersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFSyslogServersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -154,11 +152,7 @@ func resourceCudaWAFSyslogServersDelete(d *schema.ResourceData, m interface{}) e
 	return nil
 }
 
-func hydrateBarracudaWAFSyslogServersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSyslogServersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -215,9 +209,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSyslogServersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSyslogServersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {
