@@ -13,11 +13,16 @@ description: |-
 ## Example Usage
 
 ```terraform
-provider "barracudawaf" {
-    address = "x.x.x.x"
-    username = "xxxx"
-    port = "xxxx"
-    password = "xxxxxxxxx"
+variable address {}
+variable username {}
+variable password {}
+variable port {}
+
+provider "bigip" {
+  address  = var.hostname
+  username = var.username
+  password = var.password
+  port     = var.port
 }
 ```
 
