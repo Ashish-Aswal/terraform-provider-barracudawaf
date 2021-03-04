@@ -178,35 +178,29 @@ func (b *BarracudaWAF) hydrateBarracudaWAFTrustedCaCertificateSubResource(
 	for subResource, subResourceParams := range subResourceTrustedCaCertificateParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
-		if subResourceParamsLength > 0 {
-			log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
+		log.Printf("[INFO] Updating Barracuda WAF sub resource (%s) (%s)", name, subResource)
 
-			for i := 0; i < subResourceParamsLength; i++ {
-				subResourcePayload := map[string]string{}
-				suffix := fmt.Sprintf(".%d", i)
+		for i := 0; i < subResourceParamsLength; i++ {
+			subResourcePayload := map[string]string{}
+			suffix := fmt.Sprintf(".%d", i)
 
-				for _, param := range subResourceParams {
-					paramSuffix := fmt.Sprintf(".%s", param)
-					paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
+			for _, param := range subResourceParams {
+				paramSuffix := fmt.Sprintf(".%s", param)
+				paramVaule := d.Get(subResource + suffix + paramSuffix).(string)
 
+				if len(paramVaule) > 0 {
 					param = strings.Replace(param, "_", "-", -1)
 					subResourcePayload[param] = paramVaule
 				}
+			}
 
-				for key, val := range subResourcePayload {
-					if len(val) == 0 {
-						delete(subResourcePayload, key)
-					}
-				}
+			err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
+				URL:  strings.Replace(subResource, "_", "-", -1),
+				Body: subResourcePayload,
+			})
 
-				err := b.UpdateBarracudaWAFSubResource(name, endpoint, &APIRequest{
-					URL:  strings.Replace(subResource, "_", "-", -1),
-					Body: subResourcePayload,
-				})
-
-				if err != nil {
-					return err
-				}
+			if err != nil {
+				return err
 			}
 		}
 	}
