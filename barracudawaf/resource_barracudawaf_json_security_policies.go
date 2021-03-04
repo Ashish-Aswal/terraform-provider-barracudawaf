@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceJsonSecurityPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFJsonSecurityPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFJsonSecurityPoliciesCreate,
@@ -36,10 +40,7 @@ func resourceCudaWAFJsonSecurityPoliciesCreate(d *schema.ResourceData, m interfa
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/json-security-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFJsonSecurityPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFJsonSecurityPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFJsonSecurityPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -137,11 +138,7 @@ func resourceCudaWAFJsonSecurityPoliciesDelete(d *schema.ResourceData, m interfa
 	return nil
 }
 
-func hydrateBarracudaWAFJsonSecurityPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFJsonSecurityPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -181,9 +178,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFJsonSecurityPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceJsonSecurityPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

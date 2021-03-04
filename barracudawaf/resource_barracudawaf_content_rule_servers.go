@@ -8,6 +8,46 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceContentRuleServersParams = map[string][]string{
+		"advanced_configuration": {
+			"client_impersonation",
+			"source_ip_to_connect",
+			"max_connections",
+			"max_establishing_connections",
+			"max_requests",
+			"max_keepalive_requests",
+			"max_spare_connections",
+			"timeout",
+		},
+		"out_of_band_health_checks": {"interval", "enable_oob_health_checks"},
+		"application_layer_health_checks": {
+			"additional_headers",
+			"match_content_string",
+			"method",
+			"status_code",
+			"url",
+			"domain",
+		},
+		"connection_pooling":    {"keepalive_timeout", "enable_connection_pooling"},
+		"redirect":              {},
+		"in_band_health_checks": {"max_other_failure", "max_refused", "max_timeout_failure", "max_http_errors"},
+		"ssl_policy": {
+			"client_certificate",
+			"enable_ssl_compatibility_mode",
+			"enable_ssl_3",
+			"enable_tls_1",
+			"enable_tls_1_1",
+			"enable_tls_1_2",
+			"enable_tls_1_3",
+			"validate_certificate",
+			"enable_https",
+			"enable_sni",
+		},
+		"load_balancing": {"backup_server", "weight"},
+	}
+)
+
 func resourceCudaWAFContentRuleServers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFContentRuleServersCreate,
@@ -137,10 +177,7 @@ func resourceCudaWAFContentRuleServersCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules/" + d.Get("parent.1").(string) + "/content-rule-servers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFContentRuleServersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFContentRuleServersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFContentRuleServersSubResource(d, name, resourceEndpoint)
 
@@ -196,10 +233,7 @@ func resourceCudaWAFContentRuleServersUpdate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules/" + d.Get("parent.1").(string) + "/content-rule-servers"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFContentRuleServersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFContentRuleServersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -238,11 +272,7 @@ func resourceCudaWAFContentRuleServersDelete(d *schema.ResourceData, m interface
 	return nil
 }
 
-func hydrateBarracudaWAFContentRuleServersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFContentRuleServersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -283,50 +313,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFContentRuleServersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{
-		"advanced_configuration": {
-			"client_impersonation",
-			"source_ip_to_connect",
-			"max_connections",
-			"max_establishing_connections",
-			"max_requests",
-			"max_keepalive_requests",
-			"max_spare_connections",
-			"timeout",
-		},
-		"out_of_band_health_checks": {"interval", "enable_oob_health_checks"},
-		"application_layer_health_checks": {
-			"additional_headers",
-			"match_content_string",
-			"method",
-			"status_code",
-			"url",
-			"domain",
-		},
-		"connection_pooling": {"keepalive_timeout", "enable_connection_pooling"},
-		"redirect":           {},
-		"in_band_health_checks": {
-			"max_other_failure",
-			"max_refused",
-			"max_timeout_failure",
-			"max_http_errors",
-		},
-		"ssl_policy": {
-			"client_certificate",
-			"enable_ssl_compatibility_mode",
-			"enable_ssl_3",
-			"enable_tls_1",
-			"enable_tls_1_1",
-			"enable_tls_1_2",
-			"enable_tls_1_3",
-			"validate_certificate",
-			"enable_https",
-			"enable_sni",
-		},
-		"load_balancing": {"backup_server", "weight"},
-	}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceContentRuleServersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

@@ -8,6 +8,46 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceServersParams = map[string][]string{
+		"in_band_health_checks": {"max_other_failure", "max_refused", "max_timeout_failure", "max_http_errors"},
+		"redirect":              {},
+		"advanced_configuration": {
+			"client_impersonation",
+			"source_ip_to_connect",
+			"max_connections",
+			"max_establishing_connections",
+			"max_requests",
+			"max_keepalive_requests",
+			"max_spare_connections",
+			"timeout",
+		},
+		"load_balancing": {"backup_server", "weight"},
+		"ssl_policy": {
+			"client_certificate",
+			"enable_ssl_compatibility_mode",
+			"validate_certificate",
+			"enable_https",
+			"enable_sni",
+			"enable_ssl_3",
+			"enable_tls_1",
+			"enable_tls_1_1",
+			"enable_tls_1_2",
+			"enable_tls_1_3",
+		},
+		"connection_pooling":        {"keepalive_timeout", "enable_connection_pooling"},
+		"out_of_band_health_checks": {"interval", "enable_oob_health_checks"},
+		"application_layer_health_checks": {
+			"additional_headers",
+			"match_content_string",
+			"method",
+			"domain",
+			"status_code",
+			"url",
+		},
+	}
+)
+
 func resourceCudaWAFServers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFServersCreate,
@@ -137,10 +177,7 @@ func resourceCudaWAFServersCreate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/servers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFServersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFServersSubResource(d, name, resourceEndpoint)
 
@@ -196,10 +233,7 @@ func resourceCudaWAFServersUpdate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/servers"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFServersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFServersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -238,11 +272,7 @@ func resourceCudaWAFServersDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func hydrateBarracudaWAFServersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFServersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -278,55 +308,9 @@ func hydrateBarracudaWAFServersResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFServersSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{
-		"in_band_health_checks": {
-			"max_other_failure",
-			"max_refused",
-			"max_timeout_failure",
-			"max_http_errors",
-		},
-		"redirect": {},
-		"advanced_configuration": {
-			"client_impersonation",
-			"source_ip_to_connect",
-			"max_connections",
-			"max_establishing_connections",
-			"max_requests",
-			"max_keepalive_requests",
-			"max_spare_connections",
-			"timeout",
-		},
-		"load_balancing": {"backup_server", "weight"},
-		"ssl_policy": {
-			"client_certificate",
-			"enable_ssl_compatibility_mode",
-			"validate_certificate",
-			"enable_https",
-			"enable_sni",
-			"enable_ssl_3",
-			"enable_tls_1",
-			"enable_tls_1_1",
-			"enable_tls_1_2",
-			"enable_tls_1_3",
-		},
-		"connection_pooling":        {"keepalive_timeout", "enable_connection_pooling"},
-		"out_of_band_health_checks": {"interval", "enable_oob_health_checks"},
-		"application_layer_health_checks": {
-			"additional_headers",
-			"match_content_string",
-			"method",
-			"domain",
-			"status_code",
-			"url",
-		},
-	}
+func (b *BarracudaWAF) hydrateBarracudaWAFServersSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceServersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

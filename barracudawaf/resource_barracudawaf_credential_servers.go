@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceCredentialServersParams = map[string][]string{}
+)
+
 func resourceCudaWAFCredentialServers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFCredentialServersCreate,
@@ -36,10 +40,7 @@ func resourceCudaWAFCredentialServersCreate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/credential-servers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFCredentialServersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFCredentialServersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFCredentialServersSubResource(d, name, resourceEndpoint)
 
@@ -95,10 +96,7 @@ func resourceCudaWAFCredentialServersUpdate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/credential-servers"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFCredentialServersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFCredentialServersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -137,11 +135,7 @@ func resourceCudaWAFCredentialServersDelete(d *schema.ResourceData, m interface{
 	return nil
 }
 
-func hydrateBarracudaWAFCredentialServersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFCredentialServersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -181,9 +175,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFCredentialServersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceCredentialServersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

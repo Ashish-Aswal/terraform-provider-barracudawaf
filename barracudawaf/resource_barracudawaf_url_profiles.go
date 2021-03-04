@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceUrlProfilesParams = map[string][]string{}
+)
+
 func resourceCudaWAFUrlProfiles() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFUrlProfilesCreate,
@@ -54,10 +58,7 @@ func resourceCudaWAFUrlProfilesCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlProfilesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlProfilesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFUrlProfilesSubResource(d, name, resourceEndpoint)
 
@@ -113,10 +114,7 @@ func resourceCudaWAFUrlProfilesUpdate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlProfilesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFUrlProfilesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -155,11 +153,7 @@ func resourceCudaWAFUrlProfilesDelete(d *schema.ResourceData, m interface{}) err
 	return nil
 }
 
-func hydrateBarracudaWAFUrlProfilesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFUrlProfilesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -212,9 +206,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFUrlProfilesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceUrlProfilesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

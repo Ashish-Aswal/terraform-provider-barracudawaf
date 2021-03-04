@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSamlServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFSamlServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSamlServicesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFSamlServicesCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/saml-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSamlServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSamlServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSamlServicesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFSamlServicesUpdate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/saml-services"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSamlServicesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFSamlServicesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFSamlServicesDelete(d *schema.ResourceData, m interface{}) er
 	return nil
 }
 
-func hydrateBarracudaWAFSamlServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSamlServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSamlServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSamlServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

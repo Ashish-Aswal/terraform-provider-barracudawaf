@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceConfigurationCheckpointsParams = map[string][]string{}
+)
+
 func resourceCudaWAFConfigurationCheckpoints() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFConfigurationCheckpointsCreate,
@@ -31,10 +35,7 @@ func resourceCudaWAFConfigurationCheckpointsCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/configuration-checkpoints"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFConfigurationCheckpointsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFConfigurationCheckpointsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFConfigurationCheckpointsSubResource(d, name, resourceEndpoint)
 
@@ -171,9 +172,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFConfigurationCheckpointsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceConfigurationCheckpointsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

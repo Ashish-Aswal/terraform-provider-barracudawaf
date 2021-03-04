@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceJsonProfilesParams = map[string][]string{}
+)
+
 func resourceCudaWAFJsonProfiles() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFJsonProfilesCreate,
@@ -28,11 +32,7 @@ func resourceCudaWAFJsonProfiles() *schema.Resource {
 			"exception_patterns":    {Type: schema.TypeString, Optional: true},
 			"json_policy":           {Type: schema.TypeString, Optional: true},
 			"validate_key":          {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":                {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -45,10 +45,7 @@ func resourceCudaWAFJsonProfilesCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFJsonProfilesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFJsonProfilesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFJsonProfilesSubResource(d, name, resourceEndpoint)
 
@@ -104,10 +101,7 @@ func resourceCudaWAFJsonProfilesUpdate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFJsonProfilesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFJsonProfilesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -146,11 +140,7 @@ func resourceCudaWAFJsonProfilesDelete(d *schema.ResourceData, m interface{}) er
 	return nil
 }
 
-func hydrateBarracudaWAFJsonProfilesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFJsonProfilesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -194,9 +184,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFJsonProfilesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceJsonProfilesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

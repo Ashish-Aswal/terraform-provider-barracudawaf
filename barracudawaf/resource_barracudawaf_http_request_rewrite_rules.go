@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceHttpRequestRewriteRulesParams = map[string][]string{}
+)
+
 func resourceCudaWAFHttpRequestRewriteRules() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFHttpRequestRewriteRulesCreate,
@@ -25,11 +29,7 @@ func resourceCudaWAFHttpRequestRewriteRules() *schema.Resource {
 			"name":                {Type: schema.TypeString, Required: true},
 			"sequence_number":     {Type: schema.TypeString, Required: true},
 			"rewrite_value":       {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -42,10 +42,7 @@ func resourceCudaWAFHttpRequestRewriteRulesCreate(d *schema.ResourceData, m inte
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/http-request-rewrite-rules"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFHttpRequestRewriteRulesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFHttpRequestRewriteRulesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFHttpRequestRewriteRulesSubResource(d, name, resourceEndpoint)
 
@@ -143,11 +140,7 @@ func resourceCudaWAFHttpRequestRewriteRulesDelete(d *schema.ResourceData, m inte
 	return nil
 }
 
-func hydrateBarracudaWAFHttpRequestRewriteRulesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFHttpRequestRewriteRulesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -188,9 +181,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFHttpRequestRewriteRulesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceHttpRequestRewriteRulesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

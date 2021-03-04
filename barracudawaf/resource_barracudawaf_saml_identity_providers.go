@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSamlIdentityProvidersParams = map[string][]string{}
+)
+
 func resourceCudaWAFSamlIdentityProviders() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSamlIdentityProvidersCreate,
@@ -22,11 +26,7 @@ func resourceCudaWAFSamlIdentityProviders() *schema.Resource {
 			"metadata_url":        {Type: schema.TypeString, Optional: true},
 			"name":                {Type: schema.TypeString, Required: true},
 			"metadata_content":    {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -39,10 +39,7 @@ func resourceCudaWAFSamlIdentityProvidersCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/saml-services/" + d.Get("parent.0").(string) + "/saml-identity-providers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSamlIdentityProvidersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSamlIdentityProvidersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSamlIdentityProvidersSubResource(d, name, resourceEndpoint)
 
@@ -140,11 +137,7 @@ func resourceCudaWAFSamlIdentityProvidersDelete(d *schema.ResourceData, m interf
 	return nil
 }
 
-func hydrateBarracudaWAFSamlIdentityProvidersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSamlIdentityProvidersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +175,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSamlIdentityProvidersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSamlIdentityProvidersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

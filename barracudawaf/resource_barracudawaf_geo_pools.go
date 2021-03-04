@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceGeoPoolsParams = map[string][]string{}
+)
+
 func resourceCudaWAFGeoPools() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFGeoPoolsCreate,
@@ -30,10 +34,7 @@ func resourceCudaWAFGeoPoolsCreate(d *schema.ResourceData, m interface{}) error 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/geo-pools"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFGeoPoolsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFGeoPoolsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFGeoPoolsSubResource(d, name, resourceEndpoint)
 
@@ -89,10 +90,7 @@ func resourceCudaWAFGeoPoolsUpdate(d *schema.ResourceData, m interface{}) error 
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/geo-pools"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFGeoPoolsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFGeoPoolsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -131,17 +129,10 @@ func resourceCudaWAFGeoPoolsDelete(d *schema.ResourceData, m interface{}) error 
 	return nil
 }
 
-func hydrateBarracudaWAFGeoPoolsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFGeoPoolsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
-	resourcePayload := map[string]string{
-		"region": d.Get("region").(string),
-		"name":   d.Get("name").(string),
-	}
+	resourcePayload := map[string]string{"region": d.Get("region").(string), "name": d.Get("name").(string)}
 
 	// parameters not supported for updates
 	if method == "put" {
@@ -164,14 +155,9 @@ func hydrateBarracudaWAFGeoPoolsResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFGeoPoolsSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFGeoPoolsSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceGeoPoolsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

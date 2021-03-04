@@ -8,6 +8,79 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSecurityPoliciesParams = map[string][]string{
+		"request_limits": {
+			"max_cookie_name_length",
+			"max_number_of_cookies",
+			"max_header_name_length",
+			"max_request_line_length",
+			"max_number_of_headers",
+			"max_query_length",
+			"max_cookie_value_length",
+			"max_header_value_length",
+			"max_request_length",
+			"max_url_length",
+			"enable",
+		},
+		"url_normalization": {
+			"default_charset",
+			"detect_response_charset",
+			"normalize_special_chars",
+			"apply_double_decoding",
+			"parameter_separators",
+		},
+		"url_protection": {
+			"allowed_methods",
+			"allowed_content_types",
+			"custom_blocked_attack_types",
+			"exception_patterns",
+			"blocked_attack_types",
+			"max_content_length",
+			"maximum_parameter_name_length",
+			"max_parameters",
+			"maximum_upload_files",
+			"csrf_prevention",
+			"enable",
+		},
+		"parameter_protection": {
+			"blocked_attack_types",
+			"custom_blocked_attack_types",
+			"base64_decode_parameter_value",
+			"allowed_file_upload_type",
+			"denied_metacharacters",
+			"exception_patterns",
+			"file_upload_extensions",
+			"file_upload_mime_types",
+			"maximum_instances",
+			"maximum_parameter_value_length",
+			"maximum_upload_file_size",
+			"enable",
+			"validate_parameter_name",
+			"ignore_parameters",
+		},
+		"cloaking": {
+			"return_codes_to_exempt",
+			"headers_to_filter",
+			"filter_response_header",
+			"suppress_return_code",
+		},
+		"cookie_security": {
+			"allow_unrecognized_cookies",
+			"days_allowed",
+			"cookies_exempted",
+			"http_only",
+			"cookie_max_age",
+			"tamper_proof_mode",
+			"secure_cookie",
+			"cookie_replay_protection_type",
+			"custom_headers",
+		},
+		"client_profile": {"medium_risk_score", "high_risk_score", "exception_client_fingerprints", "client_profile"},
+		"tarpit_profile": {"backlog_requests_limit", "tarpit_inactivity_timeout"},
+	}
+)
+
 func resourceCudaWAFSecurityPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSecurityPoliciesCreate,
@@ -154,10 +227,7 @@ func resourceCudaWAFSecurityPoliciesCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSecurityPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSecurityPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSecurityPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -213,10 +283,7 @@ func resourceCudaWAFSecurityPoliciesUpdate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSecurityPoliciesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFSecurityPoliciesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -255,17 +322,10 @@ func resourceCudaWAFSecurityPoliciesDelete(d *schema.ResourceData, m interface{}
 	return nil
 }
 
-func hydrateBarracudaWAFSecurityPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSecurityPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
-	resourcePayload := map[string]string{
-		"based-on": d.Get("based_on").(string),
-		"name":     d.Get("name").(string),
-	}
+	resourcePayload := map[string]string{"based-on": d.Get("based_on").(string), "name": d.Get("name").(string)}
 
 	// parameters not supported for updates
 	if method == "put" {
@@ -293,83 +353,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSecurityPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{
-		"request_limits": {
-			"max_cookie_name_length",
-			"max_number_of_cookies",
-			"max_header_name_length",
-			"max_request_line_length",
-			"max_number_of_headers",
-			"max_query_length",
-			"max_cookie_value_length",
-			"max_header_value_length",
-			"max_request_length",
-			"max_url_length",
-			"enable",
-		},
-		"url_normalization": {
-			"default_charset",
-			"detect_response_charset",
-			"normalize_special_chars",
-			"apply_double_decoding",
-			"parameter_separators",
-		},
-		"url_protection": {
-			"allowed_methods",
-			"allowed_content_types",
-			"custom_blocked_attack_types",
-			"exception_patterns",
-			"blocked_attack_types",
-			"max_content_length",
-			"maximum_parameter_name_length",
-			"max_parameters",
-			"maximum_upload_files",
-			"csrf_prevention",
-			"enable",
-		},
-		"parameter_protection": {
-			"blocked_attack_types",
-			"custom_blocked_attack_types",
-			"base64_decode_parameter_value",
-			"allowed_file_upload_type",
-			"denied_metacharacters",
-			"exception_patterns",
-			"file_upload_extensions",
-			"file_upload_mime_types",
-			"maximum_instances",
-			"maximum_parameter_value_length",
-			"maximum_upload_file_size",
-			"enable",
-			"validate_parameter_name",
-			"ignore_parameters",
-		},
-		"cloaking": {
-			"return_codes_to_exempt",
-			"headers_to_filter",
-			"filter_response_header",
-			"suppress_return_code",
-		},
-		"cookie_security": {
-			"allow_unrecognized_cookies",
-			"days_allowed",
-			"cookies_exempted",
-			"http_only",
-			"cookie_max_age",
-			"tamper_proof_mode",
-			"secure_cookie",
-			"cookie_replay_protection_type",
-			"custom_headers",
-		},
-		"client_profile": {
-			"medium_risk_score",
-			"high_risk_score",
-			"exception_client_fingerprints",
-			"client_profile",
-		},
-		"tarpit_profile": {"backlog_requests_limit", "tarpit_inactivity_timeout"},
-	}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSecurityPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

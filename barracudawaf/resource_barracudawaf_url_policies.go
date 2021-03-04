@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceUrlPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFUrlPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFUrlPoliciesCreate,
@@ -67,10 +71,7 @@ func resourceCudaWAFUrlPoliciesCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFUrlPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -126,10 +127,7 @@ func resourceCudaWAFUrlPoliciesUpdate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-policies"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlPoliciesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFUrlPoliciesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -168,11 +166,7 @@ func resourceCudaWAFUrlPoliciesDelete(d *schema.ResourceData, m interface{}) err
 	return nil
 }
 
-func hydrateBarracudaWAFUrlPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFUrlPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -238,9 +232,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFUrlPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceUrlPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

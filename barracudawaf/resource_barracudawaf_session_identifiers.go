@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSessionIdentifiersParams = map[string][]string{}
+)
+
 func resourceCudaWAFSessionIdentifiers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSessionIdentifiersCreate,
@@ -33,10 +37,7 @@ func resourceCudaWAFSessionIdentifiersCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/session-identifiers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSessionIdentifiersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSessionIdentifiersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSessionIdentifiersSubResource(d, name, resourceEndpoint)
 
@@ -92,10 +93,7 @@ func resourceCudaWAFSessionIdentifiersUpdate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/session-identifiers"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSessionIdentifiersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFSessionIdentifiersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -134,11 +132,7 @@ func resourceCudaWAFSessionIdentifiersDelete(d *schema.ResourceData, m interface
 	return nil
 }
 
-func hydrateBarracudaWAFSessionIdentifiersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSessionIdentifiersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -175,9 +169,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSessionIdentifiersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSessionIdentifiersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

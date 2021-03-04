@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceOpenidcServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFOpenidcServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFOpenidcServicesCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFOpenidcServicesCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/openidc-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFOpenidcServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFOpenidcServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFOpenidcServicesSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFOpenidcServicesUpdate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/openidc-services"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFOpenidcServicesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFOpenidcServicesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFOpenidcServicesDelete(d *schema.ResourceData, m interface{})
 	return nil
 }
 
-func hydrateBarracudaWAFOpenidcServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFOpenidcServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFOpenidcServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceOpenidcServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

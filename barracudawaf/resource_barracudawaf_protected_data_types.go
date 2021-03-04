@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceProtectedDataTypesParams = map[string][]string{}
+)
+
 func resourceCudaWAFProtectedDataTypes() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFProtectedDataTypesCreate,
@@ -40,10 +44,7 @@ func resourceCudaWAFProtectedDataTypesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFProtectedDataTypesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFProtectedDataTypesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFProtectedDataTypesSubResource(d, name, resourceEndpoint)
 
@@ -99,10 +100,7 @@ func resourceCudaWAFProtectedDataTypesUpdate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFProtectedDataTypesResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFProtectedDataTypesResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -141,11 +139,7 @@ func resourceCudaWAFProtectedDataTypesDelete(d *schema.ResourceData, m interface
 	return nil
 }
 
-func hydrateBarracudaWAFProtectedDataTypesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFProtectedDataTypesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -184,9 +178,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFProtectedDataTypesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceProtectedDataTypesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

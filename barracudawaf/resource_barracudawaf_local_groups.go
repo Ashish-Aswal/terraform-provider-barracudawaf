@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceLocalGroupsParams = map[string][]string{}
+)
+
 func resourceCudaWAFLocalGroups() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFLocalGroupsCreate,
@@ -27,10 +31,7 @@ func resourceCudaWAFLocalGroupsCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/local-groups"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFLocalGroupsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFLocalGroupsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFLocalGroupsSubResource(d, name, resourceEndpoint)
 
@@ -86,10 +87,7 @@ func resourceCudaWAFLocalGroupsUpdate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/local-groups"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFLocalGroupsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFLocalGroupsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -128,11 +126,7 @@ func resourceCudaWAFLocalGroupsDelete(d *schema.ResourceData, m interface{}) err
 	return nil
 }
 
-func hydrateBarracudaWAFLocalGroupsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFLocalGroupsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"name": d.Get("name").(string)}
@@ -163,9 +157,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFLocalGroupsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceLocalGroupsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

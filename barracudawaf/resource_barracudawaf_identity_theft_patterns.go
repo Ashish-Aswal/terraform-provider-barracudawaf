@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceIdentityTheftPatternsParams = map[string][]string{}
+)
+
 func resourceCudaWAFIdentityTheftPatterns() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFIdentityTheftPatternsCreate,
@@ -22,11 +26,7 @@ func resourceCudaWAFIdentityTheftPatterns() *schema.Resource {
 			"name":           {Type: schema.TypeString, Required: true},
 			"regex":          {Type: schema.TypeString, Required: true},
 			"status":         {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -39,10 +39,7 @@ func resourceCudaWAFIdentityTheftPatternsCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/identity-types/" + d.Get("parent.0").(string) + "/identity-theft-patterns"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFIdentityTheftPatternsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFIdentityTheftPatternsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFIdentityTheftPatternsSubResource(d, name, resourceEndpoint)
 
@@ -140,11 +137,7 @@ func resourceCudaWAFIdentityTheftPatternsDelete(d *schema.ResourceData, m interf
 	return nil
 }
 
-func hydrateBarracudaWAFIdentityTheftPatternsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFIdentityTheftPatternsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +175,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFIdentityTheftPatternsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceIdentityTheftPatternsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

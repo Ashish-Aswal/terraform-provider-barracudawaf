@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceExportConfigurationParams = map[string][]string{}
+)
+
 func resourceCudaWAFExportConfiguration() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFExportConfigurationCreate,
@@ -34,10 +38,7 @@ func resourceCudaWAFExportConfigurationCreate(d *schema.ResourceData, m interfac
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/export-configuration"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFExportConfigurationResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFExportConfigurationResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFExportConfigurationSubResource(d, name, resourceEndpoint)
 
@@ -135,11 +136,7 @@ func resourceCudaWAFExportConfigurationDelete(d *schema.ResourceData, m interfac
 	return nil
 }
 
-func hydrateBarracudaWAFExportConfigurationResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFExportConfigurationResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -177,9 +174,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFExportConfigurationSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceExportConfigurationParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

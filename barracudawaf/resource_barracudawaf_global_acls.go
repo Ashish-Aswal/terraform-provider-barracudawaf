@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceGlobalAclsParams = map[string][]string{}
+)
+
 func resourceCudaWAFGlobalAcls() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFGlobalAclsCreate,
@@ -45,10 +49,7 @@ func resourceCudaWAFGlobalAclsCreate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/global-acls"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFGlobalAclsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFGlobalAclsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFGlobalAclsSubResource(d, name, resourceEndpoint)
 
@@ -104,10 +105,7 @@ func resourceCudaWAFGlobalAclsUpdate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/global-acls"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFGlobalAclsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFGlobalAclsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -146,11 +144,7 @@ func resourceCudaWAFGlobalAclsDelete(d *schema.ResourceData, m interface{}) erro
 	return nil
 }
 
-func hydrateBarracudaWAFGlobalAclsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFGlobalAclsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -189,14 +183,9 @@ func hydrateBarracudaWAFGlobalAclsResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFGlobalAclsSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFGlobalAclsSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceGlobalAclsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

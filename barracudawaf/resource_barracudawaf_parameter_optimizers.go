@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceParameterOptimizersParams = map[string][]string{}
+)
+
 func resourceCudaWAFParameterOptimizers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFParameterOptimizersCreate,
@@ -18,11 +22,7 @@ func resourceCudaWAFParameterOptimizers() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name":        {Type: schema.TypeString, Required: true},
 			"start_token": {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":      {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -35,10 +35,7 @@ func resourceCudaWAFParameterOptimizersCreate(d *schema.ResourceData, m interfac
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFParameterOptimizersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFParameterOptimizersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFParameterOptimizersSubResource(d, name, resourceEndpoint)
 
@@ -136,17 +133,10 @@ func resourceCudaWAFParameterOptimizersDelete(d *schema.ResourceData, m interfac
 	return nil
 }
 
-func hydrateBarracudaWAFParameterOptimizersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFParameterOptimizersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
-	resourcePayload := map[string]string{
-		"name":        d.Get("name").(string),
-		"start-token": d.Get("start_token").(string),
-	}
+	resourcePayload := map[string]string{"name": d.Get("name").(string), "start-token": d.Get("start_token").(string)}
 
 	// parameters not supported for updates
 	if method == "put" {
@@ -174,9 +164,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFParameterOptimizersSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceParameterOptimizersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

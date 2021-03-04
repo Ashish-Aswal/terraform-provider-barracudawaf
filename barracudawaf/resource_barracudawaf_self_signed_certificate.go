@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSelfSignedCertificateParams = map[string][]string{}
+)
+
 func resourceCudaWAFSelfSignedCertificate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSelfSignedCertificateCreate,
@@ -44,10 +48,7 @@ func resourceCudaWAFSelfSignedCertificateCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/self-signed-certificate"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSelfSignedCertificateResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSelfSignedCertificateResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSelfSignedCertificateSubResource(d, name, resourceEndpoint)
 
@@ -145,11 +146,7 @@ func resourceCudaWAFSelfSignedCertificateDelete(d *schema.ResourceData, m interf
 	return nil
 }
 
-func hydrateBarracudaWAFSelfSignedCertificateResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSelfSignedCertificateResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -212,9 +209,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSelfSignedCertificateSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSelfSignedCertificateParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

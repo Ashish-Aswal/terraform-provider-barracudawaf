@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceUrlTranslationsParams = map[string][]string{}
+)
+
 func resourceCudaWAFUrlTranslations() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFUrlTranslationsCreate,
@@ -22,11 +26,7 @@ func resourceCudaWAFUrlTranslations() *schema.Resource {
 			"inside_domain":  {Type: schema.TypeString, Required: true},
 			"inside_prefix":  {Type: schema.TypeString, Required: true},
 			"name":           {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -39,10 +39,7 @@ func resourceCudaWAFUrlTranslationsCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-translations"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlTranslationsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlTranslationsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFUrlTranslationsSubResource(d, name, resourceEndpoint)
 
@@ -98,10 +95,7 @@ func resourceCudaWAFUrlTranslationsUpdate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-translations"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUrlTranslationsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFUrlTranslationsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -140,11 +134,7 @@ func resourceCudaWAFUrlTranslationsDelete(d *schema.ResourceData, m interface{})
 	return nil
 }
 
-func hydrateBarracudaWAFUrlTranslationsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFUrlTranslationsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +172,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFUrlTranslationsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceUrlTranslationsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

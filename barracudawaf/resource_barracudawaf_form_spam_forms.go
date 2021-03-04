@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceFormSpamFormsParams = map[string][]string{}
+)
+
 func resourceCudaWAFFormSpamForms() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFFormSpamFormsCreate,
@@ -24,11 +28,7 @@ func resourceCudaWAFFormSpamForms() *schema.Resource {
 			"minimum_form_fill_time": {Type: schema.TypeString, Optional: true},
 			"parameter_name":         {Type: schema.TypeString, Optional: true},
 			"parameter_class":        {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":                 {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -41,10 +41,7 @@ func resourceCudaWAFFormSpamFormsCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/form-spam-forms"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFFormSpamFormsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFFormSpamFormsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFFormSpamFormsSubResource(d, name, resourceEndpoint)
 
@@ -100,10 +97,7 @@ func resourceCudaWAFFormSpamFormsUpdate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/form-spam-forms"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFFormSpamFormsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFFormSpamFormsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -142,11 +136,7 @@ func resourceCudaWAFFormSpamFormsDelete(d *schema.ResourceData, m interface{}) e
 	return nil
 }
 
-func hydrateBarracudaWAFFormSpamFormsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFFormSpamFormsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -186,9 +176,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFFormSpamFormsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceFormSpamFormsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

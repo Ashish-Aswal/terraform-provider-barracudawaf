@@ -8,6 +8,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSignedCertificateParams = map[string][]string{
+		"ocsp_stapling": {
+			"cache_timeout",
+			"clock_skew",
+			"error_timeout",
+			"issuer_certificate",
+			"ocsp_stapling",
+			"override_ocsp_responder",
+			"ocsp_issuer_certificate",
+		},
+	}
+)
+
 func resourceCudaWAFSignedCertificate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSignedCertificateCreate,
@@ -59,10 +73,7 @@ func resourceCudaWAFSignedCertificateCreate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/signed-certificate"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSignedCertificateResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSignedCertificateResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSignedCertificateSubResource(d, name, resourceEndpoint)
 
@@ -118,10 +129,7 @@ func resourceCudaWAFSignedCertificateUpdate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/signed-certificate"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSignedCertificateResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFSignedCertificateResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -160,11 +168,7 @@ func resourceCudaWAFSignedCertificateDelete(d *schema.ResourceData, m interface{
 	return nil
 }
 
-func hydrateBarracudaWAFSignedCertificateResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSignedCertificateResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -225,19 +229,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSignedCertificateSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{
-		"ocsp_stapling": {
-			"cache_timeout",
-			"clock_skew",
-			"error_timeout",
-			"issuer_certificate",
-			"ocsp_stapling",
-			"override_ocsp_responder",
-			"ocsp_issuer_certificate",
-		},
-	}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSignedCertificateParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

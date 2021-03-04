@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceExternalLdapServicesParams = map[string][]string{}
+)
+
 func resourceCudaWAFExternalLdapServices() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFExternalLdapServicesCreate,
@@ -47,10 +51,7 @@ func resourceCudaWAFExternalLdapServicesCreate(d *schema.ResourceData, m interfa
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/external-ldap-services"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFExternalLdapServicesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFExternalLdapServicesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFExternalLdapServicesSubResource(d, name, resourceEndpoint)
 
@@ -148,11 +149,7 @@ func resourceCudaWAFExternalLdapServicesDelete(d *schema.ResourceData, m interfa
 	return nil
 }
 
-func hydrateBarracudaWAFExternalLdapServicesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFExternalLdapServicesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -203,9 +200,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFExternalLdapServicesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceExternalLdapServicesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

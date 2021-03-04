@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceTrustedHostsParams = map[string][]string{}
+)
+
 func resourceCudaWAFTrustedHosts() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFTrustedHostsCreate,
@@ -23,11 +27,7 @@ func resourceCudaWAFTrustedHosts() *schema.Resource {
 			"comments":     {Type: schema.TypeString, Optional: true},
 			"name":         {Type: schema.TypeString, Required: true},
 			"version":      {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":       {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -40,10 +40,7 @@ func resourceCudaWAFTrustedHostsCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-host-groups/" + d.Get("parent.0").(string) + "/trusted-hosts"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFTrustedHostsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedHostsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFTrustedHostsSubResource(d, name, resourceEndpoint)
 
@@ -99,10 +96,7 @@ func resourceCudaWAFTrustedHostsUpdate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-host-groups/" + d.Get("parent.0").(string) + "/trusted-hosts"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFTrustedHostsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedHostsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -141,11 +135,7 @@ func resourceCudaWAFTrustedHostsDelete(d *schema.ResourceData, m interface{}) er
 	return nil
 }
 
-func hydrateBarracudaWAFTrustedHostsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFTrustedHostsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -184,9 +174,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFTrustedHostsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceTrustedHostsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

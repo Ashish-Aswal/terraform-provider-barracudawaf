@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceSecureBrowsingPoliciesParams = map[string][]string{}
+)
+
 func resourceCudaWAFSecureBrowsingPolicies() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFSecureBrowsingPoliciesCreate,
@@ -41,10 +45,7 @@ func resourceCudaWAFSecureBrowsingPoliciesCreate(d *schema.ResourceData, m inter
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/secure-browsing-policies"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFSecureBrowsingPoliciesResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSecureBrowsingPoliciesResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFSecureBrowsingPoliciesSubResource(d, name, resourceEndpoint)
 
@@ -142,11 +143,7 @@ func resourceCudaWAFSecureBrowsingPoliciesDelete(d *schema.ResourceData, m inter
 	return nil
 }
 
-func hydrateBarracudaWAFSecureBrowsingPoliciesResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFSecureBrowsingPoliciesResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -186,9 +183,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFSecureBrowsingPoliciesSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceSecureBrowsingPoliciesParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

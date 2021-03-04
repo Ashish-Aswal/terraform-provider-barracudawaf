@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceRateControlPoolsParams = map[string][]string{}
+)
+
 func resourceCudaWAFRateControlPools() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFRateControlPoolsCreate,
@@ -32,10 +36,7 @@ func resourceCudaWAFRateControlPoolsCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rate-control-pools"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFRateControlPoolsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFRateControlPoolsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFRateControlPoolsSubResource(d, name, resourceEndpoint)
 
@@ -91,10 +92,7 @@ func resourceCudaWAFRateControlPoolsUpdate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rate-control-pools"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFRateControlPoolsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFRateControlPoolsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -133,11 +131,7 @@ func resourceCudaWAFRateControlPoolsDelete(d *schema.ResourceData, m interface{}
 	return nil
 }
 
-func hydrateBarracudaWAFRateControlPoolsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFRateControlPoolsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -173,9 +167,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFRateControlPoolsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceRateControlPoolsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

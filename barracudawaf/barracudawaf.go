@@ -283,11 +283,7 @@ func (b *BarracudaWAF) APICall(options *APIRequest) ([]byte, error) {
 	data, _ := ioutil.ReadAll(res.Body)
 
 	if res.StatusCode >= 400 {
-		if res.Header["Content-Type"][0] == "application/json" {
-			return data, b.checkError(data)
-		}
-
-		return data, fmt.Errorf(fmt.Sprintf("HTTP %d :: %s", res.StatusCode, string(data[:])))
+		return data, b.checkError(data)
 	}
 
 	return data, nil

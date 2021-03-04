@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceTrustedServerCertificateParams = map[string][]string{}
+)
+
 func resourceCudaWAFTrustedServerCertificate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFTrustedServerCertificateCreate,
@@ -34,10 +38,7 @@ func resourceCudaWAFTrustedServerCertificateCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-server-certificate"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFTrustedServerCertificateResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedServerCertificateResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFTrustedServerCertificateSubResource(d, name, resourceEndpoint)
 
@@ -153,13 +154,7 @@ func hydrateBarracudaWAFTrustedServerCertificateResource(
 
 	// parameters not supported for updates
 	if method == "put" {
-		updatePayloadExceptions := [...]string{
-			"common-name",
-			"expiry",
-			"serial",
-			"name",
-			"certificate",
-		}
+		updatePayloadExceptions := [...]string{"common-name", "expiry", "serial", "name", "certificate"}
 		for _, param := range updatePayloadExceptions {
 			delete(resourcePayload, param)
 		}
@@ -183,9 +178,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFTrustedServerCertificateSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceTrustedServerCertificateParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

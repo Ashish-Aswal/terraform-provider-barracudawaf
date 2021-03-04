@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceUsersParams = map[string][]string{}
+)
+
 func resourceCudaWAFUsers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFUsersCreate,
@@ -33,10 +37,7 @@ func resourceCudaWAFUsersCreate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/users"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUsersResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUsersResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFUsersSubResource(d, name, resourceEndpoint)
 
@@ -92,10 +93,7 @@ func resourceCudaWAFUsersUpdate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/users"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFUsersResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFUsersResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -134,11 +132,7 @@ func resourceCudaWAFUsersDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func hydrateBarracudaWAFUsersResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFUsersResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -170,14 +164,9 @@ func hydrateBarracudaWAFUsersResource(
 	}
 }
 
-func (b *BarracudaWAF) hydrateBarracudaWAFUsersSubResource(
-	d *schema.ResourceData,
-	name string,
-	endpoint string,
-) error {
-	subResourceObjects := map[string][]string{}
+func (b *BarracudaWAF) hydrateBarracudaWAFUsersSubResource(d *schema.ResourceData, name string, endpoint string) error {
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceUsersParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

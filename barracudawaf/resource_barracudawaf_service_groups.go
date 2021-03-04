@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceServiceGroupsParams = map[string][]string{}
+)
+
 func resourceCudaWAFServiceGroups() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFServiceGroupsCreate,
@@ -17,11 +21,7 @@ func resourceCudaWAFServiceGroups() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"service_group": {Type: schema.TypeString, Required: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":        {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -34,10 +34,7 @@ func resourceCudaWAFServiceGroupsCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/vsites/" + d.Get("parent.0").(string) + "/service-groups"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFServiceGroupsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServiceGroupsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFServiceGroupsSubResource(d, name, resourceEndpoint)
 
@@ -93,10 +90,7 @@ func resourceCudaWAFServiceGroupsUpdate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/vsites/" + d.Get("parent.0").(string) + "/service-groups"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFServiceGroupsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFServiceGroupsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -135,11 +129,7 @@ func resourceCudaWAFServiceGroupsDelete(d *schema.ResourceData, m interface{}) e
 	return nil
 }
 
-func hydrateBarracudaWAFServiceGroupsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFServiceGroupsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{"service-group": d.Get("service_group").(string)}
@@ -170,9 +160,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFServiceGroupsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceServiceGroupsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

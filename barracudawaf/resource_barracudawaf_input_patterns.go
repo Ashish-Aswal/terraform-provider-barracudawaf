@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceInputPatternsParams = map[string][]string{}
+)
+
 func resourceCudaWAFInputPatterns() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFInputPatternsCreate,
@@ -22,11 +26,7 @@ func resourceCudaWAFInputPatterns() *schema.Resource {
 			"name":           {Type: schema.TypeString, Required: true},
 			"regex":          {Type: schema.TypeString, Required: true},
 			"status":         {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -39,10 +39,7 @@ func resourceCudaWAFInputPatternsCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/input-types/" + d.Get("parent.0").(string) + "/input-patterns"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFInputPatternsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFInputPatternsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFInputPatternsSubResource(d, name, resourceEndpoint)
 
@@ -98,10 +95,7 @@ func resourceCudaWAFInputPatternsUpdate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Updating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/input-types/" + d.Get("parent.0").(string) + "/input-patterns"
-	err := client.UpdateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFInputPatternsResource(d, "put", resourceEndpoint),
-	)
+	err := client.UpdateBarracudaWAFResource(name, hydrateBarracudaWAFInputPatternsResource(d, "put", resourceEndpoint))
 
 	if err != nil {
 		log.Printf("[ERROR] Unable to update the Barracuda WAF resource (%s) (%v)", name, err)
@@ -140,11 +134,7 @@ func resourceCudaWAFInputPatternsDelete(d *schema.ResourceData, m interface{}) e
 	return nil
 }
 
-func hydrateBarracudaWAFInputPatternsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFInputPatternsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -182,9 +172,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFInputPatternsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceInputPatternsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {

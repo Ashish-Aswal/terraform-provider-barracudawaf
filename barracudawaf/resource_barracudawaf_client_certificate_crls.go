@@ -8,6 +8,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var (
+	subResourceClientCertificateCrlsParams = map[string][]string{}
+)
+
 func resourceCudaWAFClientCertificateCrls() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCudaWAFClientCertificateCrlsCreate,
@@ -25,11 +29,7 @@ func resourceCudaWAFClientCertificateCrls() *schema.Resource {
 			"number_of_retries": {Type: schema.TypeString, Optional: true},
 			"url":               {Type: schema.TypeString, Required: true},
 			"enable":            {Type: schema.TypeString, Optional: true},
-			"parent": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
-			},
+			"parent":            {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }
@@ -42,10 +42,7 @@ func resourceCudaWAFClientCertificateCrlsCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls"
-	client.CreateBarracudaWAFResource(
-		name,
-		hydrateBarracudaWAFClientCertificateCrlsResource(d, "post", resourceEndpoint),
-	)
+	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFClientCertificateCrlsResource(d, "post", resourceEndpoint))
 
 	client.hydrateBarracudaWAFClientCertificateCrlsSubResource(d, name, resourceEndpoint)
 
@@ -143,11 +140,7 @@ func resourceCudaWAFClientCertificateCrlsDelete(d *schema.ResourceData, m interf
 	return nil
 }
 
-func hydrateBarracudaWAFClientCertificateCrlsResource(
-	d *schema.ResourceData,
-	method string,
-	endpoint string,
-) *APIRequest {
+func hydrateBarracudaWAFClientCertificateCrlsResource(d *schema.ResourceData, method string, endpoint string) *APIRequest {
 
 	//resourcePayload : payload for the resource
 	resourcePayload := map[string]string{
@@ -188,9 +181,8 @@ func (b *BarracudaWAF) hydrateBarracudaWAFClientCertificateCrlsSubResource(
 	name string,
 	endpoint string,
 ) error {
-	subResourceObjects := map[string][]string{}
 
-	for subResource, subResourceParams := range subResourceObjects {
+	for subResource, subResourceParams := range subResourceClientCertificateCrlsParams {
 		subResourceParamsLength := d.Get(subResource + ".#").(int)
 
 		if subResourceParamsLength > 0 {
