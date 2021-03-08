@@ -57,9 +57,19 @@ func resourceCudaWAFSyslogServersCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/syslog-servers"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSyslogServersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSyslogServersResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFSyslogServersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFSyslogServersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFSyslogServersRead(d, m)

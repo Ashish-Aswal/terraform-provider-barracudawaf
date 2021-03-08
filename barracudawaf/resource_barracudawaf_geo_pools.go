@@ -34,9 +34,19 @@ func resourceCudaWAFGeoPoolsCreate(d *schema.ResourceData, m interface{}) error 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/geo-pools"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFGeoPoolsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFGeoPoolsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFGeoPoolsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFGeoPoolsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFGeoPoolsRead(d, m)

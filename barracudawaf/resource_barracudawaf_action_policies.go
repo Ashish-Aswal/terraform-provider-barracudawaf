@@ -42,9 +42,19 @@ func resourceCudaWAFActionPoliciesCreate(d *schema.ResourceData, m interface{}) 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/action-policies"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFActionPoliciesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFActionPoliciesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFActionPoliciesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFActionPoliciesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFActionPoliciesRead(d, m)

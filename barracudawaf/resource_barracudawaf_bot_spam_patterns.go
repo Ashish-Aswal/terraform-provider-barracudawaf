@@ -39,9 +39,19 @@ func resourceCudaWAFBotSpamPatternsCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/bot-spam-types/" + d.Get("parent.0").(string) + "/bot-spam-patterns"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFBotSpamPatternsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFBotSpamPatternsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFBotSpamPatternsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFBotSpamPatternsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFBotSpamPatternsRead(d, m)

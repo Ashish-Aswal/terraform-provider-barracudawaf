@@ -40,9 +40,22 @@ func resourceCudaWAFResponseBodyRewriteRulesCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/response-body-rewrite-rules"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFResponseBodyRewriteRulesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFResponseBodyRewriteRulesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFResponseBodyRewriteRulesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFResponseBodyRewriteRulesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFResponseBodyRewriteRulesRead(d, m)

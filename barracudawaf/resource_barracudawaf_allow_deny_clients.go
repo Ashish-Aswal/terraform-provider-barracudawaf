@@ -44,9 +44,19 @@ func resourceCudaWAFAllowDenyClientsCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/allow-deny-clients"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAllowDenyClientsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAllowDenyClientsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFAllowDenyClientsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFAllowDenyClientsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFAllowDenyClientsRead(d, m)

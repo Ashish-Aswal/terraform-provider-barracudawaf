@@ -38,9 +38,22 @@ func resourceCudaWAFExportConfigurationCreate(d *schema.ResourceData, m interfac
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/export-configuration"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFExportConfigurationResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFExportConfigurationResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFExportConfigurationSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFExportConfigurationSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFExportConfigurationRead(d, m)

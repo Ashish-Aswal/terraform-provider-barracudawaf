@@ -45,9 +45,22 @@ func resourceCudaWAFSecureBrowsingPoliciesCreate(d *schema.ResourceData, m inter
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/secure-browsing-policies"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSecureBrowsingPoliciesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFSecureBrowsingPoliciesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFSecureBrowsingPoliciesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFSecureBrowsingPoliciesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFSecureBrowsingPoliciesRead(d, m)

@@ -36,9 +36,19 @@ func resourceCudaWAFRateControlPoolsCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rate-control-pools"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFRateControlPoolsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFRateControlPoolsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFRateControlPoolsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFRateControlPoolsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFRateControlPoolsRead(d, m)

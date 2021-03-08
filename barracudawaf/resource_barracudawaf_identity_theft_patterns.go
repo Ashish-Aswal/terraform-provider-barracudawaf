@@ -39,9 +39,22 @@ func resourceCudaWAFIdentityTheftPatternsCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/identity-types/" + d.Get("parent.0").(string) + "/identity-theft-patterns"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFIdentityTheftPatternsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFIdentityTheftPatternsResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFIdentityTheftPatternsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFIdentityTheftPatternsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFIdentityTheftPatternsRead(d, m)

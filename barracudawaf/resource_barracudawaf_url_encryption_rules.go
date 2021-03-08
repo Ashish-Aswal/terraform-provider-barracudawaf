@@ -43,9 +43,22 @@ func resourceCudaWAFUrlEncryptionRulesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-encryption-rules"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlEncryptionRulesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFUrlEncryptionRulesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFUrlEncryptionRulesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFUrlEncryptionRulesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFUrlEncryptionRulesRead(d, m)

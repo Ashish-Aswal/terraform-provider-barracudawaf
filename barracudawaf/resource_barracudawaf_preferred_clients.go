@@ -37,9 +37,19 @@ func resourceCudaWAFPreferredClientsCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rate-control-pools/" + d.Get("parent.0").(string) + "/preferred-clients"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFPreferredClientsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFPreferredClientsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFPreferredClientsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFPreferredClientsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFPreferredClientsRead(d, m)

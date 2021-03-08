@@ -31,9 +31,19 @@ func resourceCudaWAFKerberosServicesCreate(d *schema.ResourceData, m interface{}
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/kerberos-services"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFKerberosServicesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFKerberosServicesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFKerberosServicesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFKerberosServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFKerberosServicesRead(d, m)

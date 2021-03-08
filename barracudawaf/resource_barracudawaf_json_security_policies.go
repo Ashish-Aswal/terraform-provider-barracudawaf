@@ -40,9 +40,22 @@ func resourceCudaWAFJsonSecurityPoliciesCreate(d *schema.ResourceData, m interfa
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/json-security-policies"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFJsonSecurityPoliciesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFJsonSecurityPoliciesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFJsonSecurityPoliciesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFJsonSecurityPoliciesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFJsonSecurityPoliciesRead(d, m)

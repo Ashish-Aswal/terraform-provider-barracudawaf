@@ -34,9 +34,19 @@ func resourceCudaWAFServiceGroupsCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/vsites/" + d.Get("parent.0").(string) + "/service-groups"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServiceGroupsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServiceGroupsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFServiceGroupsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFServiceGroupsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFServiceGroupsRead(d, m)

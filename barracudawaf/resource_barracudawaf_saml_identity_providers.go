@@ -39,9 +39,22 @@ func resourceCudaWAFSamlIdentityProvidersCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/saml-services/" + d.Get("parent.0").(string) + "/saml-identity-providers"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSamlIdentityProvidersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFSamlIdentityProvidersResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFSamlIdentityProvidersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFSamlIdentityProvidersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFSamlIdentityProvidersRead(d, m)
