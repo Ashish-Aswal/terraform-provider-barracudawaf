@@ -31,9 +31,19 @@ func resourceCudaWAFOpenidcServicesCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/openidc-services"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFOpenidcServicesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFOpenidcServicesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFOpenidcServicesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFOpenidcServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFOpenidcServicesRead(d, m)

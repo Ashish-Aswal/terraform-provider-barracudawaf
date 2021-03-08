@@ -37,9 +37,19 @@ func resourceCudaWAFUsersCreate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/users"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUsersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUsersResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFUsersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFUsersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFUsersRead(d, m)

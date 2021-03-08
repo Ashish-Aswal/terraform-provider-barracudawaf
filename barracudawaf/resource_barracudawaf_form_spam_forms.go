@@ -41,9 +41,19 @@ func resourceCudaWAFFormSpamFormsCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/form-spam-forms"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFFormSpamFormsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFFormSpamFormsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFFormSpamFormsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFFormSpamFormsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFFormSpamFormsRead(d, m)

@@ -35,9 +35,19 @@ func resourceCudaWAFLocalUsersCreate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/local-users"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFLocalUsersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFLocalUsersResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFLocalUsersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFLocalUsersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFLocalUsersRead(d, m)

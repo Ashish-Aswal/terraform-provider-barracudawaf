@@ -58,9 +58,19 @@ func resourceCudaWAFUrlProfilesCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-profiles"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlProfilesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlProfilesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFUrlProfilesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFUrlProfilesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFUrlProfilesRead(d, m)

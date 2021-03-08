@@ -146,9 +146,19 @@ func resourceCudaWAFContentRulesCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/content-rules"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFContentRulesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFContentRulesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFContentRulesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFContentRulesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFContentRulesRead(d, m)

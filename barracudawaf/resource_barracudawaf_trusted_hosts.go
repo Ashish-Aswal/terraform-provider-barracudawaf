@@ -40,9 +40,19 @@ func resourceCudaWAFTrustedHostsCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-host-groups/" + d.Get("parent.0").(string) + "/trusted-hosts"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedHostsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedHostsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFTrustedHostsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFTrustedHostsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFTrustedHostsRead(d, m)

@@ -38,9 +38,22 @@ func resourceCudaWAFTrustedServerCertificateCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/trusted-server-certificate"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFTrustedServerCertificateResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFTrustedServerCertificateResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFTrustedServerCertificateSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFTrustedServerCertificateSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFTrustedServerCertificateRead(d, m)

@@ -51,9 +51,22 @@ func resourceCudaWAFExternalLdapServicesCreate(d *schema.ResourceData, m interfa
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/external-ldap-services"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFExternalLdapServicesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFExternalLdapServicesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFExternalLdapServicesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFExternalLdapServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFExternalLdapServicesRead(d, m)

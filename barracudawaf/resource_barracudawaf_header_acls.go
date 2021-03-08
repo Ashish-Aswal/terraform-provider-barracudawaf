@@ -47,9 +47,19 @@ func resourceCudaWAFHeaderAclsCreate(d *schema.ResourceData, m interface{}) erro
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/header-acls"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFHeaderAclsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFHeaderAclsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFHeaderAclsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFHeaderAclsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFHeaderAclsRead(d, m)

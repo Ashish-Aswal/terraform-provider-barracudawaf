@@ -39,9 +39,19 @@ func resourceCudaWAFInputPatternsCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/input-types/" + d.Get("parent.0").(string) + "/input-patterns"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFInputPatternsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFInputPatternsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFInputPatternsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFInputPatternsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFInputPatternsRead(d, m)

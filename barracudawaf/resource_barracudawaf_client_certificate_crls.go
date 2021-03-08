@@ -42,9 +42,22 @@ func resourceCudaWAFClientCertificateCrlsCreate(d *schema.ResourceData, m interf
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/client-certificate-crls"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFClientCertificateCrlsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFClientCertificateCrlsResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFClientCertificateCrlsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFClientCertificateCrlsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFClientCertificateCrlsRead(d, m)

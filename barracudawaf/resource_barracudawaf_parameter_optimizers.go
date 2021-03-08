@@ -35,9 +35,22 @@ func resourceCudaWAFParameterOptimizersCreate(d *schema.ResourceData, m interfac
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/parameter-optimizers"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFParameterOptimizersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFParameterOptimizersResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFParameterOptimizersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFParameterOptimizersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFParameterOptimizersRead(d, m)

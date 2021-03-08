@@ -177,9 +177,19 @@ func resourceCudaWAFServersCreate(d *schema.ResourceData, m interface{}) error {
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/servers"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServersResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFServersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFServersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFServersRead(d, m)

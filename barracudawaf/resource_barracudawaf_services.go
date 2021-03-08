@@ -249,6 +249,7 @@ func resourceCudaWAFServices() *schema.Resource {
 			"status":              {Type: schema.TypeString, Optional: true},
 			"type":                {Type: schema.TypeString, Optional: true},
 			"vsite":               {Type: schema.TypeString, Optional: true},
+			"certificate":         {Type: schema.TypeString, Optional: true},
 			"authentication": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -675,9 +676,19 @@ func resourceCudaWAFServicesCreate(d *schema.ResourceData, m interface{}) error 
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServicesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFServicesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFServicesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFServicesRead(d, m)
@@ -791,6 +802,7 @@ func hydrateBarracudaWAFServicesResource(d *schema.ResourceData, method string, 
 		"status":              d.Get("status").(string),
 		"type":                d.Get("type").(string),
 		"vsite":               d.Get("vsite").(string),
+		"certificate":         d.Get("certificate").(string),
 	}
 
 	// parameters not supported for updates

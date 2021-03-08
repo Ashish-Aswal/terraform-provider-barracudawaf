@@ -31,9 +31,19 @@ func resourceCudaWAFSamlServicesCreate(d *schema.ResourceData, m interface{}) er
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/saml-services"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSamlServicesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFSamlServicesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFSamlServicesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFSamlServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFSamlServicesRead(d, m)

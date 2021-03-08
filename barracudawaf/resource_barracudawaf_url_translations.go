@@ -39,9 +39,19 @@ func resourceCudaWAFUrlTranslationsCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/url-translations"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlTranslationsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFUrlTranslationsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFUrlTranslationsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFUrlTranslationsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFUrlTranslationsRead(d, m)

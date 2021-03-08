@@ -40,9 +40,19 @@ func resourceCudaWAFCredentialServersCreate(d *schema.ResourceData, m interface{
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/credential-servers"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFCredentialServersResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFCredentialServersResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFCredentialServersSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFCredentialServersSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFCredentialServersRead(d, m)

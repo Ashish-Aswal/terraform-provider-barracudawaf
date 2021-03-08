@@ -42,9 +42,22 @@ func resourceCudaWAFWebScrapingPoliciesCreate(d *schema.ResourceData, m interfac
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/web-scraping-policies"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFWebScrapingPoliciesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFWebScrapingPoliciesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFWebScrapingPoliciesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFWebScrapingPoliciesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFWebScrapingPoliciesRead(d, m)

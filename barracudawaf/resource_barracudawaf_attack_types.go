@@ -31,9 +31,19 @@ func resourceCudaWAFAttackTypesCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/attack-types"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAttackTypesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFAttackTypesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFAttackTypesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFAttackTypesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFAttackTypesRead(d, m)

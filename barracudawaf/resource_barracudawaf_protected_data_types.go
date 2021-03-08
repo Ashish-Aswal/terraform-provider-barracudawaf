@@ -44,9 +44,22 @@ func resourceCudaWAFProtectedDataTypesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/security-policies/" + d.Get("parent.0").(string) + "/protected-data-types"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFProtectedDataTypesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFProtectedDataTypesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFProtectedDataTypesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFProtectedDataTypesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFProtectedDataTypesRead(d, m)

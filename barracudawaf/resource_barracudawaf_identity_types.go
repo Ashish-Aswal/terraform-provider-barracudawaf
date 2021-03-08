@@ -31,9 +31,19 @@ func resourceCudaWAFIdentityTypesCreate(d *schema.ResourceData, m interface{}) e
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/identity-types"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFIdentityTypesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFIdentityTypesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFIdentityTypesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFIdentityTypesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFIdentityTypesRead(d, m)

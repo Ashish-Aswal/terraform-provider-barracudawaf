@@ -55,9 +55,19 @@ func resourceCudaWAFNetworkAclsCreate(d *schema.ResourceData, m interface{}) err
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/network-acls"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFNetworkAclsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFNetworkAclsResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFNetworkAclsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFNetworkAclsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFNetworkAclsRead(d, m)

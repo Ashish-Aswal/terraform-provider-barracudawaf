@@ -35,9 +35,22 @@ func resourceCudaWAFConfigurationCheckpointsCreate(d *schema.ResourceData, m int
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/configuration-checkpoints"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFConfigurationCheckpointsResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFConfigurationCheckpointsResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFConfigurationCheckpointsSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFConfigurationCheckpointsSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFConfigurationCheckpointsRead(d, m)

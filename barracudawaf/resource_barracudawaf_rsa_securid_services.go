@@ -31,9 +31,22 @@ func resourceCudaWAFRsaSecuridServicesCreate(d *schema.ResourceData, m interface
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/rsa-securid-services"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFRsaSecuridServicesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(
+		name,
+		hydrateBarracudaWAFRsaSecuridServicesResource(d, "post", resourceEndpoint),
+	)
 
-	client.hydrateBarracudaWAFRsaSecuridServicesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFRsaSecuridServicesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFRsaSecuridServicesRead(d, m)

@@ -52,9 +52,19 @@ func resourceCudaWAFJsonKeyProfilesCreate(d *schema.ResourceData, m interface{})
 	log.Println("[INFO] Creating Barracuda WAF resource " + name)
 
 	resourceEndpoint := "/services/" + d.Get("parent.0").(string) + "/json-profiles/" + d.Get("parent.1").(string) + "/json-key-profiles"
-	client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFJsonKeyProfilesResource(d, "post", resourceEndpoint))
+	err := client.CreateBarracudaWAFResource(name, hydrateBarracudaWAFJsonKeyProfilesResource(d, "post", resourceEndpoint))
 
-	client.hydrateBarracudaWAFJsonKeyProfilesSubResource(d, name, resourceEndpoint)
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF resource (%s) (%v) ", name, err)
+		return err
+	}
+
+	err = client.hydrateBarracudaWAFJsonKeyProfilesSubResource(d, name, resourceEndpoint)
+
+	if err != nil {
+		log.Printf("[ERROR] Unable to create Barracuda WAF sub resource (%s) (%v) ", name, err)
+		return err
+	}
 
 	d.SetId(name)
 	return resourceCudaWAFJsonKeyProfilesRead(d, m)
