@@ -56,28 +56,56 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 		Delete: resourceCudaWAFContentRuleServersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"comments":        {Type: schema.TypeString, Optional: true},
-			"name":            {Type: schema.TypeString, Optional: true},
-			"hostname":        {Type: schema.TypeString, Optional: true},
-			"identifier":      {Type: schema.TypeString, Optional: true},
-			"ip_address":      {Type: schema.TypeString, Optional: true},
-			"address_version": {Type: schema.TypeString, Optional: true},
-			"port":            {Type: schema.TypeString, Optional: true},
-			"status":          {Type: schema.TypeString, Optional: true},
+			"comments":        {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"name":            {Type: schema.TypeString, Optional: true, Description: "Web Server Name"},
+			"hostname":        {Type: schema.TypeString, Optional: true, Description: "Hostname"},
+			"identifier":      {Type: schema.TypeString, Optional: true, Description: "Identifier:"},
+			"ip_address":      {Type: schema.TypeString, Optional: true, Description: "IP Address"},
+			"address_version": {Type: schema.TypeString, Optional: true, Description: "Version"},
+			"port":            {Type: schema.TypeString, Optional: true, Description: "Port"},
+			"status":          {Type: schema.TypeString, Optional: true, Description: "Status"},
 			"resolved_ips":    {Type: schema.TypeString, Optional: true},
 			"advanced_configuration": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"client_impersonation":         {Type: schema.TypeString, Optional: true},
-						"source_ip_to_connect":         {Type: schema.TypeString, Optional: true},
-						"max_connections":              {Type: schema.TypeString, Optional: true},
-						"max_establishing_connections": {Type: schema.TypeString, Optional: true},
-						"max_requests":                 {Type: schema.TypeString, Optional: true},
-						"max_keepalive_requests":       {Type: schema.TypeString, Optional: true},
-						"max_spare_connections":        {Type: schema.TypeString, Optional: true},
-						"timeout":                      {Type: schema.TypeString, Optional: true},
+						"client_impersonation": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Client Impersonation",
+						},
+						"source_ip_to_connect": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Source IP to Connect",
+						},
+						"max_connections": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Connections",
+						},
+						"max_establishing_connections": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Establishing Connections",
+						},
+						"max_requests": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Requests",
+						},
+						"max_keepalive_requests": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Keepalive Requests",
+						},
+						"max_spare_connections": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Spare Connections",
+						},
+						"timeout": {Type: schema.TypeString, Optional: true, Description: "Timeout"},
 					},
 				},
 			},
@@ -86,8 +114,8 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"interval":                 {Type: schema.TypeString, Optional: true},
-						"enable_oob_health_checks": {Type: schema.TypeString, Optional: true},
+						"interval":                 {Type: schema.TypeString, Optional: true, Description: "Interval"},
+						"enable_oob_health_checks": {Type: schema.TypeString, Optional: true, Description: "Status"},
 					},
 				},
 			},
@@ -96,12 +124,16 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"additional_headers":   {Type: schema.TypeString, Optional: true},
-						"match_content_string": {Type: schema.TypeString, Optional: true},
-						"method":               {Type: schema.TypeString, Optional: true},
-						"status_code":          {Type: schema.TypeString, Optional: true},
-						"url":                  {Type: schema.TypeString, Optional: true},
-						"domain":               {Type: schema.TypeString, Optional: true},
+						"additional_headers": {Type: schema.TypeString, Optional: true, Description: "Additional Headers"},
+						"match_content_string": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Match content String",
+						},
+						"method":      {Type: schema.TypeString, Optional: true, Description: "Method"},
+						"status_code": {Type: schema.TypeString, Optional: true, Description: "Status Code"},
+						"url":         {Type: schema.TypeString, Optional: true, Description: "URL"},
+						"domain":      {Type: schema.TypeString, Optional: true, Description: "Domain"},
 					},
 				},
 			},
@@ -110,8 +142,16 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"keepalive_timeout":         {Type: schema.TypeString, Optional: true},
-						"enable_connection_pooling": {Type: schema.TypeString, Optional: true},
+						"keepalive_timeout": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Keepalive Timeout",
+						},
+						"enable_connection_pooling": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable Connection Pooling",
+						},
 					},
 				},
 			},
@@ -125,10 +165,14 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"max_other_failure":   {Type: schema.TypeString, Optional: true},
-						"max_refused":         {Type: schema.TypeString, Optional: true},
-						"max_timeout_failure": {Type: schema.TypeString, Optional: true},
-						"max_http_errors":     {Type: schema.TypeString, Optional: true},
+						"max_other_failure": {Type: schema.TypeString, Optional: true, Description: "Max Other Failure"},
+						"max_refused":       {Type: schema.TypeString, Optional: true, Description: "Max Refused"},
+						"max_timeout_failure": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Timeout Failures",
+						},
+						"max_http_errors": {Type: schema.TypeString, Optional: true, Description: "Max HTTP Errors"},
 					},
 				},
 			},
@@ -137,16 +181,40 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"client_certificate":            {Type: schema.TypeString, Optional: true},
-						"enable_ssl_compatibility_mode": {Type: schema.TypeString, Optional: true},
-						"enable_ssl_3":                  {Type: schema.TypeString, Optional: true},
-						"enable_tls_1":                  {Type: schema.TypeString, Optional: true},
-						"enable_tls_1_1":                {Type: schema.TypeString, Optional: true},
-						"enable_tls_1_2":                {Type: schema.TypeString, Optional: true},
-						"enable_tls_1_3":                {Type: schema.TypeString, Optional: true},
-						"validate_certificate":          {Type: schema.TypeString, Optional: true},
-						"enable_https":                  {Type: schema.TypeString, Optional: true},
-						"enable_sni":                    {Type: schema.TypeString, Optional: true},
+						"client_certificate": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Client Certificate",
+						},
+						"enable_ssl_compatibility_mode": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable SSL Compatibility Mode",
+						},
+						"enable_ssl_3": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "SSL 3.0 (Insecure)",
+						},
+						"enable_tls_1": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "TLS 1.0 (Insecure)",
+						},
+						"enable_tls_1_1": {Type: schema.TypeString, Optional: true, Description: "TLS 1.1"},
+						"enable_tls_1_2": {Type: schema.TypeString, Optional: true, Description: "TLS 1.2"},
+						"enable_tls_1_3": {Type: schema.TypeString, Optional: true, Description: "TLS 1.3"},
+						"validate_certificate": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Validate Server Certificate",
+						},
+						"enable_https": {Type: schema.TypeString, Optional: true, Description: "Status"},
+						"enable_sni": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable SNI",
+						},
 					},
 				},
 			},
@@ -155,8 +223,8 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"backup_server": {Type: schema.TypeString, Optional: true},
-						"weight":        {Type: schema.TypeString, Optional: true},
+						"backup_server": {Type: schema.TypeString, Optional: true, Description: "Backup Appliance"},
+						"weight":        {Type: schema.TypeString, Optional: true, Description: "WRR Weight"},
 					},
 				},
 			},

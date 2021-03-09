@@ -17,13 +17,13 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Access Rule Name
 - **parent** (List of String)
 
 ### Optional
 
-- **attribute_names** (String)
-- **attribute_values** (String)
+- **attribute_names** (String) Access Rule Attribute Names
+- **attribute_values** (String) Access Rule Attribute Values
 - **id** (String) The ID of this resource.
 
 

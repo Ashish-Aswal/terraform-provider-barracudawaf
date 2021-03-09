@@ -20,7 +20,7 @@ func resourceCudaWAFServiceGroups() *schema.Resource {
 		Delete: resourceCudaWAFServiceGroupsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"service_group": {Type: schema.TypeString, Required: true},
+			"service_group": {Type: schema.TypeString, Required: true, Description: "Service Group"},
 			"parent":        {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

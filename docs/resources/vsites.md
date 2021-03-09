@@ -17,13 +17,13 @@ description: |-
 
 ### Required
 
-- **interface** (String)
+- **interface** (String) Interface
 
 ### Optional
 
-- **active_on** (String)
-- **comments** (String)
+- **active_on** (String) Active-on
+- **comments** (String) Comments
 - **id** (String) The ID of this resource.
-- **name** (String)
+- **name** (String) Vsite
 
 

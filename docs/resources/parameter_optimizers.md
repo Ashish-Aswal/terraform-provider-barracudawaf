@@ -17,9 +17,9 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Optimizer Name
 - **parent** (List of String)
-- **start_token** (String)
+- **start_token** (String) Start Token
 
 ### Optional
 

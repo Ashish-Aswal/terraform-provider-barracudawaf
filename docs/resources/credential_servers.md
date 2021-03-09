@@ -17,17 +17,17 @@ description: |-
 
 ### Required
 
-- **armored_browser_type** (String)
-- **ip_address** (String)
-- **name** (String)
-- **policy_name** (String)
+- **armored_browser_type** (String) Armored Browser Type
+- **ip_address** (String) Server Name/IP Address
+- **name** (String) Name
+- **policy_name** (String) Policy Name
 
 ### Optional
 
-- **cache_expiry** (String)
-- **cache_valid_sessions** (String)
+- **cache_expiry** (String) Cache Expiry (Seconds)
+- **cache_valid_sessions** (String) Cache Valid Sessions
 - **id** (String) The ID of this resource.
-- **port** (String)
-- **redirect_url** (String)
+- **port** (String) Server Port
+- **redirect_url** (String) Redirect URL
 
 

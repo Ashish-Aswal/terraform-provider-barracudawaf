@@ -20,13 +20,17 @@ func resourceCudaWAFBonds() *schema.Resource {
 		Delete: resourceCudaWAFBondsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"duplexity":  {Type: schema.TypeString, Optional: true},
-			"name":       {Type: schema.TypeString, Required: true},
-			"speed":      {Type: schema.TypeString, Optional: true},
-			"bond_ports": {Type: schema.TypeString, Required: true},
-			"min_link":   {Type: schema.TypeString, Optional: true},
-			"mode":       {Type: schema.TypeString, Optional: true},
-			"mtu":        {Type: schema.TypeString, Optional: true},
+			"duplexity":  {Type: schema.TypeString, Optional: true, Description: "None"},
+			"name":       {Type: schema.TypeString, Required: true, Description: "Name"},
+			"speed":      {Type: schema.TypeString, Optional: true, Description: "None"},
+			"bond_ports": {Type: schema.TypeString, Required: true, Description: "Ports"},
+			"min_link":   {Type: schema.TypeString, Optional: true, Description: "Minimum Links"},
+			"mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Cannot have VLAN(s) on LAN interface when enabling Network Port Configuration.",
+			},
+			"mtu": {Type: schema.TypeString, Optional: true, Description: "Maximum Transmission Unit (MTU)"},
 		},
 	}
 }

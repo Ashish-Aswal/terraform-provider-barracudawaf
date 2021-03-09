@@ -20,13 +20,13 @@ func resourceCudaWAFResponseBodyRewriteRules() *schema.Resource {
 		Delete: resourceCudaWAFResponseBodyRewriteRulesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"comments":        {Type: schema.TypeString, Optional: true},
-			"host":            {Type: schema.TypeString, Required: true},
-			"name":            {Type: schema.TypeString, Required: true},
-			"replace_string":  {Type: schema.TypeString, Optional: true},
-			"search_string":   {Type: schema.TypeString, Required: true},
-			"sequence_number": {Type: schema.TypeString, Required: true},
-			"url":             {Type: schema.TypeString, Required: true},
+			"comments":        {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"host":            {Type: schema.TypeString, Required: true, Description: "Host Match"},
+			"name":            {Type: schema.TypeString, Required: true, Description: "Rule Name"},
+			"replace_string":  {Type: schema.TypeString, Optional: true, Description: "Replace String"},
+			"search_string":   {Type: schema.TypeString, Required: true, Description: "Search String"},
+			"sequence_number": {Type: schema.TypeString, Required: true, Description: "Sequence number"},
+			"url":             {Type: schema.TypeString, Required: true, Description: "URL Match"},
 			"parent":          {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

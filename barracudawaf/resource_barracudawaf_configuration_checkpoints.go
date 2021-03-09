@@ -20,9 +20,9 @@ func resourceCudaWAFConfigurationCheckpoints() *schema.Resource {
 		Delete: resourceCudaWAFConfigurationCheckpointsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":    {Type: schema.TypeString, Required: true},
-			"comment": {Type: schema.TypeString, Optional: true},
-			"date":    {Type: schema.TypeString, Optional: true},
+			"name":    {Type: schema.TypeString, Required: true, Description: "checkpoint name"},
+			"comment": {Type: schema.TypeString, Optional: true, Description: "checkpoint comment"},
+			"date":    {Type: schema.TypeString, Optional: true, Description: "checkpoint date"},
 		},
 	}
 }

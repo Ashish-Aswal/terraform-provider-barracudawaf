@@ -19,7 +19,7 @@ func resourceCudaWAFOpenidcServices() *schema.Resource {
 		Update: resourceCudaWAFOpenidcServicesUpdate,
 		Delete: resourceCudaWAFOpenidcServicesDelete,
 
-		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true}},
+		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
 	}
 }
 

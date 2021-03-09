@@ -17,31 +17,31 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) URL Profile Name
 - **parent** (List of String)
-- **url** (String)
+- **url** (String) URL
 
 ### Optional
 
-- **allow_query_string** (String)
-- **allowed_content_types** (String)
-- **allowed_methods** (String)
-- **blocked_attack_types** (String)
-- **comment** (String)
-- **csrf_prevention** (String)
-- **custom_blocked_attack_types** (String)
-- **display_name** (String)
-- **exception_patterns** (String)
-- **extended_match** (String)
-- **extended_match_sequence** (String)
-- **hidden_parameter_protection** (String)
+- **allow_query_string** (String) Allow Query String
+- **allowed_content_types** (String) Allowed Content Types
+- **allowed_methods** (String) Allowed Methods
+- **blocked_attack_types** (String) Blocked Attack Types
+- **comment** (String) Comments
+- **csrf_prevention** (String) CSRF Prevention
+- **custom_blocked_attack_types** (String) Custom Blocked Attack Types
+- **display_name** (String) Display Name
+- **exception_patterns** (String) Exception Patterns
+- **extended_match** (String) Extended Match
+- **extended_match_sequence** (String) Extended Match Sequence
+- **hidden_parameter_protection** (String) Hidden Parameter Protection
 - **id** (String) The ID of this resource.
-- **max_content_length** (String)
-- **maximum_parameter_name_length** (String)
-- **maximum_upload_files** (String)
-- **minimum_form_fill_time** (String)
-- **mode** (String)
-- **referrers_for_the_url_profile** (String)
-- **status** (String)
+- **max_content_length** (String) Max Content Length
+- **maximum_parameter_name_length** (String) Maximum Parameter Name Length
+- **maximum_upload_files** (String) Maximum Upload Files
+- **minimum_form_fill_time** (String) Minimum Form Fill Time
+- **mode** (String) Mode
+- **referrers_for_the_url_profile** (String) Referrers for the URL Profile
+- **status** (String) Status
 
 

@@ -18,7 +18,7 @@ description: |-
 ### Required
 
 - **parent** (List of String)
-- **service_group** (String)
+- **service_group** (String) Service Group
 
 ### Optional
 

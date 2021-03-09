@@ -17,14 +17,14 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **token_name** (String)
-- **token_type** (String)
+- **name** (String) Session Identifier Name
+- **token_name** (String) Session Token Name
+- **token_type** (String) Session Token Type
 
 ### Optional
 
-- **end_delimiter** (String)
+- **end_delimiter** (String) URL Session Token End Delimiter
 - **id** (String) The ID of this resource.
-- **start_delimiter** (String)
+- **start_delimiter** (String) URL Session Token Start Delimiter
 
 

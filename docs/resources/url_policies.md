@@ -17,44 +17,44 @@ description: |-
 
 ### Required
 
-- **max_bandwidth_from_all_sources** (String)
-- **max_bandwidth_per_fingerprint** (String)
-- **max_bandwidth_per_ip** (String)
-- **name** (String)
+- **max_bandwidth_from_all_sources** (String) Max Bandwidth From All Sources
+- **max_bandwidth_per_fingerprint** (String) Max Bandwidth Per Client Fingerprint
+- **max_bandwidth_per_ip** (String) Max Bandwidth Per IP
+- **name** (String) URL Policy Name
 - **parent** (List of String)
-- **url** (String)
+- **url** (String) URL Match
 
 ### Optional
 
-- **comments** (String)
-- **count_window** (String)
-- **counting_criterion** (String)
-- **credential_protection_type** (String)
-- **credential_spraying_blocking_threshold** (String)
-- **credential_stuffing_password_field** (String)
-- **credential_stuffing_username_field** (String)
-- **enable_batd_scan** (String)
-- **enable_bruteforce_prevention** (String)
-- **enable_count_auth_resp_code** (String)
-- **enable_data_theft_protection** (String)
-- **enable_virus_scan** (String)
-- **exception_clients** (String)
-- **exception_fingerprints** (String)
-- **extended_match** (String)
-- **extended_match_sequence** (String)
-- **host** (String)
+- **comments** (String) Comments
+- **count_window** (String) Count Window
+- **counting_criterion** (String) Counting Criterion
+- **credential_protection_type** (String) Protection Type
+- **credential_spraying_blocking_threshold** (String) Block Threshold
+- **credential_stuffing_password_field** (String) Password Parameter
+- **credential_stuffing_username_field** (String) Username Parameter
+- **enable_batd_scan** (String) Enable BATP Scan
+- **enable_bruteforce_prevention** (String) Enable Bruteforce Prevention
+- **enable_count_auth_resp_code** (String) Count Auth Response Codes
+- **enable_data_theft_protection** (String) Enable Data Theft Protection
+- **enable_virus_scan** (String) Enable Virus Scan
+- **exception_clients** (String) Exception Clients
+- **exception_fingerprints** (String) Exception Fingerprints
+- **extended_match** (String) Extended Match
+- **extended_match_sequence** (String) Extended Match Sequence
+- **host** (String) Host Match
 - **id** (String) The ID of this resource.
-- **max_allowed_accesses_from_all_sources** (String)
-- **max_allowed_accesses_per_fingerprint** (String)
-- **max_allowed_accesses_per_ip** (String)
-- **max_failed_accesses_from_all_sources** (String)
-- **max_failed_accesses_per_fingerprint** (String)
-- **max_failed_accesses_per_ip** (String)
-- **mode** (String)
-- **parse_urls_in_scripts** (String)
-- **rate_control_pool** (String)
-- **response_charset** (String)
-- **status** (String)
-- **web_scraping_policy** (String)
+- **max_allowed_accesses_from_all_sources** (String) Max Allowed Accesses From All Sources
+- **max_allowed_accesses_per_fingerprint** (String) Max Allowed Accesses Per Client Fingerprint
+- **max_allowed_accesses_per_ip** (String) Max Allowed Accesses Per IP
+- **max_failed_accesses_from_all_sources** (String) Max Failed Accesses From All Sources
+- **max_failed_accesses_per_fingerprint** (String) Max Failed Accesses Per Client Fingerprint
+- **max_failed_accesses_per_ip** (String) Max Failed Accesses Per IP
+- **mode** (String) Mode
+- **parse_urls_in_scripts** (String) Parse URLs in Scripts
+- **rate_control_pool** (String) Rate Control Pool
+- **response_charset** (String) Response Charset
+- **status** (String) Status
+- **web_scraping_policy** (String) Web Scraping Policy
 
 

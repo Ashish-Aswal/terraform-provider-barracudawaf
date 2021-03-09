@@ -17,14 +17,14 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **user_agent** (String)
+- **name** (String) Parent Name
+- **user_agent** (String) User Agent
 
 ### Optional
 
-- **host** (String)
+- **host** (String) Host
 - **id** (String) The ID of this resource.
-- **identifier** (String)
-- **ip_address** (String)
+- **identifier** (String) Whitelist Identifier
+- **ip_address** (String) IP Addresses
 
 

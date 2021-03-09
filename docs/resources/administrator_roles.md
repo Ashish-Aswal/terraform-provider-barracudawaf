@@ -17,19 +17,19 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Role Name
 
 ### Optional
 
-- **api_privilege** (String)
-- **authentication_services** (String)
+- **api_privilege** (String) API Privilege
+- **authentication_services** (String) Auth Services
 - **id** (String) The ID of this resource.
-- **objects** (String)
-- **operations** (String)
+- **objects** (String) Object access permissions
+- **operations** (String) Specify Allowed Operations
 - **role_type** (String)
-- **security_policies** (String)
-- **service_groups** (String)
-- **services** (String)
-- **vsites** (String)
+- **security_policies** (String) Security Policies
+- **service_groups** (String) Service Group
+- **services** (String) Services
+- **vsites** (String) Vsites
 
 

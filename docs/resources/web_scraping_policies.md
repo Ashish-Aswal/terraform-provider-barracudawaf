@@ -17,19 +17,19 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Web Scraping Policy Name
 
 ### Optional
 
-- **blacklisted_categories** (String)
-- **comments** (String)
-- **delay_time** (String)
-- **detect_mouse_event** (String)
+- **blacklisted_categories** (String) Blacklisted Categories
+- **comments** (String) Comment
+- **delay_time** (String) Delay Time
+- **detect_mouse_event** (String) Detect Mouse Event
 - **id** (String) The ID of this resource.
-- **insert_delay** (String)
-- **insert_disallowed_urls** (String)
-- **insert_hidden_links** (String)
-- **insert_javascript_in_response** (String)
-- **whitelisted_bots** (String)
+- **insert_delay** (String) Insert Delay in Robots.txt
+- **insert_disallowed_urls** (String) Insert Disallowed URLs in Robots.txt
+- **insert_hidden_links** (String) Insert Hidden Links in Response
+- **insert_javascript_in_response** (String) Insert JavaScript in Response
+- **whitelisted_bots** (String) Whitelisted Bots
 
 

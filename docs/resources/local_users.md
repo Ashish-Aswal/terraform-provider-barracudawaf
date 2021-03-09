@@ -17,12 +17,12 @@ description: |-
 
 ### Required
 
-- **password** (String)
+- **password** (String) Password
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **name** (String)
-- **user_groups** (String)
+- **name** (String) New user name
+- **user_groups** (String) User Groups
 
 

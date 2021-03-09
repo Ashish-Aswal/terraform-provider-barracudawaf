@@ -17,17 +17,17 @@ description: |-
 
 ### Required
 
-- **max_key_length** (String)
-- **max_keys** (String)
-- **max_value_length** (String)
-- **name** (String)
+- **max_key_length** (String) Max Key Length
+- **max_keys** (String) Max Keys
+- **max_value_length** (String) Max Value Length
+- **name** (String) Policy Name
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **max_array_elements** (String)
-- **max_number_value** (String)
-- **max_object_depth** (String)
-- **max_siblings** (String)
+- **max_array_elements** (String) Max Array Elements
+- **max_number_value** (String) Max Number Value
+- **max_object_depth** (String) Max Object Depth
+- **max_siblings** (String) Max Siblings
 
 

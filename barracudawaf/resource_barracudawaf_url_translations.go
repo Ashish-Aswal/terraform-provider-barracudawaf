@@ -20,12 +20,12 @@ func resourceCudaWAFUrlTranslations() *schema.Resource {
 		Delete: resourceCudaWAFUrlTranslationsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"comments":       {Type: schema.TypeString, Optional: true},
-			"outside_domain": {Type: schema.TypeString, Required: true},
-			"outside_prefix": {Type: schema.TypeString, Required: true},
-			"inside_domain":  {Type: schema.TypeString, Required: true},
-			"inside_prefix":  {Type: schema.TypeString, Required: true},
-			"name":           {Type: schema.TypeString, Required: true},
+			"comments":       {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"outside_domain": {Type: schema.TypeString, Required: true, Description: "Outside Domain"},
+			"outside_prefix": {Type: schema.TypeString, Required: true, Description: "Outside Prefix"},
+			"inside_domain":  {Type: schema.TypeString, Required: true, Description: "Inside Domain"},
+			"inside_prefix":  {Type: schema.TypeString, Required: true, Description: "Inside Prefix"},
+			"name":           {Type: schema.TypeString, Required: true, Description: "Rule Name"},
 			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

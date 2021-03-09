@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Input Data Type Name
 
 ### Optional
 

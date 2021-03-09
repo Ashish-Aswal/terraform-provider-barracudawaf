@@ -17,22 +17,22 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) URL ACL Name
 - **parent** (List of String)
 
 ### Optional
 
-- **action** (String)
-- **comments** (String)
-- **deny_response** (String)
-- **enable** (String)
-- **extended_match** (String)
-- **extended_match_sequence** (String)
-- **follow_up_action** (String)
-- **follow_up_action_time** (String)
+- **action** (String) Action
+- **comments** (String) Comments
+- **deny_response** (String) Deny Response
+- **enable** (String) Enable URL ACL
+- **extended_match** (String) Extended Match
+- **extended_match_sequence** (String) Extended Match Sequence
+- **follow_up_action** (String) Follow Up Action
+- **follow_up_action_time** (String) Follow Up Action Time
 - **id** (String) The ID of this resource.
-- **redirect_url** (String)
-- **response_page** (String)
-- **url** (String)
+- **redirect_url** (String) Redirect URL
+- **response_page** (String) Response Page
+- **url** (String) URL Match
 
 

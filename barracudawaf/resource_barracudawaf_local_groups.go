@@ -19,7 +19,7 @@ func resourceCudaWAFLocalGroups() *schema.Resource {
 		Update: resourceCudaWAFLocalGroupsUpdate,
 		Delete: resourceCudaWAFLocalGroupsDelete,
 
-		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true}},
+		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "New Group Name"}},
 	}
 }
 

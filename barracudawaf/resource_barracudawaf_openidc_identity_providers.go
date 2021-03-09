@@ -20,19 +20,35 @@ func resourceCudaWAFOpenidcIdentityProviders() *schema.Resource {
 		Delete: resourceCudaWAFOpenidcIdentityProvidersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":                   {Type: schema.TypeString, Optional: true},
-			"auth_endpoint":          {Type: schema.TypeString, Optional: true},
-			"client_id":              {Type: schema.TypeString, Required: true},
-			"client_secret":          {Type: schema.TypeString, Required: true},
-			"endpoint_configuration": {Type: schema.TypeString, Optional: true},
-			"openidc_issuer":         {Type: schema.TypeString, Optional: true},
-			"jwks_url":               {Type: schema.TypeString, Required: true},
-			"metadata_url":           {Type: schema.TypeString, Optional: true},
-			"scope":                  {Type: schema.TypeString, Optional: true},
-			"token_endpoint":         {Type: schema.TypeString, Required: true},
-			"userinfo_endpoint":      {Type: schema.TypeString, Optional: true},
-			"type_openidc":           {Type: schema.TypeString, Optional: true},
-			"parent":                 {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
+			"name":          {Type: schema.TypeString, Optional: true, Description: "OpenID Connect Alias"},
+			"auth_endpoint": {Type: schema.TypeString, Optional: true, Description: "Auth Endpoint"},
+			"client_id":     {Type: schema.TypeString, Required: true, Description: "Identity Provider Name"},
+			"client_secret": {Type: schema.TypeString, Required: true, Description: "Server IP"},
+			"endpoint_configuration": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Identity Provider Metadata Type",
+			},
+			"openidc_issuer": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the metadata file being uploaded.",
+			},
+			"jwks_url": {Type: schema.TypeString, Required: true, Description: "Type"},
+			"metadata_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Please specify the OpenId Connect authorization endpoint",
+			},
+			"scope": {Type: schema.TypeString, Optional: true, Description: "Metadata URL"},
+			"token_endpoint": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Identity Provider Metadata Type",
+			},
+			"userinfo_endpoint": {Type: schema.TypeString, Optional: true, Description: "Type"},
+			"type_openidc":      {Type: schema.TypeString, Optional: true, Description: "Type"},
+			"parent":            {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
 }

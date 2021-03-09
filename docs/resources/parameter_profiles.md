@@ -17,29 +17,29 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **parameter** (String)
-- **parameter_class** (String)
+- **name** (String) Parameter Profile Name
+- **parameter** (String) Parameter
+- **parameter_class** (String) Parameter Class
 - **parent** (List of String)
 
 ### Optional
 
-- **allowed_file_upload_type** (String)
-- **allowed_metachars** (String)
-- **base64_decode_parameter_value** (String)
-- **comments** (String)
-- **custom_parameter_class** (String)
-- **exception_patterns** (String)
-- **file_upload_extensions** (String)
-- **file_upload_mime_types** (String)
+- **allowed_file_upload_type** (String) Allowed File Upload Type
+- **allowed_metachars** (String) Allowed Metacharacters
+- **base64_decode_parameter_value** (String) Base64 Decode Parameter Value
+- **comments** (String) Comments
+- **custom_parameter_class** (String) Custom Parameter Class
+- **exception_patterns** (String) Exception Patterns
+- **file_upload_extensions** (String) File Upload Extensions
+- **file_upload_mime_types** (String) File Upload Mime Types
 - **id** (String) The ID of this resource.
-- **ignore** (String)
-- **max_value_length** (String)
-- **maximum_instances** (String)
-- **required** (String)
-- **status** (String)
-- **type** (String)
-- **validate_parameter_name** (String)
-- **values** (String)
+- **ignore** (String) Ignore
+- **max_value_length** (String) Max Value Length
+- **maximum_instances** (String) Maximum Instances
+- **required** (String) Required
+- **status** (String) Status
+- **type** (String) Type
+- **validate_parameter_name** (String) Validate Parameter Name
+- **values** (String) Values
 
 

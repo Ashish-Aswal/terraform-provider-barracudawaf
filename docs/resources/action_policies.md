@@ -17,19 +17,19 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Attack Action Name
 - **parent** (List of String)
 
 ### Optional
 
-- **action** (String)
-- **deny_response** (String)
-- **follow_up_action** (String)
-- **follow_up_action_time** (String)
+- **action** (String) Action
+- **deny_response** (String) Deny Response
+- **follow_up_action** (String) Follow Up Action
+- **follow_up_action_time** (String) Follow Up Action Time
 - **id** (String) The ID of this resource.
-- **numeric_id** (String)
-- **redirect_url** (String)
-- **response_page** (String)
-- **risk_score** (String)
+- **numeric_id** (String) Attack Description
+- **redirect_url** (String) Redirect URL
+- **response_page** (String) Response Page
+- **risk_score** (String) Risk Score
 
 

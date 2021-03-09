@@ -17,21 +17,21 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Rule Name
 - **parent** (List of String)
 
 ### Optional
 
-- **action** (String)
-- **certificate_serial** (String)
-- **common_name** (String)
-- **country** (String)
+- **action** (String) Action
+- **certificate_serial** (String) Certificate Serial Number
+- **common_name** (String) Common Name
+- **country** (String) Country
 - **id** (String) The ID of this resource.
-- **locality** (String)
-- **organization** (String)
-- **organizational_unit** (String)
-- **sequence** (String)
-- **state** (String)
-- **status** (String)
+- **locality** (String) Locality
+- **organization** (String) Organization
+- **organizational_unit** (String) Organizational Unit
+- **sequence** (String) Sequence
+- **state** (String) State
+- **status** (String) Status
 
 

@@ -20,14 +20,14 @@ func resourceCudaWAFFormSpamForms() *schema.Resource {
 		Delete: resourceCudaWAFFormSpamFormsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":                   {Type: schema.TypeString, Required: true},
-			"created_by":             {Type: schema.TypeString, Optional: true},
-			"status":                 {Type: schema.TypeString, Optional: true},
-			"mode":                   {Type: schema.TypeString, Optional: true},
-			"action_url":             {Type: schema.TypeString, Required: true},
-			"minimum_form_fill_time": {Type: schema.TypeString, Optional: true},
-			"parameter_name":         {Type: schema.TypeString, Optional: true},
-			"parameter_class":        {Type: schema.TypeString, Optional: true},
+			"name":                   {Type: schema.TypeString, Required: true, Description: "Form Name"},
+			"created_by":             {Type: schema.TypeString, Optional: true, Description: "Created By"},
+			"status":                 {Type: schema.TypeString, Optional: true, Description: "Status"},
+			"mode":                   {Type: schema.TypeString, Optional: true, Description: "Mode"},
+			"action_url":             {Type: schema.TypeString, Required: true, Description: "Action URL"},
+			"minimum_form_fill_time": {Type: schema.TypeString, Optional: true, Description: "Minimum Form Fill Time"},
+			"parameter_name":         {Type: schema.TypeString, Optional: true, Description: "Parameter Name"},
+			"parameter_class":        {Type: schema.TypeString, Optional: true, Description: "Parameter Class"},
 			"parent":                 {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

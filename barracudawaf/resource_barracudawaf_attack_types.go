@@ -19,7 +19,9 @@ func resourceCudaWAFAttackTypes() *schema.Resource {
 		Update: resourceCudaWAFAttackTypesUpdate,
 		Delete: resourceCudaWAFAttackTypesDelete,
 
-		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true}},
+		Schema: map[string]*schema.Schema{
+			"name": {Type: schema.TypeString, Required: true, Description: "Attack Data Type Name"},
+		},
 	}
 }
 

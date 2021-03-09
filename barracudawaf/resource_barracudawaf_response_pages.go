@@ -20,11 +20,11 @@ func resourceCudaWAFResponsePages() *schema.Resource {
 		Delete: resourceCudaWAFResponsePagesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":        {Type: schema.TypeString, Required: true},
-			"body":        {Type: schema.TypeString, Optional: true},
-			"headers":     {Type: schema.TypeString, Optional: true},
-			"status_code": {Type: schema.TypeString, Required: true},
-			"type":        {Type: schema.TypeString, Optional: true},
+			"name":        {Type: schema.TypeString, Required: true, Description: "Response Page Name"},
+			"body":        {Type: schema.TypeString, Optional: true, Description: "Body"},
+			"headers":     {Type: schema.TypeString, Optional: true, Description: "Headers"},
+			"status_code": {Type: schema.TypeString, Required: true, Description: "Status Code"},
+			"type":        {Type: schema.TypeString, Optional: true, Description: "Session Token Type"},
 		},
 	}
 }

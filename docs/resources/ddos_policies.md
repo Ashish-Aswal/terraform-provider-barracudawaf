@@ -17,22 +17,22 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) DDos Policy Name
 - **parent** (List of String)
 
 ### Optional
 
-- **comments** (String)
-- **enforce_captcha** (String)
-- **evaluate_clients** (String)
-- **expiry_time** (String)
-- **extended_match** (String)
-- **extended_match_sequence** (String)
-- **host** (String)
+- **comments** (String) Comments
+- **enforce_captcha** (String) Enforce CAPTCHA
+- **evaluate_clients** (String) Enable URL ACL
+- **expiry_time** (String) Expiry time
+- **extended_match** (String) Extended Match
+- **extended_match_sequence** (String) Extended Match Sequence
+- **host** (String) Host Match
 - **id** (String) The ID of this resource.
-- **mouse_check** (String)
-- **num_captcha_tries** (String)
-- **num_unanswered_captcha** (String)
-- **url** (String)
+- **mouse_check** (String) Detect Mouse Event
+- **num_captcha_tries** (String) Max CAPTCHA Attempts
+- **num_unanswered_captcha** (String) Max Unanswered CAPTCHA
+- **url** (String) URL Match
 
 

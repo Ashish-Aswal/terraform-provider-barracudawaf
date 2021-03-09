@@ -17,17 +17,17 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Trusted Host Name
 - **parent** (List of String)
 
 ### Optional
 
-- **comments** (String)
+- **comments** (String) Comments
 - **id** (String) The ID of this resource.
-- **ip_address** (String)
-- **ipv6_address** (String)
-- **ipv6_mask** (String)
-- **mask** (String)
-- **version** (String)
+- **ip_address** (String) IP Address
+- **ipv6_address** (String) IPv6 Address
+- **ipv6_mask** (String) Mask
+- **mask** (String) Mask
+- **version** (String) Version
 
 

@@ -20,11 +20,11 @@ func resourceCudaWAFSessionIdentifiers() *schema.Resource {
 		Delete: resourceCudaWAFSessionIdentifiersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":            {Type: schema.TypeString, Required: true},
-			"token_name":      {Type: schema.TypeString, Required: true},
-			"token_type":      {Type: schema.TypeString, Required: true},
-			"end_delimiter":   {Type: schema.TypeString, Optional: true},
-			"start_delimiter": {Type: schema.TypeString, Optional: true},
+			"name":            {Type: schema.TypeString, Required: true, Description: "Session Identifier Name"},
+			"token_name":      {Type: schema.TypeString, Required: true, Description: "Session Token Name"},
+			"token_type":      {Type: schema.TypeString, Required: true, Description: "Session Token Type"},
+			"end_delimiter":   {Type: schema.TypeString, Optional: true, Description: "URL Session Token End Delimiter"},
+			"start_delimiter": {Type: schema.TypeString, Optional: true, Description: "URL Session Token Start Delimiter"},
 		},
 	}
 }

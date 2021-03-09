@@ -17,25 +17,25 @@ description: |-
 
 ### Required
 
-- **common_name** (String)
-- **country_code** (String)
-- **name** (String)
+- **common_name** (String) Common Name
+- **country_code** (String) Country
+- **name** (String) None
 
 ### Optional
 
-- **allow_private_key_export** (String)
-- **city** (String)
-- **download_type** (String)
-- **elliptic_curve_name** (String)
-- **encrypt_password** (String)
+- **allow_private_key_export** (String) If set to <b>Yes</b>, the Private Key gets downloaded along with the certificate.
+- **city** (String) Locality Name
+- **download_type** (String) A Certificate Signing Request (CSR) and/or Certificate can be downloaded.
+- **elliptic_curve_name** (String) Elliptic Curve Name
+- **encrypt_password** (String) Encryption Password is used to extract the private key from PKCS #12 token.
 - **expiry** (String)
 - **id** (String) The ID of this resource.
-- **key_size** (String)
-- **key_type** (String)
-- **organization_name** (String)
-- **organizational_unit** (String)
-- **san_certificate** (String)
+- **key_size** (String) Key Size
+- **key_type** (String) Select Key Type:
+- **organization_name** (String) Organization Name
+- **organizational_unit** (String) Organizational Unit Name
+- **san_certificate** (String) None
 - **serial** (String)
-- **state** (String)
+- **state** (String) State or Province
 
 

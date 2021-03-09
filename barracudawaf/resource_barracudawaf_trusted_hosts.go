@@ -20,13 +20,13 @@ func resourceCudaWAFTrustedHosts() *schema.Resource {
 		Delete: resourceCudaWAFTrustedHostsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"ip_address":   {Type: schema.TypeString, Optional: true},
-			"ipv6_address": {Type: schema.TypeString, Optional: true},
-			"ipv6_mask":    {Type: schema.TypeString, Optional: true},
-			"mask":         {Type: schema.TypeString, Optional: true},
-			"comments":     {Type: schema.TypeString, Optional: true},
-			"name":         {Type: schema.TypeString, Required: true},
-			"version":      {Type: schema.TypeString, Optional: true},
+			"ip_address":   {Type: schema.TypeString, Optional: true, Description: "IP Address"},
+			"ipv6_address": {Type: schema.TypeString, Optional: true, Description: "IPv6 Address"},
+			"ipv6_mask":    {Type: schema.TypeString, Optional: true, Description: "Mask"},
+			"mask":         {Type: schema.TypeString, Optional: true, Description: "Mask"},
+			"comments":     {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"name":         {Type: schema.TypeString, Required: true, Description: "Trusted Host Name"},
+			"version":      {Type: schema.TypeString, Optional: true, Description: "Version"},
 			"parent":       {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

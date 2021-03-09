@@ -20,11 +20,11 @@ func resourceCudaWAFUsers() *schema.Resource {
 		Delete: resourceCudaWAFUsersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"email_address":     {Type: schema.TypeString, Required: true},
-			"name":              {Type: schema.TypeString, Required: true},
-			"password":          {Type: schema.TypeString, Optional: true},
-			"re_enter_password": {Type: schema.TypeString, Optional: true},
-			"role":              {Type: schema.TypeString, Required: true},
+			"email_address":     {Type: schema.TypeString, Required: true, Description: "Email Address"},
+			"name":              {Type: schema.TypeString, Required: true, Description: "Username"},
+			"password":          {Type: schema.TypeString, Optional: true, Description: "Password"},
+			"re_enter_password": {Type: schema.TypeString, Optional: true, Description: "Re-enter Password"},
+			"role":              {Type: schema.TypeString, Required: true, Description: "Role"},
 		},
 	}
 }

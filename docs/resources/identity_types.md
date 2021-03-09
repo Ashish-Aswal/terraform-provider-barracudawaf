@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Identity Theft Data Type Name
 
 ### Optional
 

@@ -17,13 +17,13 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Rate Control Pool Name
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **max_active_requests** (String)
-- **max_per_client_backlog** (String)
-- **max_unconfigured_clients** (String)
+- **max_active_requests** (String) Maximum Active Requests
+- **max_per_client_backlog** (String) Maximum Per Client Backlog
+- **max_unconfigured_clients** (String) Maximum Unconfigured Clients
 
 

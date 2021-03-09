@@ -20,10 +20,10 @@ func resourceCudaWAFPreferredClients() *schema.Resource {
 		Delete: resourceCudaWAFPreferredClientsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":     {Type: schema.TypeString, Required: true},
-			"ip_range": {Type: schema.TypeString, Required: true},
-			"status":   {Type: schema.TypeString, Optional: true},
-			"weight":   {Type: schema.TypeString, Required: true},
+			"name":     {Type: schema.TypeString, Required: true, Description: "Preferred Clients Name"},
+			"ip_range": {Type: schema.TypeString, Required: true, Description: "Client IP Range"},
+			"status":   {Type: schema.TypeString, Optional: true, Description: "Status"},
+			"weight":   {Type: schema.TypeString, Required: true, Description: "Weight"},
 			"parent":   {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

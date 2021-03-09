@@ -28,34 +28,34 @@ resource "barracudawaf_content_rules" "rule_group_1" {
 
 ### Required
 
-- **host_match** (String)
-- **name** (String)
+- **host_match** (String) Host Match
+- **name** (String) Rule Group Name
 - **parent** (List of String)
-- **url_match** (String)
+- **url_match** (String) URL Match
 
 ### Optional
 
-- **access_log** (String)
+- **access_log** (String) Access Log
 - **advanced_client_analysis** (Block List) (see [below for nested schema](#nestedblock--advanced_client_analysis))
-- **app_id** (String)
+- **app_id** (String) Rule App Id
 - **caching** (Block List) (see [below for nested schema](#nestedblock--caching))
 - **captcha_settings** (Block List) (see [below for nested schema](#nestedblock--captcha_settings))
-- **comments** (String)
+- **comments** (String) Comments
 - **compression** (Block List) (see [below for nested schema](#nestedblock--compression))
-- **extended_match** (String)
-- **extended_match_sequence** (String)
+- **extended_match** (String) Extended Match
+- **extended_match_sequence** (String) Extended Match Sequence
 - **id** (String) The ID of this resource.
 - **load_balancing** (Block List) (see [below for nested schema](#nestedblock--load_balancing))
-- **mode** (String)
-- **status** (String)
-- **web_firewall_policy** (String)
+- **mode** (String) Mode
+- **status** (String) Status
+- **web_firewall_policy** (String) Web Firewall Policy
 
 <a id="nestedblock--advanced_client_analysis"></a>
 ### Nested Schema for `advanced_client_analysis`
 
 Optional:
 
-- **advanced_analysis** (String)
+- **advanced_analysis** (String) Advanced Analysis
 
 
 <a id="nestedblock--caching"></a>
@@ -63,14 +63,14 @@ Optional:
 
 Optional:
 
-- **cache_negative_responses** (String)
-- **expiry_age** (String)
-- **file_extensions** (String)
-- **ignore_request_headers** (String)
-- **ignore_response_headers** (String)
-- **max_size** (String)
-- **min_size** (String)
-- **status** (String)
+- **cache_negative_responses** (String) Cache Negative Responses
+- **expiry_age** (String) Expiry Age (minutes)
+- **file_extensions** (String) File Extensions
+- **ignore_request_headers** (String) Ignore Request Headers
+- **ignore_response_headers** (String) Ignore Response Headers
+- **max_size** (String) Max Size (KB)
+- **min_size** (String) Min Size (B)
+- **status** (String) Status
 
 
 <a id="nestedblock--captcha_settings"></a>
@@ -78,10 +78,10 @@ Optional:
 
 Optional:
 
-- **recaptcha_type** (String)
-- **rg_recaptcha_domain** (String)
-- **rg_recaptcha_site_key** (String)
-- **rg_recaptcha_site_secret** (String)
+- **recaptcha_type** (String) Captcha Method
+- **rg_recaptcha_domain** (String) Domain
+- **rg_recaptcha_site_key** (String) Site key
+- **rg_recaptcha_site_secret** (String) Site Secret
 
 
 <a id="nestedblock--compression"></a>
@@ -89,10 +89,10 @@ Optional:
 
 Optional:
 
-- **compress_unknown_content_types** (String)
-- **content_types** (String)
-- **min_size** (String)
-- **status** (String)
+- **compress_unknown_content_types** (String) Compress Others
+- **content_types** (String) Content Types
+- **min_size** (String) Min Size (B)
+- **status** (String) Status
 
 
 <a id="nestedblock--load_balancing"></a>
@@ -100,16 +100,16 @@ Optional:
 
 Optional:
 
-- **cookie_age** (String)
-- **failover_method** (String)
-- **header_name** (String)
-- **lb_algorithm** (String)
-- **parameter_name** (String)
-- **persistence_cookie_domain** (String)
-- **persistence_cookie_name** (String)
-- **persistence_cookie_path** (String)
-- **persistence_idle_timeout** (String)
-- **persistence_method** (String)
-- **source_ip_netmask** (String)
+- **cookie_age** (String) Cookie Age
+- **failover_method** (String) Failover Method
+- **header_name** (String) Header Name
+- **lb_algorithm** (String) Algorithm
+- **parameter_name** (String) Parameter Name
+- **persistence_cookie_domain** (String) Persistence Cookie Domain
+- **persistence_cookie_name** (String) Persistence Cookie Name
+- **persistence_cookie_path** (String) Persistence Cookie Path
+- **persistence_idle_timeout** (String) Idle Timeout
+- **persistence_method** (String) Persistence Method
+- **source_ip_netmask** (String) Source IP
 
 

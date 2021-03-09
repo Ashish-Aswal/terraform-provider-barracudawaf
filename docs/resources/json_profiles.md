@@ -17,22 +17,22 @@ description: |-
 
 ### Required
 
-- **host_match** (String)
-- **method** (String)
-- **name** (String)
+- **host_match** (String) Host Match
+- **method** (String) Methods
+- **name** (String) JSON Profile Name
 - **parent** (List of String)
-- **url_match** (String)
+- **url_match** (String) URL Match
 
 ### Optional
 
-- **allowed_content_types** (String)
-- **comment** (String)
-- **exception_patterns** (String)
+- **allowed_content_types** (String) Inspect Mime Types
+- **comment** (String) Comments
+- **exception_patterns** (String) None
 - **id** (String) The ID of this resource.
-- **ignore_keys** (String)
-- **json_policy** (String)
-- **mode** (String)
-- **status** (String)
-- **validate_key** (String)
+- **ignore_keys** (String) Ignore Keys
+- **json_policy** (String) JSON Policy
+- **mode** (String) Mode
+- **status** (String) Status
+- **validate_key** (String) Validate Key
 
 

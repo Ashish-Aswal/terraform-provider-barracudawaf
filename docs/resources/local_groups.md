@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) New Group Name
 
 ### Optional
 

@@ -17,18 +17,18 @@ description: |-
 
 ### Required
 
-- **action_url** (String)
-- **name** (String)
+- **action_url** (String) Action URL
+- **name** (String) Form Name
 - **parent** (List of String)
 
 ### Optional
 
-- **created_by** (String)
+- **created_by** (String) Created By
 - **id** (String) The ID of this resource.
-- **minimum_form_fill_time** (String)
-- **mode** (String)
-- **parameter_class** (String)
-- **parameter_name** (String)
-- **status** (String)
+- **minimum_form_fill_time** (String) Minimum Form Fill Time
+- **mode** (String) Mode
+- **parameter_class** (String) Parameter Class
+- **parameter_name** (String) Parameter Name
+- **status** (String) Status
 
 

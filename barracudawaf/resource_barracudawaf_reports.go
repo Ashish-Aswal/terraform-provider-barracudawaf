@@ -20,17 +20,17 @@ func resourceCudaWAFReports() *schema.Resource {
 		Delete: resourceCudaWAFReportsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"report_format":    {Type: schema.TypeString, Optional: true},
-			"frequency":        {Type: schema.TypeString, Optional: true},
-			"ftp_directory":    {Type: schema.TypeString, Optional: true},
-			"ftp_ip_address":   {Type: schema.TypeString, Optional: true},
-			"ftp_password":     {Type: schema.TypeString, Optional: true},
-			"ftp_port":         {Type: schema.TypeString, Optional: true},
-			"ftp_username":     {Type: schema.TypeString, Optional: true},
-			"email_id":         {Type: schema.TypeString, Optional: true},
-			"name":             {Type: schema.TypeString, Required: true},
-			"report_types":     {Type: schema.TypeString, Required: true},
-			"delivery_options": {Type: schema.TypeString, Optional: true},
+			"report_format":    {Type: schema.TypeString, Optional: true, Description: "None"},
+			"frequency":        {Type: schema.TypeString, Optional: true, Description: "None"},
+			"ftp_directory":    {Type: schema.TypeString, Optional: true, Description: "Folder/Path"},
+			"ftp_ip_address":   {Type: schema.TypeString, Optional: true, Description: "Server Name/IP"},
+			"ftp_password":     {Type: schema.TypeString, Optional: true, Description: "Password"},
+			"ftp_port":         {Type: schema.TypeString, Optional: true, Description: "Port"},
+			"ftp_username":     {Type: schema.TypeString, Optional: true, Description: "Username"},
+			"email_id":         {Type: schema.TypeString, Optional: true, Description: "Email Report to:"},
+			"name":             {Type: schema.TypeString, Required: true, Description: "None"},
+			"report_types":     {Type: schema.TypeString, Required: true, Description: "Report Type"},
+			"delivery_options": {Type: schema.TypeString, Optional: true, Description: "Chart Type"},
 		},
 	}
 }

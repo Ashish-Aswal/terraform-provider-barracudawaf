@@ -17,20 +17,20 @@ description: |-
 
 ### Required
 
-- **header_name** (String)
-- **name** (String)
+- **header_name** (String) Header Name
+- **name** (String) Header ACL Name
 - **parent** (List of String)
 
 ### Optional
 
-- **blocked_attack_types** (String)
-- **comments** (String)
-- **custom_blocked_attack_types** (String)
-- **denied_metachars** (String)
-- **exception_patterns** (String)
+- **blocked_attack_types** (String) Blocked Attack Types
+- **comments** (String) Comments
+- **custom_blocked_attack_types** (String) Custom Blocked Attack Types
+- **denied_metachars** (String) Denied Metacharacters
+- **exception_patterns** (String) Exception Patterns
 - **id** (String) The ID of this resource.
-- **max_header_value_length** (String)
-- **mode** (String)
-- **status** (String)
+- **max_header_value_length** (String) Max Header Value Length
+- **mode** (String) Mode
+- **status** (String) Status
 
 

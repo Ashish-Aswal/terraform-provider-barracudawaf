@@ -20,10 +20,10 @@ func resourceCudaWAFVsites() *schema.Resource {
 		Delete: resourceCudaWAFVsitesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"comments":  {Type: schema.TypeString, Optional: true},
-			"active_on": {Type: schema.TypeString, Optional: true},
-			"interface": {Type: schema.TypeString, Required: true},
-			"name":      {Type: schema.TypeString, Optional: true},
+			"comments":  {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"active_on": {Type: schema.TypeString, Optional: true, Description: "Active-on"},
+			"interface": {Type: schema.TypeString, Required: true, Description: "Interface"},
+			"name":      {Type: schema.TypeString, Optional: true, Description: "Vsite"},
 		},
 	}
 }

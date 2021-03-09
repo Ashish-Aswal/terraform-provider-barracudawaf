@@ -17,17 +17,17 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Data Theft Element Name
 - **parent** (List of String)
 
 ### Optional
 
-- **action** (String)
-- **custom_identity_theft_type** (String)
-- **enable** (String)
+- **action** (String) Action
+- **custom_identity_theft_type** (String) Custom Identity Theft Type
+- **enable** (String) Enabled
 - **id** (String) The ID of this resource.
-- **identity_theft_type** (String)
-- **initial_characters_to_keep** (String)
-- **trailing_characters_to_keep** (String)
+- **identity_theft_type** (String) Identity Theft Type
+- **initial_characters_to_keep** (String) Initial Characters to Keep
+- **trailing_characters_to_keep** (String) Trailing Characters to Keep
 
 

@@ -20,12 +20,12 @@ func resourceCudaWAFAttackPatterns() *schema.Resource {
 		Delete: resourceCudaWAFAttackPatternsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"algorithm":      {Type: schema.TypeString, Optional: true},
-			"case_sensitive": {Type: schema.TypeString, Optional: true},
-			"description":    {Type: schema.TypeString, Optional: true},
-			"mode":           {Type: schema.TypeString, Optional: true},
-			"name":           {Type: schema.TypeString, Required: true},
-			"regex":          {Type: schema.TypeString, Required: true},
+			"algorithm":      {Type: schema.TypeString, Optional: true, Description: "Pattern Algorithm"},
+			"case_sensitive": {Type: schema.TypeString, Optional: true, Description: "Case Sensitivity"},
+			"description":    {Type: schema.TypeString, Optional: true, Description: "Pattern Description"},
+			"mode":           {Type: schema.TypeString, Optional: true, Description: "Operating Mode"},
+			"name":           {Type: schema.TypeString, Required: true, Description: "Pattern Name"},
+			"regex":          {Type: schema.TypeString, Required: true, Description: "Pattern Regex"},
 			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

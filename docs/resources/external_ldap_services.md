@@ -17,28 +17,28 @@ description: |-
 
 ### Required
 
-- **allow_nested_groups** (String)
-- **bind_dn** (String)
-- **default_role** (String)
-- **encryption** (String)
-- **group_member_uid_attribute** (String)
-- **ip_address** (String)
-- **name** (String)
+- **allow_nested_groups** (String) Allow Nested Groups
+- **bind_dn** (String) Bind DN
+- **default_role** (String) Default Role
+- **encryption** (String) Encryption
+- **group_member_uid_attribute** (String) None
+- **ip_address** (String) IP Address
+- **name** (String) Realm Name
 
 ### Optional
 
-- **bind_password** (String)
-- **group_filter** (String)
-- **group_membership_format** (String)
-- **group_name_attribute** (String)
+- **bind_password** (String) Bind Password
+- **group_filter** (String) Group Filter
+- **group_membership_format** (String) Group Membership format description
+- **group_name_attribute** (String) Query For Group
 - **id** (String) The ID of this resource.
-- **ldap_server_type** (String)
-- **port** (String)
-- **retype_bind_password** (String)
-- **role_map** (String)
-- **role_order** (String)
-- **search_base** (String)
-- **uid_attribute** (String)
-- **validate_server_certificate** (String)
+- **ldap_server_type** (String) LDAP Server Type
+- **port** (String) Port
+- **retype_bind_password** (String) Re-enter Bind Password
+- **role_map** (String) WAF-LDAP Role group Mapping
+- **role_order** (String) WAF-LDAP Role group priority
+- **search_base** (String) LDAP Search Base
+- **uid_attribute** (String) UID Attribute
+- **validate_server_certificate** (String) Validate Server Certificate
 
 

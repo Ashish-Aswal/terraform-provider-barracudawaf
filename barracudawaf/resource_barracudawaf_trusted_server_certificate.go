@@ -20,12 +20,16 @@ func resourceCudaWAFTrustedServerCertificate() *schema.Resource {
 		Delete: resourceCudaWAFTrustedServerCertificateDelete,
 
 		Schema: map[string]*schema.Schema{
-			"common_name":   {Type: schema.TypeString, Optional: true},
-			"expiry":        {Type: schema.TypeString, Optional: true},
-			"serial":        {Type: schema.TypeString, Optional: true},
-			"name":          {Type: schema.TypeString, Optional: true},
-			"certificate":   {Type: schema.TypeString, Optional: true},
-			"download_type": {Type: schema.TypeString, Optional: true},
+			"common_name": {Type: schema.TypeString, Optional: true, Description: "Common Name"},
+			"expiry":      {Type: schema.TypeString, Optional: true},
+			"serial":      {Type: schema.TypeString, Optional: true},
+			"name":        {Type: schema.TypeString, Optional: true, Description: "Certificate Name"},
+			"certificate": {Type: schema.TypeString, Optional: true},
+			"download_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "A Certificate Signing Request (CSR) and/or Certificate can be downloaded.",
+			},
 		},
 	}
 }

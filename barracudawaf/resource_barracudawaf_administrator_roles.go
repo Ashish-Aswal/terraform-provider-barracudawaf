@@ -20,16 +20,16 @@ func resourceCudaWAFAdministratorRoles() *schema.Resource {
 		Delete: resourceCudaWAFAdministratorRolesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"api_privilege":           {Type: schema.TypeString, Optional: true},
-			"authentication_services": {Type: schema.TypeString, Optional: true},
-			"name":                    {Type: schema.TypeString, Required: true},
-			"objects":                 {Type: schema.TypeString, Optional: true},
-			"operations":              {Type: schema.TypeString, Optional: true},
-			"security_policies":       {Type: schema.TypeString, Optional: true},
-			"service_groups":          {Type: schema.TypeString, Optional: true},
-			"services":                {Type: schema.TypeString, Optional: true},
+			"api_privilege":           {Type: schema.TypeString, Optional: true, Description: "API Privilege"},
+			"authentication_services": {Type: schema.TypeString, Optional: true, Description: "Auth Services"},
+			"name":                    {Type: schema.TypeString, Required: true, Description: "Role Name"},
+			"objects":                 {Type: schema.TypeString, Optional: true, Description: "Object access permissions"},
+			"operations":              {Type: schema.TypeString, Optional: true, Description: "Specify Allowed Operations"},
+			"security_policies":       {Type: schema.TypeString, Optional: true, Description: "Security Policies"},
+			"service_groups":          {Type: schema.TypeString, Optional: true, Description: "Service Group"},
+			"services":                {Type: schema.TypeString, Optional: true, Description: "Services"},
 			"role_type":               {Type: schema.TypeString, Optional: true},
-			"vsites":                  {Type: schema.TypeString, Optional: true},
+			"vsites":                  {Type: schema.TypeString, Optional: true, Description: "Vsites"},
 		},
 	}
 }

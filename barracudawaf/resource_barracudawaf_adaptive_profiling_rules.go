@@ -20,12 +20,12 @@ func resourceCudaWAFAdaptiveProfilingRules() *schema.Resource {
 		Delete: resourceCudaWAFAdaptiveProfilingRulesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"host":                {Type: schema.TypeString, Required: true},
-			"learn_from_request":  {Type: schema.TypeString, Optional: true},
-			"learn_from_response": {Type: schema.TypeString, Optional: true},
-			"name":                {Type: schema.TypeString, Required: true},
-			"status":              {Type: schema.TypeString, Optional: true},
-			"url":                 {Type: schema.TypeString, Required: true},
+			"host":                {Type: schema.TypeString, Required: true, Description: "Host Match"},
+			"learn_from_request":  {Type: schema.TypeString, Optional: true, Description: "Learn From Request"},
+			"learn_from_response": {Type: schema.TypeString, Optional: true, Description: "Learn From Response"},
+			"name":                {Type: schema.TypeString, Required: true, Description: "Learn Rule Name"},
+			"status":              {Type: schema.TypeString, Optional: true, Description: "Status"},
+			"url":                 {Type: schema.TypeString, Required: true, Description: "URL Match"},
 			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}
