@@ -3,12 +3,12 @@
 page_title: "barracudawaf_custom_parameter_classes Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_custom_parameter_classes manages Custom Parameter Classes on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_custom_parameter_classes (Resource)
 
-
+`barracudawaf_custom_parameter_classes` manages `Custom Parameter Classes` on the Barracuda Web Application Firewall.
 
 
 

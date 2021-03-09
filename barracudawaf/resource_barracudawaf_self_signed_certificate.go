@@ -49,6 +49,8 @@ func resourceCudaWAFSelfSignedCertificate() *schema.Resource {
 			"serial":              {Type: schema.TypeString, Optional: true},
 			"state":               {Type: schema.TypeString, Optional: true, Description: "State or Province"},
 		},
+
+		Description: "`barracudawaf_self_signed_certificate` manages `Self Signed Certificate` on the Barracuda Web Application Firewall.",
 	}
 }
 

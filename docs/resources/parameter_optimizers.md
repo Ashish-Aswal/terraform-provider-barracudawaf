@@ -3,12 +3,12 @@
 page_title: "barracudawaf_parameter_optimizers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_parameter_optimizers manages Parameter Optimizers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_parameter_optimizers (Resource)
 
-
+`barracudawaf_parameter_optimizers` manages `Parameter Optimizers` on the Barracuda Web Application Firewall.
 
 
 

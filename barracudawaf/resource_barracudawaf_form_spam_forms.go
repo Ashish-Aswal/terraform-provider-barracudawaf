@@ -30,6 +30,8 @@ func resourceCudaWAFFormSpamForms() *schema.Resource {
 			"parameter_class":        {Type: schema.TypeString, Optional: true, Description: "Parameter Class"},
 			"parent":                 {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_form_spam_forms` manages `Form Spam Forms` on the Barracuda Web Application Firewall.",
 	}
 }
 

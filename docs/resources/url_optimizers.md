@@ -3,12 +3,12 @@
 page_title: "barracudawaf_url_optimizers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_url_optimizers manages Url Optimizers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_url_optimizers (Resource)
 
-
+`barracudawaf_url_optimizers` manages `Url Optimizers` on the Barracuda Web Application Firewall.
 
 
 

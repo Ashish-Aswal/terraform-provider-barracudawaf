@@ -3,12 +3,12 @@
 page_title: "barracudawaf_self_signed_certificate Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_self_signed_certificate manages Self Signed Certificate on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_self_signed_certificate (Resource)
 
-
+`barracudawaf_self_signed_certificate` manages `Self Signed Certificate` on the Barracuda Web Application Firewall.
 
 
 

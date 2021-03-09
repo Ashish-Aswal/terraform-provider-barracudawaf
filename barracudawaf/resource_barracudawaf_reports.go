@@ -32,6 +32,8 @@ func resourceCudaWAFReports() *schema.Resource {
 			"report_types":     {Type: schema.TypeString, Required: true, Description: "Report Type"},
 			"delivery_options": {Type: schema.TypeString, Optional: true, Description: "Chart Type"},
 		},
+
+		Description: "`barracudawaf_reports` manages `Reports` on the Barracuda Web Application Firewall.",
 	}
 }
 

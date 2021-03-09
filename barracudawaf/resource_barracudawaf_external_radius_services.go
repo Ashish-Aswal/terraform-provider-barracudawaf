@@ -27,6 +27,8 @@ func resourceCudaWAFExternalRadiusServices() *schema.Resource {
 			"shared_secret": {Type: schema.TypeString, Optional: true, Description: "Shared Secret"},
 			"timeout":       {Type: schema.TypeString, Optional: true, Description: "Timeout"},
 		},
+
+		Description: "`barracudawaf_external_radius_services` manages `External Radius Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

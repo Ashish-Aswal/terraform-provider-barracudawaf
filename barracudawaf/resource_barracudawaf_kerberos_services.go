@@ -20,6 +20,8 @@ func resourceCudaWAFKerberosServices() *schema.Resource {
 		Delete: resourceCudaWAFKerberosServicesDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
+
+		Description: "`barracudawaf_kerberos_services` manages `Kerberos Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

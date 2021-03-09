@@ -20,6 +20,8 @@ func resourceCudaWAFLocalGroups() *schema.Resource {
 		Delete: resourceCudaWAFLocalGroupsDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "New Group Name"}},
+
+		Description: "`barracudawaf_local_groups` manages `Local Groups` on the Barracuda Web Application Firewall.",
 	}
 }
 

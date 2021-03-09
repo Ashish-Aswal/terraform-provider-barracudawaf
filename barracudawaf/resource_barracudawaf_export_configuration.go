@@ -27,6 +27,8 @@ func resourceCudaWAFExportConfiguration() *schema.Resource {
 			"hour_of_day":    {Type: schema.TypeString, Optional: true, Description: "hour"},
 			"minute_of_hour": {Type: schema.TypeString, Optional: true, Description: "minute"},
 		},
+
+		Description: "`barracudawaf_export_configuration` manages `Export Configuration` on the Barracuda Web Application Firewall.",
 	}
 }
 

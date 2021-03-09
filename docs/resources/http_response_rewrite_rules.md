@@ -3,12 +3,12 @@
 page_title: "barracudawaf_http_response_rewrite_rules Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_http_response_rewrite_rules manages Http Response Rewrite Rules on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_http_response_rewrite_rules (Resource)
 
-
+`barracudawaf_http_response_rewrite_rules` manages `Http Response Rewrite Rules` on the Barracuda Web Application Firewall.
 
 
 

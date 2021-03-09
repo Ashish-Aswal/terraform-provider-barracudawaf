@@ -39,6 +39,8 @@ func resourceCudaWAFUrlAcls() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_url_acls` manages `Url Acls` on the Barracuda Web Application Firewall.",
 	}
 }
 

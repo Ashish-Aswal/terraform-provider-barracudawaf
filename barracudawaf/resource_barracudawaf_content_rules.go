@@ -193,6 +193,8 @@ func resourceCudaWAFContentRules() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_content_rules` manages `Content Rules` on the Barracuda Web Application Firewall.",
 	}
 }
 

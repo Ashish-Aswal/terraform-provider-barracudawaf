@@ -20,6 +20,8 @@ func resourceCudaWAFRadiusServices() *schema.Resource {
 		Delete: resourceCudaWAFRadiusServicesDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
+
+		Description: "`barracudawaf_radius_services` manages `Radius Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

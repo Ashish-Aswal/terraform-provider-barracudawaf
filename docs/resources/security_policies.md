@@ -3,12 +3,12 @@
 page_title: "barracudawaf_security_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_security_policies manages Security Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_security_policies (Resource)
 
-
+`barracudawaf_security_policies` manages `Security Policies` on the Barracuda Web Application Firewall.
 
 ## Example Usage
 

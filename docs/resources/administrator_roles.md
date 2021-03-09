@@ -3,12 +3,12 @@
 page_title: "barracudawaf_administrator_roles Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_administrator_roles manages Administrator Roles on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_administrator_roles (Resource)
 
-
+`barracudawaf_administrator_roles` manages `Administrator Roles` on the Barracuda Web Application Firewall.
 
 
 

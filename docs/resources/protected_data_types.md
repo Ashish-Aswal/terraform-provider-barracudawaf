@@ -3,12 +3,12 @@
 page_title: "barracudawaf_protected_data_types Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_protected_data_types manages Protected Data Types on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_protected_data_types (Resource)
 
-
+`barracudawaf_protected_data_types` manages `Protected Data Types` on the Barracuda Web Application Firewall.
 
 
 

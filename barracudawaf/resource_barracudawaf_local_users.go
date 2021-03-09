@@ -24,6 +24,8 @@ func resourceCudaWAFLocalUsers() *schema.Resource {
 			"name":        {Type: schema.TypeString, Optional: true, Description: "New user name"},
 			"password":    {Type: schema.TypeString, Required: true, Description: "Password"},
 		},
+
+		Description: "`barracudawaf_local_users` manages `Local Users` on the Barracuda Web Application Firewall.",
 	}
 }
 

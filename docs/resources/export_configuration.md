@@ -3,12 +3,12 @@
 page_title: "barracudawaf_export_configuration Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_export_configuration manages Export Configuration on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_export_configuration (Resource)
 
-
+`barracudawaf_export_configuration` manages `Export Configuration` on the Barracuda Web Application Firewall.
 
 
 

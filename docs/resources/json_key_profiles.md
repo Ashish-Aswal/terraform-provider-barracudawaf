@@ -3,12 +3,12 @@
 page_title: "barracudawaf_json_key_profiles Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_json_key_profiles manages Json Key Profiles on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_json_key_profiles (Resource)
 
-
+`barracudawaf_json_key_profiles` manages `Json Key Profiles` on the Barracuda Web Application Firewall.
 
 
 

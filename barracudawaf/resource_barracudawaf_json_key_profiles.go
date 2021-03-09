@@ -49,6 +49,8 @@ func resourceCudaWAFJsonKeyProfiles() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_json_key_profiles` manages `Json Key Profiles` on the Barracuda Web Application Firewall.",
 	}
 }
 

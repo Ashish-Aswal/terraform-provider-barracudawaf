@@ -3,12 +3,12 @@
 page_title: "barracudawaf_saml_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_saml_services manages Saml Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_saml_services (Resource)
 
-
+`barracudawaf_saml_services` manages `Saml Services` on the Barracuda Web Application Firewall.
 
 
 

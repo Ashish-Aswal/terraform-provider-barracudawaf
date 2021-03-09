@@ -34,6 +34,8 @@ func resourceCudaWAFSecureBrowsingPolicies() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_secure_browsing_policies` manages `Secure Browsing Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

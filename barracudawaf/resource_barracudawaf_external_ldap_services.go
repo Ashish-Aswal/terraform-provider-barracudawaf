@@ -56,6 +56,8 @@ func resourceCudaWAFExternalLdapServices() *schema.Resource {
 				Description: "Validate Server Certificate",
 			},
 		},
+
+		Description: "`barracudawaf_external_ldap_services` manages `External Ldap Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

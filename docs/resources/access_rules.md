@@ -3,12 +3,12 @@
 page_title: "barracudawaf_access_rules Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_access_rules manages Access Rules on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_access_rules (Resource)
 
-
+`barracudawaf_access_rules` manages `Access Rules` on the Barracuda Web Application Firewall.
 
 
 

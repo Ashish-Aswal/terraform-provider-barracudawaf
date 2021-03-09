@@ -3,12 +3,12 @@
 page_title: "barracudawaf_bot_spam_patterns Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_bot_spam_patterns manages Bot Spam Patterns on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_bot_spam_patterns (Resource)
 
-
+`barracudawaf_bot_spam_patterns` manages `Bot Spam Patterns` on the Barracuda Web Application Firewall.
 
 
 

@@ -71,6 +71,8 @@ func resourceCudaWAFUrlProfiles() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_url_profiles` manages `Url Profiles` on the Barracuda Web Application Firewall.",
 	}
 }
 

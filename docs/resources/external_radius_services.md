@@ -3,12 +3,12 @@
 page_title: "barracudawaf_external_radius_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_external_radius_services manages External Radius Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_external_radius_services (Resource)
 
-
+`barracudawaf_external_radius_services` manages `External Radius Services` on the Barracuda Web Application Firewall.
 
 
 

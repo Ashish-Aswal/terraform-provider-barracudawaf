@@ -3,12 +3,12 @@
 page_title: "barracudawaf_servers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_servers manages Servers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_servers (Resource)
 
-
+`barracudawaf_servers` manages `Servers` on the Barracuda Web Application Firewall.
 
 ## Example Usage
 

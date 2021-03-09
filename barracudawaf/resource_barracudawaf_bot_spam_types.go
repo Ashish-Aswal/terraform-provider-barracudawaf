@@ -22,6 +22,8 @@ func resourceCudaWAFBotSpamTypes() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {Type: schema.TypeString, Required: true, Description: "Attack Data Type Name"},
 		},
+
+		Description: "`barracudawaf_bot_spam_types` manages `Bot Spam Types` on the Barracuda Web Application Firewall.",
 	}
 }
 

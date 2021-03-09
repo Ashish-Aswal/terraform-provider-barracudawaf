@@ -26,6 +26,8 @@ func resourceCudaWAFSessionIdentifiers() *schema.Resource {
 			"end_delimiter":   {Type: schema.TypeString, Optional: true, Description: "URL Session Token End Delimiter"},
 			"start_delimiter": {Type: schema.TypeString, Optional: true, Description: "URL Session Token Start Delimiter"},
 		},
+
+		Description: "`barracudawaf_session_identifiers` manages `Session Identifiers` on the Barracuda Web Application Firewall.",
 	}
 }
 

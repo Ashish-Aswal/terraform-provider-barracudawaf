@@ -3,12 +3,12 @@
 page_title: "barracudawaf_attack_types Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_attack_types manages Attack Types on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_attack_types (Resource)
 
-
+`barracudawaf_attack_types` manages `Attack Types` on the Barracuda Web Application Firewall.
 
 
 

@@ -3,12 +3,12 @@
 page_title: "barracudawaf_saml_identity_providers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_saml_identity_providers manages Saml Identity Providers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_saml_identity_providers (Resource)
 
-
+`barracudawaf_saml_identity_providers` manages `Saml Identity Providers` on the Barracuda Web Application Firewall.
 
 
 

@@ -20,6 +20,8 @@ func resourceCudaWAFSamlServices() *schema.Resource {
 		Delete: resourceCudaWAFSamlServicesDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
+
+		Description: "`barracudawaf_saml_services` manages `Saml Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

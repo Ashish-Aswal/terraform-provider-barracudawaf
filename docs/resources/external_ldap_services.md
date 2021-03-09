@@ -3,12 +3,12 @@
 page_title: "barracudawaf_external_ldap_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_external_ldap_services manages External Ldap Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_external_ldap_services (Resource)
 
-
+`barracudawaf_external_ldap_services` manages `External Ldap Services` on the Barracuda Web Application Firewall.
 
 
 

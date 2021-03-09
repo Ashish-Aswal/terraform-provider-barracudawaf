@@ -29,6 +29,8 @@ func resourceCudaWAFRateControlPools() *schema.Resource {
 				Description: "Maximum Unconfigured Clients",
 			},
 		},
+
+		Description: "`barracudawaf_rate_control_pools` manages `Rate Control Pools` on the Barracuda Web Application Firewall.",
 	}
 }
 

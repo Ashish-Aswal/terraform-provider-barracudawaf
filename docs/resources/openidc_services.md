@@ -3,12 +3,12 @@
 page_title: "barracudawaf_openidc_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_openidc_services manages Openidc Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_openidc_services (Resource)
 
-
+`barracudawaf_openidc_services` manages `Openidc Services` on the Barracuda Web Application Firewall.
 
 
 

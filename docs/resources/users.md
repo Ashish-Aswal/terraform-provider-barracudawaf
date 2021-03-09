@@ -3,12 +3,12 @@
 page_title: "barracudawaf_users Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_users manages Users on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_users (Resource)
 
-
+`barracudawaf_users` manages `Users` on the Barracuda Web Application Firewall.
 
 
 

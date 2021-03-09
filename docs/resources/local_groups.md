@@ -3,12 +3,12 @@
 page_title: "barracudawaf_local_groups Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_local_groups manages Local Groups on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_local_groups (Resource)
 
-
+`barracudawaf_local_groups` manages `Local Groups` on the Barracuda Web Application Firewall.
 
 
 

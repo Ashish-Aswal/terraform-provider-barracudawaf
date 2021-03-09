@@ -29,6 +29,8 @@ func resourceCudaWAFJsonSecurityPolicies() *schema.Resource {
 			"max_object_depth":   {Type: schema.TypeString, Optional: true, Description: "Max Object Depth"},
 			"max_value_length":   {Type: schema.TypeString, Required: true, Description: "Max Value Length"},
 		},
+
+		Description: "`barracudawaf_json_security_policies` manages `Json Security Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

@@ -28,6 +28,8 @@ func resourceCudaWAFUrlTranslations() *schema.Resource {
 			"name":           {Type: schema.TypeString, Required: true, Description: "Rule Name"},
 			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_url_translations` manages `Url Translations` on the Barracuda Web Application Firewall.",
 	}
 }
 

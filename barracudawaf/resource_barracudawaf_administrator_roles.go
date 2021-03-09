@@ -31,6 +31,8 @@ func resourceCudaWAFAdministratorRoles() *schema.Resource {
 			"role_type":               {Type: schema.TypeString, Optional: true},
 			"vsites":                  {Type: schema.TypeString, Optional: true, Description: "Vsites"},
 		},
+
+		Description: "`barracudawaf_administrator_roles` manages `Administrator Roles` on the Barracuda Web Application Firewall.",
 	}
 }
 

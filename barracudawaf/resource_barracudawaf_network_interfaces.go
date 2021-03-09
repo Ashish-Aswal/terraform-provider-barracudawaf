@@ -25,6 +25,8 @@ func resourceCudaWAFNetworkInterfaces() *schema.Resource {
 			"auto_negotiation_status": {Type: schema.TypeString, Optional: true, Description: "Auto-Negotiation Status"},
 			"speed":                   {Type: schema.TypeString, Required: true, Description: "Default System Log Level"},
 		},
+
+		Description: "`barracudawaf_network_interfaces` manages `Network Interfaces` on the Barracuda Web Application Firewall.",
 	}
 }
 

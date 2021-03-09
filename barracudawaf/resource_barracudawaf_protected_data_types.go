@@ -45,6 +45,8 @@ func resourceCudaWAFProtectedDataTypes() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_protected_data_types` manages `Protected Data Types` on the Barracuda Web Application Firewall.",
 	}
 }
 

@@ -39,6 +39,8 @@ func resourceCudaWAFCustomParameterClasses() *schema.Resource {
 			"input_type_validation": {Type: schema.TypeString, Optional: true, Description: "Input Type Validation"},
 			"blocked_attack_types":  {Type: schema.TypeString, Optional: true, Description: "Blocked Attack Types"},
 		},
+
+		Description: "`barracudawaf_custom_parameter_classes` manages `Custom Parameter Classes` on the Barracuda Web Application Firewall.",
 	}
 }
 

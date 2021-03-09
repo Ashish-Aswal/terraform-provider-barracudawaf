@@ -72,6 +72,8 @@ func resourceCudaWAFAuthorizationPolicies() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_authorization_policies` manages `Authorization Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

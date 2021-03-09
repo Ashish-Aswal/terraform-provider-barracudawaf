@@ -23,6 +23,8 @@ func resourceCudaWAFGeoPools() *schema.Resource {
 			"region": {Type: schema.TypeString, Optional: true, Description: "Available Categories"},
 			"name":   {Type: schema.TypeString, Required: true, Description: "Geo Pool Name"},
 		},
+
+		Description: "`barracudawaf_geo_pools` manages `Geo Pools` on the Barracuda Web Application Firewall.",
 	}
 }
 

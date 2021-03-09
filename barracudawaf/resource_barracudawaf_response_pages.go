@@ -26,6 +26,8 @@ func resourceCudaWAFResponsePages() *schema.Resource {
 			"status_code": {Type: schema.TypeString, Required: true, Description: "Status Code"},
 			"type":        {Type: schema.TypeString, Optional: true, Description: "Session Token Type"},
 		},
+
+		Description: "`barracudawaf_response_pages` manages `Response Pages` on the Barracuda Web Application Firewall.",
 	}
 }
 

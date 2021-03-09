@@ -20,6 +20,8 @@ func resourceCudaWAFOpenidcServices() *schema.Resource {
 		Delete: resourceCudaWAFOpenidcServicesDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
+
+		Description: "`barracudawaf_openidc_services` manages `Openidc Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

@@ -38,6 +38,8 @@ func resourceCudaWAFDdosPolicies() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_ddos_policies` manages `Ddos Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

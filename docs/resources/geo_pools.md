@@ -3,12 +3,12 @@
 page_title: "barracudawaf_geo_pools Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_geo_pools manages Geo Pools on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_geo_pools (Resource)
 
-
+`barracudawaf_geo_pools` manages `Geo Pools` on the Barracuda Web Application Firewall.
 
 
 

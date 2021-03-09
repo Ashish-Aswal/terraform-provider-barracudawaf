@@ -40,6 +40,8 @@ func resourceCudaWAFHeaderAcls() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_header_acls` manages `Header Acls` on the Barracuda Web Application Firewall.",
 	}
 }
 

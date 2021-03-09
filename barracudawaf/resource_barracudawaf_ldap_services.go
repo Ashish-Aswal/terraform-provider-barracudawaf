@@ -20,6 +20,8 @@ func resourceCudaWAFLdapServices() *schema.Resource {
 		Delete: resourceCudaWAFLdapServicesDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
+
+		Description: "`barracudawaf_ldap_services` manages `Ldap Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

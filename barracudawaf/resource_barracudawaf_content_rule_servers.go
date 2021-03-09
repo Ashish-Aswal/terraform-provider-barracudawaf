@@ -234,6 +234,8 @@ func resourceCudaWAFContentRuleServers() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_content_rule_servers` manages `Content Rule Servers` on the Barracuda Web Application Firewall.",
 	}
 }
 

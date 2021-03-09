@@ -3,12 +3,12 @@
 page_title: "barracudawaf_url_profiles Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_url_profiles manages Url Profiles on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_url_profiles (Resource)
 
-
+`barracudawaf_url_profiles` manages `Url Profiles` on the Barracuda Web Application Firewall.
 
 
 

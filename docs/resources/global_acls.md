@@ -3,12 +3,12 @@
 page_title: "barracudawaf_global_acls Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_global_acls manages Global Acls on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_global_acls (Resource)
 
-
+`barracudawaf_global_acls` manages `Global Acls` on the Barracuda Web Application Firewall.
 
 
 

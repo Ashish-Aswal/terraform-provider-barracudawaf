@@ -3,12 +3,12 @@
 page_title: "barracudawaf_ldap_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_ldap_services manages Ldap Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_ldap_services (Resource)
 
-
+`barracudawaf_ldap_services` manages `Ldap Services` on the Barracuda Web Application Firewall.
 
 
 

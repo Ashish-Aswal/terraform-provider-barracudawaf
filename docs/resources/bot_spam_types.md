@@ -3,12 +3,12 @@
 page_title: "barracudawaf_bot_spam_types Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_bot_spam_types manages Bot Spam Types on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_bot_spam_types (Resource)
 
-
+`barracudawaf_bot_spam_types` manages `Bot Spam Types` on the Barracuda Web Application Firewall.
 
 
 

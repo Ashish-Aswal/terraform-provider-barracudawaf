@@ -3,12 +3,12 @@
 page_title: "barracudawaf_attack_patterns Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_attack_patterns manages Attack Patterns on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_attack_patterns (Resource)
 
-
+`barracudawaf_attack_patterns` manages `Attack Patterns` on the Barracuda Web Application Firewall.
 
 
 

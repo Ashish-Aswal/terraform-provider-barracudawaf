@@ -3,12 +3,12 @@
 page_title: "barracudawaf_credential_servers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_credential_servers manages Credential Servers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_credential_servers (Resource)
 
-
+`barracudawaf_credential_servers` manages `Credential Servers` on the Barracuda Web Application Firewall.
 
 
 

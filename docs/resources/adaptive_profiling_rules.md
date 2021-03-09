@@ -3,12 +3,12 @@
 page_title: "barracudawaf_adaptive_profiling_rules Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_adaptive_profiling_rules manages Adaptive Profiling Rules on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_adaptive_profiling_rules (Resource)
 
-
+`barracudawaf_adaptive_profiling_rules` manages `Adaptive Profiling Rules` on the Barracuda Web Application Firewall.
 
 
 

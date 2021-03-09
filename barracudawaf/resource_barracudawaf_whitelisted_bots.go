@@ -26,6 +26,8 @@ func resourceCudaWAFWhitelistedBots() *schema.Resource {
 			"name":       {Type: schema.TypeString, Required: true, Description: "Parent Name"},
 			"user_agent": {Type: schema.TypeString, Required: true, Description: "User Agent"},
 		},
+
+		Description: "`barracudawaf_whitelisted_bots` manages `Whitelisted Bots` on the Barracuda Web Application Firewall.",
 	}
 }
 

@@ -3,12 +3,12 @@
 page_title: "barracudawaf_local_users Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_local_users manages Local Users on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_local_users (Resource)
 
-
+`barracudawaf_local_users` manages `Local Users` on the Barracuda Web Application Firewall.
 
 
 

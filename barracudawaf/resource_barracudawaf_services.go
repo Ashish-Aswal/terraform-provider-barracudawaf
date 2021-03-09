@@ -1256,6 +1256,8 @@ func resourceCudaWAFServices() *schema.Resource {
 				},
 			},
 		},
+
+		Description: "`barracudawaf_services` manages `Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

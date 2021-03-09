@@ -26,6 +26,8 @@ func resourceCudaWAFPreferredClients() *schema.Resource {
 			"weight":   {Type: schema.TypeString, Required: true, Description: "Weight"},
 			"parent":   {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_preferred_clients` manages `Preferred Clients` on the Barracuda Web Application Firewall.",
 	}
 }
 

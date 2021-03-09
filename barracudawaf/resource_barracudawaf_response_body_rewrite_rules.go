@@ -29,6 +29,8 @@ func resourceCudaWAFResponseBodyRewriteRules() *schema.Resource {
 			"url":             {Type: schema.TypeString, Required: true, Description: "URL Match"},
 			"parent":          {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_response_body_rewrite_rules` manages `Response Body Rewrite Rules` on the Barracuda Web Application Firewall.",
 	}
 }
 

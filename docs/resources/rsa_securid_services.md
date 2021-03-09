@@ -3,12 +3,12 @@
 page_title: "barracudawaf_rsa_securid_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_rsa_securid_services manages Rsa Securid Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_rsa_securid_services (Resource)
 
-
+`barracudawaf_rsa_securid_services` manages `Rsa Securid Services` on the Barracuda Web Application Firewall.
 
 
 

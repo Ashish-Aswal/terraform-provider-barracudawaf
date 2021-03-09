@@ -3,12 +3,12 @@
 page_title: "barracudawaf_syslog_servers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_syslog_servers manages Syslog Servers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_syslog_servers (Resource)
 
-
+`barracudawaf_syslog_servers` manages `Syslog Servers` on the Barracuda Web Application Firewall.
 
 
 
