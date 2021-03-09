@@ -3,12 +3,12 @@
 page_title: "barracudawaf_signed_certificate Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_signed_certificate manages Signed Certificate on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_signed_certificate (Resource)
 
-
+`barracudawaf_signed_certificate` manages `Signed Certificate` on the Barracuda Web Application Firewall.
 
 
 

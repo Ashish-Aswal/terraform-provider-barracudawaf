@@ -29,6 +29,8 @@ func resourceCudaWAFCredentialServers() *schema.Resource {
 			"armored_browser_type": {Type: schema.TypeString, Required: true, Description: "Armored Browser Type"},
 			"name":                 {Type: schema.TypeString, Required: true, Description: "Name"},
 		},
+
+		Description: "`barracudawaf_credential_servers` manages `Credential Servers` on the Barracuda Web Application Firewall.",
 	}
 }
 

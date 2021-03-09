@@ -3,12 +3,12 @@
 page_title: "barracudawaf_identity_types Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_identity_types manages Identity Types on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_identity_types (Resource)
 
-
+`barracudawaf_identity_types` manages `Identity Types` on the Barracuda Web Application Firewall.
 
 
 

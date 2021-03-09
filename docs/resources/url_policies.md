@@ -3,12 +3,12 @@
 page_title: "barracudawaf_url_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_url_policies manages Url Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_url_policies (Resource)
 
-
+`barracudawaf_url_policies` manages `Url Policies` on the Barracuda Web Application Firewall.
 
 
 

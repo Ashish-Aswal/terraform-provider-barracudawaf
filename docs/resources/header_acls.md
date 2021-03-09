@@ -3,12 +3,12 @@
 page_title: "barracudawaf_header_acls Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_header_acls manages Header Acls on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_header_acls (Resource)
 
-
+`barracudawaf_header_acls` manages `Header Acls` on the Barracuda Web Application Firewall.
 
 
 

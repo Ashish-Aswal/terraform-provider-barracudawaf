@@ -36,6 +36,8 @@ func resourceCudaWAFUrlEncryptionRules() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_url_encryption_rules` manages `Url Encryption Rules` on the Barracuda Web Application Firewall.",
 	}
 }
 

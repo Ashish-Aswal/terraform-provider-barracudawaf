@@ -3,12 +3,12 @@
 page_title: "barracudawaf_parameter_profiles Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_parameter_profiles manages Parameter Profiles on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_parameter_profiles (Resource)
 
-
+`barracudawaf_parameter_profiles` manages `Parameter Profiles` on the Barracuda Web Application Firewall.
 
 
 

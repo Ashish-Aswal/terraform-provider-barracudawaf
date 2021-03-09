@@ -3,12 +3,12 @@
 page_title: "barracudawaf_whitelisted_bots Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_whitelisted_bots manages Whitelisted Bots on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_whitelisted_bots (Resource)
 
-
+`barracudawaf_whitelisted_bots` manages `Whitelisted Bots` on the Barracuda Web Application Firewall.
 
 
 

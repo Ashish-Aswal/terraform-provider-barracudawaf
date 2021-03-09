@@ -3,12 +3,12 @@
 page_title: "barracudawaf_allow_deny_clients Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_allow_deny_clients manages Allow Deny Clients on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_allow_deny_clients (Resource)
 
-
+`barracudawaf_allow_deny_clients` manages `Allow Deny Clients` on the Barracuda Web Application Firewall.
 
 
 

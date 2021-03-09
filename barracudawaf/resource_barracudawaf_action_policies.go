@@ -31,6 +31,8 @@ func resourceCudaWAFActionPolicies() *schema.Resource {
 			"numeric_id":            {Type: schema.TypeString, Optional: true, Description: "Attack Description"},
 			"parent":                {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_action_policies` manages `Action Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

@@ -55,6 +55,8 @@ func resourceCudaWAFWebScrapingPolicies() *schema.Resource {
 			},
 			"detect_mouse_event": {Type: schema.TypeString, Optional: true, Description: "Detect Mouse Event"},
 		},
+
+		Description: "`barracudawaf_web_scraping_policies` manages `Web Scraping Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

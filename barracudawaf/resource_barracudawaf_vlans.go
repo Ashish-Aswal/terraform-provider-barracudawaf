@@ -26,6 +26,8 @@ func resourceCudaWAFVlans() *schema.Resource {
 			"name":      {Type: schema.TypeString, Required: true, Description: "VLAN Name"},
 			"vsite":     {Type: schema.TypeString, Required: true, Description: "Network Group"},
 		},
+
+		Description: "`barracudawaf_vlans` manages `Vlans` on the Barracuda Web Application Firewall.",
 	}
 }
 

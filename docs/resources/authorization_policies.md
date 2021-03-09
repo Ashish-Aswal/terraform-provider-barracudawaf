@@ -3,12 +3,12 @@
 page_title: "barracudawaf_authorization_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_authorization_policies manages Authorization Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_authorization_policies (Resource)
 
-
+`barracudawaf_authorization_policies` manages `Authorization Policies` on the Barracuda Web Application Firewall.
 
 
 

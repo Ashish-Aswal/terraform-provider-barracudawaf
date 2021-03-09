@@ -38,6 +38,8 @@ func resourceCudaWAFGlobalAcls() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_global_acls` manages `Global Acls` on the Barracuda Web Application Firewall.",
 	}
 }
 

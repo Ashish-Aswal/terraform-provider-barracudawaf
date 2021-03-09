@@ -44,6 +44,8 @@ func resourceCudaWAFNetworkAcls() *schema.Resource {
 			"ipv6_destination_netmask":  {Type: schema.TypeString, Optional: true, Description: "Destination Netmask"},
 			"vsite":                     {Type: schema.TypeString, Optional: true, Description: "Network Group"},
 		},
+
+		Description: "`barracudawaf_network_acls` manages `Network Acls` on the Barracuda Web Application Firewall.",
 	}
 }
 

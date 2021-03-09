@@ -28,6 +28,8 @@ func resourceCudaWAFAttackPatterns() *schema.Resource {
 			"regex":          {Type: schema.TypeString, Required: true, Description: "Pattern Regex"},
 			"parent":         {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_attack_patterns` manages `Attack Patterns` on the Barracuda Web Application Firewall.",
 	}
 }
 

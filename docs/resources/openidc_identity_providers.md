@@ -3,12 +3,12 @@
 page_title: "barracudawaf_openidc_identity_providers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_openidc_identity_providers manages Openidc Identity Providers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_openidc_identity_providers (Resource)
 
-
+`barracudawaf_openidc_identity_providers` manages `Openidc Identity Providers` on the Barracuda Web Application Firewall.
 
 
 

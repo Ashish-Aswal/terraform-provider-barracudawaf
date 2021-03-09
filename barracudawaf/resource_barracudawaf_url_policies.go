@@ -172,6 +172,8 @@ func resourceCudaWAFUrlPolicies() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_url_policies` manages `Url Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

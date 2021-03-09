@@ -70,6 +70,8 @@ func resourceCudaWAFSyslogServers() *schema.Resource {
 				Description: "Validate Server Certificate",
 			},
 		},
+
+		Description: "`barracudawaf_syslog_servers` manages `Syslog Servers` on the Barracuda Web Application Firewall.",
 	}
 }
 

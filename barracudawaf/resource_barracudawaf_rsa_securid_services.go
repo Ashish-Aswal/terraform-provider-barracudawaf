@@ -20,6 +20,8 @@ func resourceCudaWAFRsaSecuridServices() *schema.Resource {
 		Delete: resourceCudaWAFRsaSecuridServicesDelete,
 
 		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true, Description: "Realm Name"}},
+
+		Description: "`barracudawaf_rsa_securid_services` manages `Rsa Securid Services` on the Barracuda Web Application Firewall.",
 	}
 }
 

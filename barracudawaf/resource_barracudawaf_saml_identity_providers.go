@@ -32,6 +32,8 @@ func resourceCudaWAFSamlIdentityProviders() *schema.Resource {
 			"metadata_content":    {Type: schema.TypeString, Optional: true, Description: "Must be a Base64 encoded value"},
 			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_saml_identity_providers` manages `Saml Identity Providers` on the Barracuda Web Application Firewall.",
 	}
 }
 

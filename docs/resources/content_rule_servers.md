@@ -3,12 +3,12 @@
 page_title: "barracudawaf_content_rule_servers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_content_rule_servers manages Content Rule Servers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_content_rule_servers (Resource)
 
-
+`barracudawaf_content_rule_servers` manages `Content Rule Servers` on the Barracuda Web Application Firewall.
 
 ## Example Usage
 

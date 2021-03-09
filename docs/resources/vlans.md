@@ -3,12 +3,12 @@
 page_title: "barracudawaf_vlans Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_vlans manages Vlans on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_vlans (Resource)
 
-
+`barracudawaf_vlans` manages `Vlans` on the Barracuda Web Application Firewall.
 
 
 

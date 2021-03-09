@@ -3,12 +3,12 @@
 page_title: "barracudawaf_vsites Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_vsites manages Vsites on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_vsites (Resource)
 
-
+`barracudawaf_vsites` manages `Vsites` on the Barracuda Web Application Firewall.
 
 
 

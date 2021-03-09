@@ -33,6 +33,8 @@ func resourceCudaWAFAllowDenyClients() *schema.Resource {
 			"status":              {Type: schema.TypeString, Optional: true, Description: "Status"},
 			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_allow_deny_clients` manages `Allow Deny Clients` on the Barracuda Web Application Firewall.",
 	}
 }
 

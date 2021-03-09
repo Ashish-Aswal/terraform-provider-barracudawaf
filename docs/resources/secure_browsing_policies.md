@@ -3,12 +3,12 @@
 page_title: "barracudawaf_secure_browsing_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_secure_browsing_policies manages Secure Browsing Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_secure_browsing_policies (Resource)
 
-
+`barracudawaf_secure_browsing_policies` manages `Secure Browsing Policies` on the Barracuda Web Application Firewall.
 
 
 

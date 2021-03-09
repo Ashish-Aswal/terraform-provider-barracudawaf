@@ -31,6 +31,8 @@ func resourceCudaWAFTrustedServerCertificate() *schema.Resource {
 				Description: "A Certificate Signing Request (CSR) and/or Certificate can be downloaded.",
 			},
 		},
+
+		Description: "`barracudawaf_trusted_server_certificate` manages `Trusted Server Certificate` on the Barracuda Web Application Firewall.",
 	}
 }
 

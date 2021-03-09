@@ -3,12 +3,12 @@
 page_title: "barracudawaf_bonds Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_bonds manages Bonds on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_bonds (Resource)
 
-
+`barracudawaf_bonds` manages `Bonds` on the Barracuda Web Application Firewall.
 
 
 

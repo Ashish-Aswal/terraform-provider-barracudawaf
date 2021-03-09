@@ -3,12 +3,12 @@
 page_title: "barracudawaf_rate_control_pools Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_rate_control_pools manages Rate Control Pools on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_rate_control_pools (Resource)
 
-
+`barracudawaf_rate_control_pools` manages `Rate Control Pools` on the Barracuda Web Application Firewall.
 
 
 

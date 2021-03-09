@@ -3,12 +3,12 @@
 page_title: "barracudawaf_response_pages Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_response_pages manages Response Pages on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_response_pages (Resource)
 
-
+`barracudawaf_response_pages` manages `Response Pages` on the Barracuda Web Application Firewall.
 
 
 

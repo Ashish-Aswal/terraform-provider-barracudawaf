@@ -3,12 +3,12 @@
 page_title: "barracudawaf_network_acls Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_network_acls manages Network Acls on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_network_acls (Resource)
 
-
+`barracudawaf_network_acls` manages `Network Acls` on the Barracuda Web Application Firewall.
 
 
 

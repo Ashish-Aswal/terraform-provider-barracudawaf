@@ -3,12 +3,12 @@
 page_title: "barracudawaf_configuration_checkpoints Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_configuration_checkpoints manages Configuration Checkpoints on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_configuration_checkpoints (Resource)
 
-
+`barracudawaf_configuration_checkpoints` manages `Configuration Checkpoints` on the Barracuda Web Application Firewall.
 
 
 

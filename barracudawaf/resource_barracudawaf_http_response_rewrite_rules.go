@@ -31,6 +31,8 @@ func resourceCudaWAFHttpResponseRewriteRules() *schema.Resource {
 			"name":                {Type: schema.TypeString, Required: true, Description: "Rule Name"},
 			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_http_response_rewrite_rules` manages `Http Response Rewrite Rules` on the Barracuda Web Application Firewall.",
 	}
 }
 

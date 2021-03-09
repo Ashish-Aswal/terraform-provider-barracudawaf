@@ -31,6 +31,8 @@ func resourceCudaWAFClientCertificateCrls() *schema.Resource {
 			"enable":            {Type: schema.TypeString, Optional: true, Description: "Enable CRL"},
 			"parent":            {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_client_certificate_crls` manages `Client Certificate Crls` on the Barracuda Web Application Firewall.",
 	}
 }
 

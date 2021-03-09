@@ -25,6 +25,8 @@ func resourceCudaWAFVsites() *schema.Resource {
 			"interface": {Type: schema.TypeString, Required: true, Description: "Interface"},
 			"name":      {Type: schema.TypeString, Optional: true, Description: "Vsite"},
 		},
+
+		Description: "`barracudawaf_vsites` manages `Vsites` on the Barracuda Web Application Firewall.",
 	}
 }
 

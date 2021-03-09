@@ -25,6 +25,8 @@ func resourceCudaWAFUrlOptimizers() *schema.Resource {
 			"start_token":   {Type: schema.TypeString, Required: true, Description: "Start Token"},
 			"parent":        {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_url_optimizers` manages `Url Optimizers` on the Barracuda Web Application Firewall.",
 	}
 }
 

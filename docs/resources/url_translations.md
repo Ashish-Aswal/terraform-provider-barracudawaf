@@ -3,12 +3,12 @@
 page_title: "barracudawaf_url_translations Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_url_translations manages Url Translations on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_url_translations (Resource)
 
-
+`barracudawaf_url_translations` manages `Url Translations` on the Barracuda Web Application Firewall.
 
 
 

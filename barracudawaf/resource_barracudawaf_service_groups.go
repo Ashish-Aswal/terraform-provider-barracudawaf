@@ -23,6 +23,8 @@ func resourceCudaWAFServiceGroups() *schema.Resource {
 			"service_group": {Type: schema.TypeString, Required: true, Description: "Service Group"},
 			"parent":        {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_service_groups` manages `Service Groups` on the Barracuda Web Application Firewall.",
 	}
 }
 

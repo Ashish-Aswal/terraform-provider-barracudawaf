@@ -3,12 +3,12 @@
 page_title: "barracudawaf_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_services manages Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_services (Resource)
 
-
+`barracudawaf_services` manages `Services` on the Barracuda Web Application Firewall.
 
 ## Example Usage
 

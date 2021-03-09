@@ -77,6 +77,8 @@ func resourceCudaWAFParameterProfiles() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_parameter_profiles` manages `Parameter Profiles` on the Barracuda Web Application Firewall.",
 	}
 }
 

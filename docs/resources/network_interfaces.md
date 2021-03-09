@@ -3,12 +3,12 @@
 page_title: "barracudawaf_network_interfaces Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_network_interfaces manages Network Interfaces on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_network_interfaces (Resource)
 
-
+`barracudawaf_network_interfaces` manages `Network Interfaces` on the Barracuda Web Application Firewall.
 
 
 

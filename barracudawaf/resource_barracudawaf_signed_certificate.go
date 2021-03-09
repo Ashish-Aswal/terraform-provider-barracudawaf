@@ -82,6 +82,8 @@ func resourceCudaWAFSignedCertificate() *schema.Resource {
 				},
 			},
 		},
+
+		Description: "`barracudawaf_signed_certificate` manages `Signed Certificate` on the Barracuda Web Application Firewall.",
 	}
 }
 

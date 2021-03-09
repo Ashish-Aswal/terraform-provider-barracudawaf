@@ -3,12 +3,12 @@
 page_title: "barracudawaf_web_scraping_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_web_scraping_policies manages Web Scraping Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_web_scraping_policies (Resource)
 
-
+`barracudawaf_web_scraping_policies` manages `Web Scraping Policies` on the Barracuda Web Application Firewall.
 
 
 

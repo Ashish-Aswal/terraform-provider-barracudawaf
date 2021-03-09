@@ -26,6 +26,8 @@ func resourceCudaWAFUsers() *schema.Resource {
 			"re_enter_password": {Type: schema.TypeString, Optional: true, Description: "Re-enter Password"},
 			"role":              {Type: schema.TypeString, Required: true, Description: "Role"},
 		},
+
+		Description: "`barracudawaf_users` manages `Users` on the Barracuda Web Application Firewall.",
 	}
 }
 

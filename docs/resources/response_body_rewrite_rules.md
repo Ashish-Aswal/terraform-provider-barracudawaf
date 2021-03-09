@@ -3,12 +3,12 @@
 page_title: "barracudawaf_response_body_rewrite_rules Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_response_body_rewrite_rules manages Response Body Rewrite Rules on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_response_body_rewrite_rules (Resource)
 
-
+`barracudawaf_response_body_rewrite_rules` manages `Response Body Rewrite Rules` on the Barracuda Web Application Firewall.
 
 
 

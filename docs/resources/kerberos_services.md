@@ -3,12 +3,12 @@
 page_title: "barracudawaf_kerberos_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_kerberos_services manages Kerberos Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_kerberos_services (Resource)
 
-
+`barracudawaf_kerberos_services` manages `Kerberos Services` on the Barracuda Web Application Firewall.
 
 
 

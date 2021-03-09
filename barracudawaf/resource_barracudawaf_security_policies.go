@@ -448,6 +448,8 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				},
 			},
 		},
+
+		Description: "`barracudawaf_security_policies` manages `Security Policies` on the Barracuda Web Application Firewall.",
 	}
 }
 

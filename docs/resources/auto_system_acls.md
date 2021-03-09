@@ -3,12 +3,12 @@
 page_title: "barracudawaf_auto_system_acls Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_auto_system_acls manages Auto System Acls on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_auto_system_acls (Resource)
 
-
+`barracudawaf_auto_system_acls` manages `Auto System Acls` on the Barracuda Web Application Firewall.
 
 
 

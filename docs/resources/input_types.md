@@ -3,12 +3,12 @@
 page_title: "barracudawaf_input_types Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_input_types manages Input Types on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_input_types (Resource)
 
-
+`barracudawaf_input_types` manages `Input Types` on the Barracuda Web Application Firewall.
 
 
 

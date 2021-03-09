@@ -3,12 +3,12 @@
 page_title: "barracudawaf_form_spam_forms Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_form_spam_forms manages Form Spam Forms on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_form_spam_forms (Resource)
 
-
+`barracudawaf_form_spam_forms` manages `Form Spam Forms` on the Barracuda Web Application Firewall.
 
 
 

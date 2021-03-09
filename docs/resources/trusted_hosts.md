@@ -3,12 +3,12 @@
 page_title: "barracudawaf_trusted_hosts Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_trusted_hosts manages Trusted Hosts on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_trusted_hosts (Resource)
 
-
+`barracudawaf_trusted_hosts` manages `Trusted Hosts` on the Barracuda Web Application Firewall.
 
 
 

@@ -3,12 +3,12 @@
 page_title: "barracudawaf_input_patterns Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_input_patterns manages Input Patterns on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_input_patterns (Resource)
 
-
+`barracudawaf_input_patterns` manages `Input Patterns` on the Barracuda Web Application Firewall.
 
 
 

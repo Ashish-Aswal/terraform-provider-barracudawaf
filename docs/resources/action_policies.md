@@ -3,12 +3,12 @@
 page_title: "barracudawaf_action_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_action_policies manages Action Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_action_policies (Resource)
 
-
+`barracudawaf_action_policies` manages `Action Policies` on the Barracuda Web Application Firewall.
 
 
 

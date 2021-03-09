@@ -32,6 +32,8 @@ func resourceCudaWAFBonds() *schema.Resource {
 			},
 			"mtu": {Type: schema.TypeString, Optional: true, Description: "Maximum Transmission Unit (MTU)"},
 		},
+
+		Description: "`barracudawaf_bonds` manages `Bonds` on the Barracuda Web Application Firewall.",
 	}
 }
 

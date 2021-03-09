@@ -34,6 +34,8 @@ func resourceCudaWAFJsonProfiles() *schema.Resource {
 			"validate_key":          {Type: schema.TypeString, Optional: true, Description: "Validate Key"},
 			"parent":                {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_json_profiles` manages `Json Profiles` on the Barracuda Web Application Firewall.",
 	}
 }
 

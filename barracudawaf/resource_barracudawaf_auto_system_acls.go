@@ -37,6 +37,8 @@ func resourceCudaWAFAutoSystemAcls() *schema.Resource {
 			"destination_netmask": {Type: schema.TypeString, Optional: true, Description: "Destination Netmask"},
 			"vsite":               {Type: schema.TypeString, Optional: true, Description: "Network Group"},
 		},
+
+		Description: "`barracudawaf_auto_system_acls` manages `Auto System Acls` on the Barracuda Web Application Firewall.",
 	}
 }
 

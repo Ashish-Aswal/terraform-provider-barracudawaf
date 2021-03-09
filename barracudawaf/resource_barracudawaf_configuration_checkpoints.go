@@ -24,6 +24,8 @@ func resourceCudaWAFConfigurationCheckpoints() *schema.Resource {
 			"comment": {Type: schema.TypeString, Optional: true, Description: "checkpoint comment"},
 			"date":    {Type: schema.TypeString, Optional: true, Description: "checkpoint date"},
 		},
+
+		Description: "`barracudawaf_configuration_checkpoints` manages `Configuration Checkpoints` on the Barracuda Web Application Firewall.",
 	}
 }
 

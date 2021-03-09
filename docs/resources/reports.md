@@ -3,12 +3,12 @@
 page_title: "barracudawaf_reports Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_reports manages Reports on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_reports (Resource)
 
-
+`barracudawaf_reports` manages `Reports` on the Barracuda Web Application Firewall.
 
 
 

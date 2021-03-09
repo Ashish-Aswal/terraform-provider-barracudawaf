@@ -242,6 +242,8 @@ func resourceCudaWAFServers() *schema.Resource {
 				Required: true,
 			},
 		},
+
+		Description: "`barracudawaf_servers` manages `Servers` on the Barracuda Web Application Firewall.",
 	}
 }
 

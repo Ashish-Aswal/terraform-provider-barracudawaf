@@ -3,12 +3,12 @@
 page_title: "barracudawaf_trusted_server_certificate Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_trusted_server_certificate manages Trusted Server Certificate on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_trusted_server_certificate (Resource)
 
-
+`barracudawaf_trusted_server_certificate` manages `Trusted Server Certificate` on the Barracuda Web Application Firewall.
 
 
 

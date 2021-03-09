@@ -22,6 +22,8 @@ func resourceCudaWAFInputTypes() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {Type: schema.TypeString, Required: true, Description: "Input Data Type Name"},
 		},
+
+		Description: "`barracudawaf_input_types` manages `Input Types` on the Barracuda Web Application Firewall.",
 	}
 }
 

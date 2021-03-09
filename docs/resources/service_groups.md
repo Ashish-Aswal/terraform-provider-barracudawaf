@@ -3,12 +3,12 @@
 page_title: "barracudawaf_service_groups Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_service_groups manages Service Groups on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_service_groups (Resource)
 
-
+`barracudawaf_service_groups` manages `Service Groups` on the Barracuda Web Application Firewall.
 
 
 

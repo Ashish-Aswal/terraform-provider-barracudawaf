@@ -28,6 +28,8 @@ func resourceCudaWAFAdaptiveProfilingRules() *schema.Resource {
 			"url":                 {Type: schema.TypeString, Required: true, Description: "URL Match"},
 			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_adaptive_profiling_rules` manages `Adaptive Profiling Rules` on the Barracuda Web Application Firewall.",
 	}
 }
 

@@ -22,6 +22,8 @@ func resourceCudaWAFIdentityTypes() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {Type: schema.TypeString, Required: true, Description: "Identity Theft Data Type Name"},
 		},
+
+		Description: "`barracudawaf_identity_types` manages `Identity Types` on the Barracuda Web Application Firewall.",
 	}
 }
 

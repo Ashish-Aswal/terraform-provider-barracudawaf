@@ -3,12 +3,12 @@
 page_title: "barracudawaf_identity_theft_patterns Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_identity_theft_patterns manages Identity Theft Patterns on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_identity_theft_patterns (Resource)
 
-
+`barracudawaf_identity_theft_patterns` manages `Identity Theft Patterns` on the Barracuda Web Application Firewall.
 
 
 

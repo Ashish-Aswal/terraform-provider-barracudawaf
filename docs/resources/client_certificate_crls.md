@@ -3,12 +3,12 @@
 page_title: "barracudawaf_client_certificate_crls Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_client_certificate_crls manages Client Certificate Crls on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_client_certificate_crls (Resource)
 
-
+`barracudawaf_client_certificate_crls` manages `Client Certificate Crls` on the Barracuda Web Application Firewall.
 
 
 

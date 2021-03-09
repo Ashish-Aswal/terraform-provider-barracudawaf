@@ -3,12 +3,12 @@
 page_title: "barracudawaf_session_identifiers Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_session_identifiers manages Session Identifiers on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_session_identifiers (Resource)
 
-
+`barracudawaf_session_identifiers` manages `Session Identifiers` on the Barracuda Web Application Firewall.
 
 
 

@@ -3,12 +3,12 @@
 page_title: "barracudawaf_ddos_policies Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_ddos_policies manages Ddos Policies on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_ddos_policies (Resource)
 
-
+`barracudawaf_ddos_policies` manages `Ddos Policies` on the Barracuda Web Application Firewall.
 
 
 

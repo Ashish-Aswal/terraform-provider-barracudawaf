@@ -3,12 +3,12 @@
 page_title: "barracudawaf_radius_services Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_radius_services manages Radius Services on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_radius_services (Resource)
 
-
+`barracudawaf_radius_services` manages `Radius Services` on the Barracuda Web Application Firewall.
 
 
 

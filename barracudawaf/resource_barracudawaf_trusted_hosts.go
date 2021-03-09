@@ -29,6 +29,8 @@ func resourceCudaWAFTrustedHosts() *schema.Resource {
 			"version":      {Type: schema.TypeString, Optional: true, Description: "Version"},
 			"parent":       {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
+
+		Description: "`barracudawaf_trusted_hosts` manages `Trusted Hosts` on the Barracuda Web Application Firewall.",
 	}
 }
 

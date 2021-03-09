@@ -3,12 +3,12 @@
 page_title: "barracudawaf_url_encryption_rules Resource - terraform-provider-barracudawaf"
 subcategory: ""
 description: |-
-  
+  barracudawaf_url_encryption_rules manages Url Encryption Rules on the Barracuda Web Application Firewall.
 ---
 
 # barracudawaf_url_encryption_rules (Resource)
 
-
+`barracudawaf_url_encryption_rules` manages `Url Encryption Rules` on the Barracuda Web Application Firewall.
 
 
 
