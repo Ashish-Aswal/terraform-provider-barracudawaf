@@ -20,11 +20,11 @@ func resourceCudaWAFVlans() *schema.Resource {
 		Delete: resourceCudaWAFVlansDelete,
 
 		Schema: map[string]*schema.Schema{
-			"comments":  {Type: schema.TypeString, Optional: true},
-			"vlan_id":   {Type: schema.TypeString, Required: true},
-			"interface": {Type: schema.TypeString, Required: true},
-			"name":      {Type: schema.TypeString, Required: true},
-			"vsite":     {Type: schema.TypeString, Required: true},
+			"comments":  {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"vlan_id":   {Type: schema.TypeString, Required: true, Description: "VLAN ID"},
+			"interface": {Type: schema.TypeString, Required: true, Description: "VLAN Interface"},
+			"name":      {Type: schema.TypeString, Required: true, Description: "VLAN Name"},
+			"vsite":     {Type: schema.TypeString, Required: true, Description: "Network Group"},
 		},
 	}
 }

@@ -17,13 +17,13 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Optimizer Name
 - **parent** (List of String)
-- **start_token** (String)
+- **start_token** (String) Start Token
 
 ### Optional
 
-- **end_delimiter** (String)
+- **end_delimiter** (String) End Delimiter
 - **id** (String) The ID of this resource.
 
 

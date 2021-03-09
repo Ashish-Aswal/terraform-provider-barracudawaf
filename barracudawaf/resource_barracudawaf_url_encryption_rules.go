@@ -20,12 +20,16 @@ func resourceCudaWAFUrlEncryptionRules() *schema.Resource {
 		Delete: resourceCudaWAFUrlEncryptionRulesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"allow_unencrypted_requests": {Type: schema.TypeString, Optional: true},
-			"exclude_urls":               {Type: schema.TypeString, Optional: true},
-			"host":                       {Type: schema.TypeString, Required: true},
-			"name":                       {Type: schema.TypeString, Required: true},
-			"status":                     {Type: schema.TypeString, Optional: true},
-			"url":                        {Type: schema.TypeString, Required: true},
+			"allow_unencrypted_requests": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Allow Unencrypted Request",
+			},
+			"exclude_urls": {Type: schema.TypeString, Optional: true, Description: "Exclude URL Patterns"},
+			"host":         {Type: schema.TypeString, Required: true, Description: "Host Match"},
+			"name":         {Type: schema.TypeString, Required: true, Description: "URL Encryption Rule Name"},
+			"status":       {Type: schema.TypeString, Optional: true, Description: "Status"},
+			"url":          {Type: schema.TypeString, Required: true, Description: "URL Match"},
 			"parent": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},

@@ -20,8 +20,8 @@ func resourceCudaWAFParameterOptimizers() *schema.Resource {
 		Delete: resourceCudaWAFParameterOptimizersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":        {Type: schema.TypeString, Required: true},
-			"start_token": {Type: schema.TypeString, Required: true},
+			"name":        {Type: schema.TypeString, Required: true, Description: "Optimizer Name"},
+			"start_token": {Type: schema.TypeString, Required: true, Description: "Start Token"},
 			"parent":      {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

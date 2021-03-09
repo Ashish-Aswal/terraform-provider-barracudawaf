@@ -17,12 +17,12 @@ description: |-
 
 ### Optional
 
-- **backup_type** (String)
-- **day_of_week** (String)
-- **destination** (String)
-- **hour_of_day** (String)
+- **backup_type** (String) Select the type of JSON export.
+- **day_of_week** (String) days
+- **destination** (String) Amazon S3 Bucket Name
+- **hour_of_day** (String) hour
 - **id** (String) The ID of this resource.
-- **minute_of_hour** (String)
-- **name** (String)
+- **minute_of_hour** (String) minute
+- **name** (String) Changes After
 
 

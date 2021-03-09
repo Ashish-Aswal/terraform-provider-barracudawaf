@@ -17,32 +17,32 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **priority** (String)
+- **name** (String) Name
+- **priority** (String) Priority
 
 ### Optional
 
-- **action** (String)
-- **comments** (String)
-- **destination_address** (String)
-- **destination_netmask** (String)
-- **destination_port** (String)
-- **enable_logging** (String)
-- **icmp_response** (String)
+- **action** (String) Action
+- **comments** (String) Comments
+- **destination_address** (String) Destination IP Address
+- **destination_netmask** (String) Destination Netmask
+- **destination_port** (String) Destination Port Range
+- **enable_logging** (String) Log Status
+- **icmp_response** (String) ICMP Response
 - **id** (String) The ID of this resource.
-- **interface** (String)
-- **ip_version** (String)
-- **ipv6_destination_address** (String)
-- **ipv6_destination_netmask** (String)
-- **ipv6_source_address** (String)
-- **ipv6_source_netmask** (String)
-- **max_connections** (String)
-- **max_half_open_connections** (String)
-- **protocol** (String)
-- **source_address** (String)
-- **source_netmask** (String)
-- **source_port** (String)
-- **status** (String)
-- **vsite** (String)
+- **interface** (String) Interface
+- **ip_version** (String) IP Protocol Version
+- **ipv6_destination_address** (String) Destination IP Address
+- **ipv6_destination_netmask** (String) Destination Netmask
+- **ipv6_source_address** (String) Source IP Address
+- **ipv6_source_netmask** (String) Source Netmask
+- **max_connections** (String) Max Number of Connections
+- **max_half_open_connections** (String) Max Connection Rate
+- **protocol** (String) Protocol
+- **source_address** (String) Source IP Address
+- **source_netmask** (String) Source Netmask
+- **source_port** (String) Source Port Range
+- **status** (String) Enabled
+- **vsite** (String) Network Group
 
 

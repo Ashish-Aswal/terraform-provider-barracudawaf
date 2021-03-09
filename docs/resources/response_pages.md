@@ -17,14 +17,14 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **status_code** (String)
+- **name** (String) Response Page Name
+- **status_code** (String) Status Code
 
 ### Optional
 
-- **body** (String)
-- **headers** (String)
+- **body** (String) Body
+- **headers** (String) Headers
 - **id** (String) The ID of this resource.
-- **type** (String)
+- **type** (String) Session Token Type
 
 

@@ -19,7 +19,9 @@ func resourceCudaWAFTrustedHostGroups() *schema.Resource {
 		Update: resourceCudaWAFTrustedHostGroupsUpdate,
 		Delete: resourceCudaWAFTrustedHostGroupsDelete,
 
-		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true}},
+		Schema: map[string]*schema.Schema{
+			"name": {Type: schema.TypeString, Required: true, Description: "Trusted Host Group Name"},
+		},
 	}
 }
 

@@ -20,9 +20,9 @@ func resourceCudaWAFLocalUsers() *schema.Resource {
 		Delete: resourceCudaWAFLocalUsersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"user_groups": {Type: schema.TypeString, Optional: true},
-			"name":        {Type: schema.TypeString, Optional: true},
-			"password":    {Type: schema.TypeString, Required: true},
+			"user_groups": {Type: schema.TypeString, Optional: true, Description: "User Groups"},
+			"name":        {Type: schema.TypeString, Optional: true, Description: "New user name"},
+			"password":    {Type: schema.TypeString, Required: true, Description: "Password"},
 		},
 	}
 }

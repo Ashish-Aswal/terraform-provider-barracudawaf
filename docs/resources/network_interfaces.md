@@ -17,13 +17,13 @@ description: |-
 
 ### Required
 
-- **duplexity** (String)
-- **name** (String)
-- **speed** (String)
+- **duplexity** (String) NIC Card's Duplexity
+- **name** (String) NIC Card Name
+- **speed** (String) Default System Log Level
 
 ### Optional
 
-- **auto_negotiation_status** (String)
+- **auto_negotiation_status** (String) Auto-Negotiation Status
 - **id** (String) The ID of this resource.
 
 

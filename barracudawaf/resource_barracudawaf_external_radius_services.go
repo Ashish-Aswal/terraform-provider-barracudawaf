@@ -20,12 +20,12 @@ func resourceCudaWAFExternalRadiusServices() *schema.Resource {
 		Delete: resourceCudaWAFExternalRadiusServicesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"server_ip":     {Type: schema.TypeString, Required: true},
-			"default_role":  {Type: schema.TypeString, Required: true},
-			"name":          {Type: schema.TypeString, Required: true},
-			"port":          {Type: schema.TypeString, Optional: true},
-			"shared_secret": {Type: schema.TypeString, Optional: true},
-			"timeout":       {Type: schema.TypeString, Optional: true},
+			"server_ip":     {Type: schema.TypeString, Required: true, Description: "Server IP"},
+			"default_role":  {Type: schema.TypeString, Required: true, Description: "Default Role"},
+			"name":          {Type: schema.TypeString, Required: true, Description: "Realm Name"},
+			"port":          {Type: schema.TypeString, Optional: true, Description: "Server Port"},
+			"shared_secret": {Type: schema.TypeString, Optional: true, Description: "Shared Secret"},
+			"timeout":       {Type: schema.TypeString, Optional: true, Description: "Timeout"},
 		},
 	}
 }

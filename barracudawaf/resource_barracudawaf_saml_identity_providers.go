@@ -20,12 +20,16 @@ func resourceCudaWAFSamlIdentityProviders() *schema.Resource {
 		Delete: resourceCudaWAFSamlIdentityProvidersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"metadata_file":       {Type: schema.TypeString, Optional: true},
-			"metadata_type":       {Type: schema.TypeString, Optional: true},
-			"autoupdate_metadata": {Type: schema.TypeString, Optional: true},
-			"metadata_url":        {Type: schema.TypeString, Optional: true},
-			"name":                {Type: schema.TypeString, Required: true},
-			"metadata_content":    {Type: schema.TypeString, Optional: true},
+			"metadata_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the metadata file being uploaded.",
+			},
+			"metadata_type":       {Type: schema.TypeString, Optional: true, Description: "Identity Provider Metadata Type"},
+			"autoupdate_metadata": {Type: schema.TypeString, Optional: true, Description: "Auto Update Metadata"},
+			"metadata_url":        {Type: schema.TypeString, Optional: true, Description: "Metadata URL"},
+			"name":                {Type: schema.TypeString, Required: true, Description: "Identity Provider Name"},
+			"metadata_content":    {Type: schema.TypeString, Optional: true, Description: "Must be a Base64 encoded value"},
 			"parent":              {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

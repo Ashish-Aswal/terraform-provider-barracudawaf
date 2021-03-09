@@ -17,7 +17,7 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Trusted Host Group Name
 
 ### Optional
 

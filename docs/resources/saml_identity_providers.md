@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Identity Provider Name
 - **parent** (List of String)
 
 ### Optional
 
-- **autoupdate_metadata** (String)
+- **autoupdate_metadata** (String) Auto Update Metadata
 - **id** (String) The ID of this resource.
-- **metadata_content** (String)
-- **metadata_file** (String)
-- **metadata_type** (String)
-- **metadata_url** (String)
+- **metadata_content** (String) Must be a Base64 encoded value
+- **metadata_file** (String) Name of the metadata file being uploaded.
+- **metadata_type** (String) Identity Provider Metadata Type
+- **metadata_url** (String) Metadata URL
 
 

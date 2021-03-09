@@ -17,34 +17,34 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **server_type** (String)
+- **name** (String) locale_text_3044=List of attributes to check during account verification. <b>Default entry</b>:<br>(|(othermailbox=smtp$${recipient_email})(othermailbox=smtp:${recipient_email})(proxyaddresses=smtp$${recipient_email})(proxyaddresses=smtp:${recipient_email})(mail=${recipient_email})(userPrincipal${recipient_email}))
+- **server_type** (String) Server Type
 
 ### Optional
 
-- **brs_host** (String)
-- **brs_shared_secret** (String)
-- **brs_system_serial** (String)
-- **client_certificate** (String)
-- **cloud_syslog_token** (String)
-- **comments** (String)
-- **connection_type** (String)
-- **event_hub_name** (String)
-- **event_queue_name** (String)
+- **brs_host** (String) IP Address
+- **brs_shared_secret** (String) Shared Secret
+- **brs_system_serial** (String) BRS System Serial Number
+- **client_certificate** (String) Client Certificate
+- **cloud_syslog_token** (String) Token
+- **comments** (String) None
+- **connection_type** (String) Connection Type
+- **event_hub_name** (String) Event Hub Name
+- **event_queue_name** (String) Event Queue Name
 - **id** (String) The ID of this resource.
-- **ip_address** (String)
-- **log_group** (String)
-- **oms_custom_log** (String)
-- **oms_govcloud** (String)
-- **oms_key** (String)
-- **oms_workspace** (String)
-- **password** (String)
-- **policy_name** (String)
-- **policy_sas_key** (String)
-- **port** (String)
-- **service_bus_name** (String)
-- **timestamp_and_hostname** (String)
-- **username** (String)
-- **validate_server_certificate** (String)
+- **ip_address** (String) IP Address
+- **log_group** (String) Log Group Name
+- **oms_custom_log** (String) Send Barracuda Custom Logs to OMS
+- **oms_govcloud** (String) Select <b>On</b> for Azure GovCloud Workspace.
+- **oms_key** (String) OMS Primary Key
+- **oms_workspace** (String) OMS Workspace ID
+- **password** (String) Password
+- **policy_name** (String) Policy Name
+- **policy_sas_key** (String) Policy SAS key
+- **port** (String) Port
+- **service_bus_name** (String) Service Bus Name
+- **timestamp_and_hostname** (String) Log Timestamp and Hostname
+- **username** (String) Username
+- **validate_server_certificate** (String) Validate Server Certificate
 
 

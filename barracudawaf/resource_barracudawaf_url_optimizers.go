@@ -20,9 +20,9 @@ func resourceCudaWAFUrlOptimizers() *schema.Resource {
 		Delete: resourceCudaWAFUrlOptimizersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"end_delimiter": {Type: schema.TypeString, Optional: true},
-			"name":          {Type: schema.TypeString, Required: true},
-			"start_token":   {Type: schema.TypeString, Required: true},
+			"end_delimiter": {Type: schema.TypeString, Optional: true, Description: "End Delimiter"},
+			"name":          {Type: schema.TypeString, Required: true, Description: "Optimizer Name"},
+			"start_token":   {Type: schema.TypeString, Required: true, Description: "Start Token"},
 			"parent":        {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

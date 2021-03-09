@@ -90,23 +90,63 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"based_on": {Type: schema.TypeString, Optional: true},
-			"name":     {Type: schema.TypeString, Required: true},
+			"name":     {Type: schema.TypeString, Required: true, Description: "Policy Name"},
 			"request_limits": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"max_cookie_name_length":  {Type: schema.TypeString, Optional: true},
-						"max_number_of_cookies":   {Type: schema.TypeString, Optional: true},
-						"max_header_name_length":  {Type: schema.TypeString, Optional: true},
-						"max_request_line_length": {Type: schema.TypeString, Optional: true},
-						"max_number_of_headers":   {Type: schema.TypeString, Optional: true},
-						"max_query_length":        {Type: schema.TypeString, Optional: true},
-						"max_cookie_value_length": {Type: schema.TypeString, Optional: true},
-						"max_header_value_length": {Type: schema.TypeString, Optional: true},
-						"max_request_length":      {Type: schema.TypeString, Optional: true},
-						"max_url_length":          {Type: schema.TypeString, Optional: true},
-						"enable":                  {Type: schema.TypeString, Optional: true},
+						"max_cookie_name_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Cookie Name Length",
+						},
+						"max_number_of_cookies": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Number of Cookies",
+						},
+						"max_header_name_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Header Name Length",
+						},
+						"max_request_line_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Request Line Length",
+						},
+						"max_number_of_headers": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Number of Headers",
+						},
+						"max_query_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Query Length",
+						},
+						"max_cookie_value_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Cookie Value Length",
+						},
+						"max_header_value_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Header Value Length",
+						},
+						"max_request_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Request Length",
+						},
+						"max_url_length": {Type: schema.TypeString, Optional: true, Description: "Max URL Length"},
+						"enable": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable Request Limits",
+						},
 					},
 				},
 			},
@@ -115,11 +155,31 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"default_charset":         {Type: schema.TypeString, Optional: true},
-						"detect_response_charset": {Type: schema.TypeString, Optional: true},
-						"normalize_special_chars": {Type: schema.TypeString, Optional: true},
-						"apply_double_decoding":   {Type: schema.TypeString, Optional: true},
-						"parameter_separators":    {Type: schema.TypeString, Optional: true},
+						"default_charset": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Default Character Set",
+						},
+						"detect_response_charset": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Detect Response Charset",
+						},
+						"normalize_special_chars": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Detect Response Charset",
+						},
+						"apply_double_decoding": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Apply Double Decoding",
+						},
+						"parameter_separators": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Parameter Separators",
+						},
 					},
 				},
 			},
@@ -128,17 +188,61 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"allowed_methods":               {Type: schema.TypeString, Required: true},
-						"allowed_content_types":         {Type: schema.TypeString, Optional: true},
-						"custom_blocked_attack_types":   {Type: schema.TypeString, Optional: true},
-						"exception_patterns":            {Type: schema.TypeString, Optional: true},
-						"blocked_attack_types":          {Type: schema.TypeString, Optional: true},
-						"max_content_length":            {Type: schema.TypeString, Optional: true},
-						"maximum_parameter_name_length": {Type: schema.TypeString, Optional: true},
-						"max_parameters":                {Type: schema.TypeString, Optional: true},
-						"maximum_upload_files":          {Type: schema.TypeString, Optional: true},
-						"csrf_prevention":               {Type: schema.TypeString, Optional: true},
-						"enable":                        {Type: schema.TypeString, Optional: true},
+						"allowed_methods": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Allowed Methods",
+						},
+						"allowed_content_types": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Allowed Content Types",
+						},
+						"custom_blocked_attack_types": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Custom Blocked Attack Types",
+						},
+						"exception_patterns": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Exception Patterns",
+						},
+						"blocked_attack_types": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Blocked Attack Types",
+						},
+						"max_content_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Content Length",
+						},
+						"maximum_parameter_name_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Maximum Parameter Name Length",
+						},
+						"max_parameters": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Max Parameters",
+						},
+						"maximum_upload_files": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Maximum Upload Files",
+						},
+						"csrf_prevention": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "CSRF Prevention",
+						},
+						"enable": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable URL Protection",
+						},
 					},
 				},
 			},
@@ -147,20 +251,76 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"blocked_attack_types":           {Type: schema.TypeString, Optional: true},
-						"custom_blocked_attack_types":    {Type: schema.TypeString, Optional: true},
-						"base64_decode_parameter_value":  {Type: schema.TypeString, Optional: true},
-						"allowed_file_upload_type":       {Type: schema.TypeString, Optional: true},
-						"denied_metacharacters":          {Type: schema.TypeString, Optional: true},
-						"exception_patterns":             {Type: schema.TypeString, Optional: true},
-						"file_upload_extensions":         {Type: schema.TypeString, Optional: true},
-						"file_upload_mime_types":         {Type: schema.TypeString, Optional: true},
-						"maximum_instances":              {Type: schema.TypeString, Optional: true},
-						"maximum_parameter_value_length": {Type: schema.TypeString, Optional: true},
-						"maximum_upload_file_size":       {Type: schema.TypeString, Optional: true},
-						"enable":                         {Type: schema.TypeString, Optional: true},
-						"validate_parameter_name":        {Type: schema.TypeString, Optional: true},
-						"ignore_parameters":              {Type: schema.TypeString, Optional: true},
+						"blocked_attack_types": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Blocked Attack Types",
+						},
+						"custom_blocked_attack_types": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Custom Blocked Attack Types",
+						},
+						"base64_decode_parameter_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Base64 Decode Parameter Value",
+						},
+						"allowed_file_upload_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Allowed File Upload Type",
+						},
+						"denied_metacharacters": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Denied Metacharacters",
+						},
+						"exception_patterns": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Exception Patterns",
+						},
+						"file_upload_extensions": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "File Upload Extensions",
+						},
+						"file_upload_mime_types": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "File Upload Mime Types",
+						},
+						"maximum_instances": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Maximum Instances",
+						},
+						"maximum_parameter_value_length": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Maximum Parameter Value Length",
+						},
+						"maximum_upload_file_size": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Maximum Upload File Size",
+						},
+						"enable": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable Parameter Protection",
+						},
+						"validate_parameter_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Validate Parameter Name",
+						},
+						"ignore_parameters": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Ignore Parameters",
+						},
 					},
 				},
 			},
@@ -169,10 +329,26 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"return_codes_to_exempt": {Type: schema.TypeString, Optional: true},
-						"headers_to_filter":      {Type: schema.TypeString, Required: true},
-						"filter_response_header": {Type: schema.TypeString, Optional: true},
-						"suppress_return_code":   {Type: schema.TypeString, Optional: true},
+						"return_codes_to_exempt": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Return Codes to Exempt",
+						},
+						"headers_to_filter": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Headers to Filter",
+						},
+						"filter_response_header": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Filter Response Header",
+						},
+						"suppress_return_code": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Suppress Return Code",
+						},
 					},
 				},
 			},
@@ -181,15 +357,47 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"allow_unrecognized_cookies":    {Type: schema.TypeString, Optional: true},
-						"days_allowed":                  {Type: schema.TypeString, Optional: true},
-						"cookies_exempted":              {Type: schema.TypeString, Optional: true},
-						"http_only":                     {Type: schema.TypeString, Optional: true},
-						"cookie_max_age":                {Type: schema.TypeString, Optional: true},
-						"tamper_proof_mode":             {Type: schema.TypeString, Optional: true},
-						"secure_cookie":                 {Type: schema.TypeString, Optional: true},
-						"cookie_replay_protection_type": {Type: schema.TypeString, Optional: true},
-						"custom_headers":                {Type: schema.TypeString, Optional: true},
+						"allow_unrecognized_cookies": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Allow Unrecognized Cookies",
+						},
+						"days_allowed": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Days Allowed",
+						},
+						"cookies_exempted": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Cookies Exempted",
+						},
+						"http_only": {Type: schema.TypeString, Optional: true, Description: "HTTP Only"},
+						"cookie_max_age": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Cookie Max Age",
+						},
+						"tamper_proof_mode": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tamper Proof Mode",
+						},
+						"secure_cookie": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Secure Cookie",
+						},
+						"cookie_replay_protection_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Cookie Replay Protection Type",
+						},
+						"custom_headers": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Custom Headers",
+						},
 					},
 				},
 			},
@@ -198,10 +406,26 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"medium_risk_score":             {Type: schema.TypeString, Optional: true},
-						"high_risk_score":               {Type: schema.TypeString, Optional: true},
-						"exception_client_fingerprints": {Type: schema.TypeString, Optional: true},
-						"client_profile":                {Type: schema.TypeString, Optional: true},
+						"medium_risk_score": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Suspicious Clients",
+						},
+						"high_risk_score": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Bad Clients",
+						},
+						"exception_client_fingerprints": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Exceptions",
+						},
+						"client_profile": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Enable Client Profile Validation",
+						},
 					},
 				},
 			},
@@ -210,8 +434,16 @@ func resourceCudaWAFSecurityPolicies() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"backlog_requests_limit":    {Type: schema.TypeString, Optional: true},
-						"tarpit_inactivity_timeout": {Type: schema.TypeString, Optional: true},
+						"backlog_requests_limit": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Backlog Requests Limit",
+						},
+						"tarpit_inactivity_timeout": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tarpit Inactivity Timeout",
+						},
 					},
 				},
 			},

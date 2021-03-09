@@ -20,8 +20,8 @@ func resourceCudaWAFGeoPools() *schema.Resource {
 		Delete: resourceCudaWAFGeoPoolsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"region": {Type: schema.TypeString, Optional: true},
-			"name":   {Type: schema.TypeString, Required: true},
+			"region": {Type: schema.TypeString, Optional: true, Description: "Available Categories"},
+			"name":   {Type: schema.TypeString, Required: true, Description: "Geo Pool Name"},
 		},
 	}
 }

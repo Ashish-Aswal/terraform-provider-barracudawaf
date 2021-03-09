@@ -20,14 +20,14 @@ func resourceCudaWAFJsonSecurityPolicies() *schema.Resource {
 		Delete: resourceCudaWAFJsonSecurityPoliciesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":               {Type: schema.TypeString, Required: true},
-			"max_array_elements": {Type: schema.TypeString, Optional: true},
-			"max_siblings":       {Type: schema.TypeString, Optional: true},
-			"max_keys":           {Type: schema.TypeString, Required: true},
-			"max_key_length":     {Type: schema.TypeString, Required: true},
-			"max_number_value":   {Type: schema.TypeString, Optional: true},
-			"max_object_depth":   {Type: schema.TypeString, Optional: true},
-			"max_value_length":   {Type: schema.TypeString, Required: true},
+			"name":               {Type: schema.TypeString, Required: true, Description: "Policy Name"},
+			"max_array_elements": {Type: schema.TypeString, Optional: true, Description: "Max Array Elements"},
+			"max_siblings":       {Type: schema.TypeString, Optional: true, Description: "Max Siblings"},
+			"max_keys":           {Type: schema.TypeString, Required: true, Description: "Max Keys"},
+			"max_key_length":     {Type: schema.TypeString, Required: true, Description: "Max Key Length"},
+			"max_number_value":   {Type: schema.TypeString, Optional: true, Description: "Max Number Value"},
+			"max_object_depth":   {Type: schema.TypeString, Optional: true, Description: "Max Object Depth"},
+			"max_value_length":   {Type: schema.TypeString, Required: true, Description: "Max Value Length"},
 		},
 	}
 }

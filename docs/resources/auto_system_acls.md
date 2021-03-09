@@ -17,25 +17,25 @@ description: |-
 
 ### Required
 
-- **destination_port** (String)
-- **name** (String)
-- **priority** (String)
-- **source_port** (String)
+- **destination_port** (String) Destination Port Range
+- **name** (String) Name
+- **priority** (String) Priority
+- **source_port** (String) Source Port Range
 
 ### Optional
 
-- **acl_type** (String)
-- **action** (String)
-- **destination_address** (String)
-- **destination_netmask** (String)
-- **enable_logging** (String)
+- **acl_type** (String) Type
+- **action** (String) Action
+- **destination_address** (String) Destination IP Address
+- **destination_netmask** (String) Destination Netmask
+- **enable_logging** (String) Enabled
 - **id** (String) The ID of this resource.
-- **interface** (String)
-- **ip_version** (String)
-- **protocol** (String)
-- **source_address** (String)
-- **source_netmask** (String)
-- **status** (String)
-- **vsite** (String)
+- **interface** (String) Interface
+- **ip_version** (String) IP Protocol Version
+- **protocol** (String) Protocol
+- **source_address** (String) Source IP Address
+- **source_netmask** (String) Source Netmask
+- **status** (String) Log Status
+- **vsite** (String) Network Group
 
 

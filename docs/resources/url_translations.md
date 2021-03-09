@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **inside_domain** (String)
-- **inside_prefix** (String)
-- **name** (String)
-- **outside_domain** (String)
-- **outside_prefix** (String)
+- **inside_domain** (String) Inside Domain
+- **inside_prefix** (String) Inside Prefix
+- **name** (String) Rule Name
+- **outside_domain** (String) Outside Domain
+- **outside_prefix** (String) Outside Prefix
 - **parent** (List of String)
 
 ### Optional
 
-- **comments** (String)
+- **comments** (String) Comments
 - **id** (String) The ID of this resource.
 
 

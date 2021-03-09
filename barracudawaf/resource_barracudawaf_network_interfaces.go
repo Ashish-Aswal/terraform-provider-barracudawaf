@@ -20,10 +20,10 @@ func resourceCudaWAFNetworkInterfaces() *schema.Resource {
 		Delete: resourceCudaWAFNetworkInterfacesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":                    {Type: schema.TypeString, Required: true},
-			"duplexity":               {Type: schema.TypeString, Required: true},
-			"auto_negotiation_status": {Type: schema.TypeString, Optional: true},
-			"speed":                   {Type: schema.TypeString, Required: true},
+			"name":                    {Type: schema.TypeString, Required: true, Description: "NIC Card Name"},
+			"duplexity":               {Type: schema.TypeString, Required: true, Description: "NIC Card's Duplexity"},
+			"auto_negotiation_status": {Type: schema.TypeString, Optional: true, Description: "Auto-Negotiation Status"},
+			"speed":                   {Type: schema.TypeString, Required: true, Description: "Default System Log Level"},
 		},
 	}
 }

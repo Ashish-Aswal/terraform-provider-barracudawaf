@@ -19,7 +19,9 @@ func resourceCudaWAFIdentityTypes() *schema.Resource {
 		Update: resourceCudaWAFIdentityTypesUpdate,
 		Delete: resourceCudaWAFIdentityTypesDelete,
 
-		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true}},
+		Schema: map[string]*schema.Schema{
+			"name": {Type: schema.TypeString, Required: true, Description: "Identity Theft Data Type Name"},
+		},
 	}
 }
 

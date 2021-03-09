@@ -17,18 +17,18 @@ description: |-
 
 ### Required
 
-- **credential_server** (String)
-- **name** (String)
+- **credential_server** (String) Credential Server
+- **name** (String) Policy Name
 - **parent** (List of String)
-- **url** (String)
+- **url** (String) URL Match
 
 ### Optional
 
-- **comments** (String)
-- **extended_match** (String)
-- **extended_match_sequence** (String)
-- **host** (String)
+- **comments** (String) Comments
+- **extended_match** (String) Extended Match
+- **extended_match_sequence** (String) Extended Match Sequence
+- **host** (String) Host Match
 - **id** (String) The ID of this resource.
-- **status** (String)
+- **status** (String) Status
 
 

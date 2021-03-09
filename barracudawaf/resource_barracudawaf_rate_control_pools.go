@@ -20,10 +20,14 @@ func resourceCudaWAFRateControlPools() *schema.Resource {
 		Delete: resourceCudaWAFRateControlPoolsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":                     {Type: schema.TypeString, Required: true},
-			"max_active_requests":      {Type: schema.TypeString, Optional: true},
-			"max_per_client_backlog":   {Type: schema.TypeString, Optional: true},
-			"max_unconfigured_clients": {Type: schema.TypeString, Optional: true},
+			"name":                   {Type: schema.TypeString, Required: true, Description: "Rate Control Pool Name"},
+			"max_active_requests":    {Type: schema.TypeString, Optional: true, Description: "Maximum Active Requests"},
+			"max_per_client_backlog": {Type: schema.TypeString, Optional: true, Description: "Maximum Per Client Backlog"},
+			"max_unconfigured_clients": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Maximum Unconfigured Clients",
+			},
 		},
 	}
 }

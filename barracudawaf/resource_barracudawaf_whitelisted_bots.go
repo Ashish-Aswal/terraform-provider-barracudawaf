@@ -20,11 +20,11 @@ func resourceCudaWAFWhitelistedBots() *schema.Resource {
 		Delete: resourceCudaWAFWhitelistedBotsDelete,
 
 		Schema: map[string]*schema.Schema{
-			"host":       {Type: schema.TypeString, Optional: true},
-			"identifier": {Type: schema.TypeString, Optional: true},
-			"ip_address": {Type: schema.TypeString, Optional: true},
-			"name":       {Type: schema.TypeString, Required: true},
-			"user_agent": {Type: schema.TypeString, Required: true},
+			"host":       {Type: schema.TypeString, Optional: true, Description: "Host"},
+			"identifier": {Type: schema.TypeString, Optional: true, Description: "Whitelist Identifier"},
+			"ip_address": {Type: schema.TypeString, Optional: true, Description: "IP Addresses"},
+			"name":       {Type: schema.TypeString, Required: true, Description: "Parent Name"},
+			"user_agent": {Type: schema.TypeString, Required: true, Description: "User Agent"},
 		},
 	}
 }

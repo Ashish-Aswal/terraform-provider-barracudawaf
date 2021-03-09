@@ -19,20 +19,20 @@ description: |-
 
 - **allow_private_key_export** (String)
 - **assign_associated_key** (String)
-- **auto_renew_cert** (String)
+- **auto_renew_cert** (String) None
 - **certificate_key** (String)
 - **certificate_password** (String)
 - **certificate_type** (String)
-- **common_name** (String)
-- **download_type** (String)
-- **encrypt_password** (String)
+- **common_name** (String) Common Name
+- **download_type** (String) A Certificate Signing Request (CSR) and/or Certificate can be downloaded.
+- **encrypt_password** (String) Encryption Password is used to extract the private key from PKCS #12 token.
 - **expiry** (String)
 - **id** (String) The ID of this resource.
 - **intermediary_certificates** (String)
-- **key_type** (String)
-- **name** (String)
+- **key_type** (String) Select Key Type:
+- **name** (String) Certificate Name
 - **ocsp_stapling** (Block List) (see [below for nested schema](#nestedblock--ocsp_stapling))
-- **schedule_renewal_day** (String)
+- **schedule_renewal_day** (String) None
 - **serial** (String)
 - **signed_certificate** (String)
 
@@ -41,15 +41,15 @@ description: |-
 
 Required:
 
-- **cache_timeout** (String)
+- **cache_timeout** (String) Cache timeout
 
 Optional:
 
-- **clock_skew** (String)
-- **error_timeout** (String)
-- **issuer_certificate** (String)
-- **ocsp_issuer_certificate** (String)
-- **ocsp_stapling** (String)
-- **override_ocsp_responder** (String)
+- **clock_skew** (String) Clock Skew
+- **error_timeout** (String) Error Timeout
+- **issuer_certificate** (String) OCSP Issuer Cetificate
+- **ocsp_issuer_certificate** (String) Ocsp Issuer Certificate content as a Base64 encoded string.
+- **ocsp_stapling** (String) OCSP Stapling
+- **override_ocsp_responder** (String) OCSP Responder URL
 
 

@@ -20,13 +20,25 @@ func resourceCudaWAFProtectedDataTypes() *schema.Resource {
 		Delete: resourceCudaWAFProtectedDataTypesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"action":                      {Type: schema.TypeString, Optional: true},
-			"initial_characters_to_keep":  {Type: schema.TypeString, Optional: true},
-			"trailing_characters_to_keep": {Type: schema.TypeString, Optional: true},
-			"name":                        {Type: schema.TypeString, Required: true},
-			"custom_identity_theft_type":  {Type: schema.TypeString, Optional: true},
-			"enable":                      {Type: schema.TypeString, Optional: true},
-			"identity_theft_type":         {Type: schema.TypeString, Optional: true},
+			"action": {Type: schema.TypeString, Optional: true, Description: "Action"},
+			"initial_characters_to_keep": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Initial Characters to Keep",
+			},
+			"trailing_characters_to_keep": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Trailing Characters to Keep",
+			},
+			"name": {Type: schema.TypeString, Required: true, Description: "Data Theft Element Name"},
+			"custom_identity_theft_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom Identity Theft Type",
+			},
+			"enable":              {Type: schema.TypeString, Optional: true, Description: "Enabled"},
+			"identity_theft_type": {Type: schema.TypeString, Optional: true, Description: "Identity Theft Type"},
 			"parent": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},

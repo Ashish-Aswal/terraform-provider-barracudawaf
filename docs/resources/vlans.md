@@ -17,14 +17,14 @@ description: |-
 
 ### Required
 
-- **interface** (String)
-- **name** (String)
-- **vlan_id** (String)
-- **vsite** (String)
+- **interface** (String) VLAN Interface
+- **name** (String) VLAN Name
+- **vlan_id** (String) VLAN ID
+- **vsite** (String) Network Group
 
 ### Optional
 
-- **comments** (String)
+- **comments** (String) Comments
 - **id** (String) The ID of this resource.
 
 

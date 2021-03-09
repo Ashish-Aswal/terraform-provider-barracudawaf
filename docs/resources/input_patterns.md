@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Pattern Name
 - **parent** (List of String)
-- **regex** (String)
+- **regex** (String) Pattern Regex
 
 ### Optional
 
-- **algorithm** (String)
-- **case_sensitive** (String)
-- **description** (String)
+- **algorithm** (String) Pattern Algorithm
+- **case_sensitive** (String) Case Sensitivity
+- **description** (String) Pattern Description
 - **id** (String) The ID of this resource.
-- **status** (String)
+- **status** (String) Status
 
 

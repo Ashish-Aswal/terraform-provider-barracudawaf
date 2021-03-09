@@ -17,11 +17,11 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Geo Pool Name
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **region** (String)
+- **region** (String) Available Categories
 
 

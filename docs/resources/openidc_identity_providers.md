@@ -17,22 +17,22 @@ description: |-
 
 ### Required
 
-- **client_id** (String)
-- **client_secret** (String)
-- **jwks_url** (String)
+- **client_id** (String) Identity Provider Name
+- **client_secret** (String) Server IP
+- **jwks_url** (String) Type
 - **parent** (List of String)
-- **token_endpoint** (String)
+- **token_endpoint** (String) Identity Provider Metadata Type
 
 ### Optional
 
-- **auth_endpoint** (String)
-- **endpoint_configuration** (String)
+- **auth_endpoint** (String) Auth Endpoint
+- **endpoint_configuration** (String) Identity Provider Metadata Type
 - **id** (String) The ID of this resource.
-- **metadata_url** (String)
-- **name** (String)
-- **openidc_issuer** (String)
-- **scope** (String)
-- **type_openidc** (String)
-- **userinfo_endpoint** (String)
+- **metadata_url** (String) Please specify the OpenId Connect authorization endpoint
+- **name** (String) OpenID Connect Alias
+- **openidc_issuer** (String) Name of the metadata file being uploaded.
+- **scope** (String) Metadata URL
+- **type_openidc** (String) Type
+- **userinfo_endpoint** (String) Type
 
 

@@ -17,14 +17,14 @@ description: |-
 
 ### Required
 
-- **ip_range** (String)
-- **name** (String)
+- **ip_range** (String) Client IP Range
+- **name** (String) Preferred Clients Name
 - **parent** (List of String)
-- **weight** (String)
+- **weight** (String) Weight
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **status** (String)
+- **status** (String) Status
 
 

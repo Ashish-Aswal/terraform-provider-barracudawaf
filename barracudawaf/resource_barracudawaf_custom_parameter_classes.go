@@ -20,12 +20,24 @@ func resourceCudaWAFCustomParameterClasses() *schema.Resource {
 		Delete: resourceCudaWAFCustomParameterClassesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":                         {Type: schema.TypeString, Required: true},
-			"custom_blocked_attack_types":  {Type: schema.TypeString, Optional: true},
-			"custom_input_type_validation": {Type: schema.TypeString, Optional: true},
-			"denied_metacharacters":        {Type: schema.TypeString, Optional: true},
-			"input_type_validation":        {Type: schema.TypeString, Optional: true},
-			"blocked_attack_types":         {Type: schema.TypeString, Optional: true},
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Custom Parameter Class Name",
+			},
+			"custom_blocked_attack_types": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom Blocked Attack Types",
+			},
+			"custom_input_type_validation": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Custom Input Type Validation",
+			},
+			"denied_metacharacters": {Type: schema.TypeString, Optional: true, Description: "Denied Metacharacters"},
+			"input_type_validation": {Type: schema.TypeString, Optional: true, Description: "Input Type Validation"},
+			"blocked_attack_types":  {Type: schema.TypeString, Optional: true, Description: "Blocked Attack Types"},
 		},
 	}
 }

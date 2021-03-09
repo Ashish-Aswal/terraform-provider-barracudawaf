@@ -17,15 +17,15 @@ description: |-
 
 ### Required
 
-- **default_role** (String)
-- **name** (String)
-- **server_ip** (String)
+- **default_role** (String) Default Role
+- **name** (String) Realm Name
+- **server_ip** (String) Server IP
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **port** (String)
-- **shared_secret** (String)
-- **timeout** (String)
+- **port** (String) Server Port
+- **shared_secret** (String) Shared Secret
+- **timeout** (String) Timeout
 
 

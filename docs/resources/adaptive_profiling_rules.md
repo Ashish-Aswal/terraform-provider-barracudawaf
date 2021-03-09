@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **host** (String)
-- **name** (String)
+- **host** (String) Host Match
+- **name** (String) Learn Rule Name
 - **parent** (List of String)
-- **url** (String)
+- **url** (String) URL Match
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **learn_from_request** (String)
-- **learn_from_response** (String)
-- **status** (String)
+- **learn_from_request** (String) Learn From Request
+- **learn_from_response** (String) Learn From Response
+- **status** (String) Status
 
 

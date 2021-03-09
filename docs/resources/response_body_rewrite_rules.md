@@ -17,17 +17,17 @@ description: |-
 
 ### Required
 
-- **host** (String)
-- **name** (String)
+- **host** (String) Host Match
+- **name** (String) Rule Name
 - **parent** (List of String)
-- **search_string** (String)
-- **sequence_number** (String)
-- **url** (String)
+- **search_string** (String) Search String
+- **sequence_number** (String) Sequence number
+- **url** (String) URL Match
 
 ### Optional
 
-- **comments** (String)
+- **comments** (String) Comments
 - **id** (String) The ID of this resource.
-- **replace_string** (String)
+- **replace_string** (String) Replace String
 
 

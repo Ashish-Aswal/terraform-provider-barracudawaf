@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **host** (String)
-- **name** (String)
+- **host** (String) Host Match
+- **name** (String) URL Encryption Rule Name
 - **parent** (List of String)
-- **url** (String)
+- **url** (String) URL Match
 
 ### Optional
 
-- **allow_unencrypted_requests** (String)
-- **exclude_urls** (String)
+- **allow_unencrypted_requests** (String) Allow Unencrypted Request
+- **exclude_urls** (String) Exclude URL Patterns
 - **id** (String) The ID of this resource.
-- **status** (String)
+- **status** (String) Status
 
 

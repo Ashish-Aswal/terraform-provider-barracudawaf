@@ -20,9 +20,9 @@ func resourceCudaWAFAccessRules() *schema.Resource {
 		Delete: resourceCudaWAFAccessRulesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"attribute_names":  {Type: schema.TypeString, Optional: true},
-			"attribute_values": {Type: schema.TypeString, Optional: true},
-			"name":             {Type: schema.TypeString, Required: true},
+			"attribute_names":  {Type: schema.TypeString, Optional: true, Description: "Access Rule Attribute Names"},
+			"attribute_values": {Type: schema.TypeString, Optional: true, Description: "Access Rule Attribute Values"},
+			"name":             {Type: schema.TypeString, Required: true, Description: "Access Rule Name"},
 			"parent":           {Type: schema.TypeList, Elem: &schema.Schema{Type: schema.TypeString}, Required: true},
 		},
 	}

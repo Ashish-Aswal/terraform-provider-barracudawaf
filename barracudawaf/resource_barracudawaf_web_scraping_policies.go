@@ -20,16 +20,40 @@ func resourceCudaWAFWebScrapingPolicies() *schema.Resource {
 		Delete: resourceCudaWAFWebScrapingPoliciesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":                          {Type: schema.TypeString, Required: true},
-			"blacklisted_categories":        {Type: schema.TypeString, Optional: true},
-			"whitelisted_bots":              {Type: schema.TypeString, Optional: true},
-			"comments":                      {Type: schema.TypeString, Optional: true},
-			"delay_time":                    {Type: schema.TypeString, Optional: true},
-			"insert_delay":                  {Type: schema.TypeString, Optional: true},
-			"insert_disallowed_urls":        {Type: schema.TypeString, Optional: true},
-			"insert_hidden_links":           {Type: schema.TypeString, Optional: true},
-			"insert_javascript_in_response": {Type: schema.TypeString, Optional: true},
-			"detect_mouse_event":            {Type: schema.TypeString, Optional: true},
+			"name": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Web Scraping Policy Name",
+			},
+			"blacklisted_categories": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Blacklisted Categories",
+			},
+			"whitelisted_bots": {Type: schema.TypeString, Optional: true, Description: "Whitelisted Bots"},
+			"comments":         {Type: schema.TypeString, Optional: true, Description: "Comment"},
+			"delay_time":       {Type: schema.TypeString, Optional: true, Description: "Delay Time"},
+			"insert_delay": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Insert Delay in Robots.txt",
+			},
+			"insert_disallowed_urls": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Insert Disallowed URLs in Robots.txt",
+			},
+			"insert_hidden_links": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Insert Hidden Links in Response",
+			},
+			"insert_javascript_in_response": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Insert JavaScript in Response",
+			},
+			"detect_mouse_event": {Type: schema.TypeString, Optional: true, Description: "Detect Mouse Event"},
 		},
 	}
 }

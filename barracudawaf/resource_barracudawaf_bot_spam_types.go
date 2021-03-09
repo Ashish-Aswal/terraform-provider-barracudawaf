@@ -19,7 +19,9 @@ func resourceCudaWAFBotSpamTypes() *schema.Resource {
 		Update: resourceCudaWAFBotSpamTypesUpdate,
 		Delete: resourceCudaWAFBotSpamTypesDelete,
 
-		Schema: map[string]*schema.Schema{"name": {Type: schema.TypeString, Required: true}},
+		Schema: map[string]*schema.Schema{
+			"name": {Type: schema.TypeString, Required: true, Description: "Attack Data Type Name"},
+		},
 	}
 }
 

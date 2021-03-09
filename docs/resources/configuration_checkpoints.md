@@ -17,12 +17,12 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) checkpoint name
 
 ### Optional
 
-- **comment** (String)
-- **date** (String)
+- **comment** (String) checkpoint comment
+- **date** (String) checkpoint date
 - **id** (String) The ID of this resource.
 
 

@@ -20,14 +20,14 @@ func resourceCudaWAFCredentialServers() *schema.Resource {
 		Delete: resourceCudaWAFCredentialServersDelete,
 
 		Schema: map[string]*schema.Schema{
-			"cache_expiry":         {Type: schema.TypeString, Optional: true},
-			"cache_valid_sessions": {Type: schema.TypeString, Optional: true},
-			"redirect_url":         {Type: schema.TypeString, Optional: true},
-			"ip_address":           {Type: schema.TypeString, Required: true},
-			"policy_name":          {Type: schema.TypeString, Required: true},
-			"port":                 {Type: schema.TypeString, Optional: true},
-			"armored_browser_type": {Type: schema.TypeString, Required: true},
-			"name":                 {Type: schema.TypeString, Required: true},
+			"cache_expiry":         {Type: schema.TypeString, Optional: true, Description: "Cache Expiry (Seconds)"},
+			"cache_valid_sessions": {Type: schema.TypeString, Optional: true, Description: "Cache Valid Sessions"},
+			"redirect_url":         {Type: schema.TypeString, Optional: true, Description: "Redirect URL"},
+			"ip_address":           {Type: schema.TypeString, Required: true, Description: "Server Name/IP Address"},
+			"policy_name":          {Type: schema.TypeString, Required: true, Description: "Policy Name"},
+			"port":                 {Type: schema.TypeString, Optional: true, Description: "Server Port"},
+			"armored_browser_type": {Type: schema.TypeString, Required: true, Description: "Armored Browser Type"},
+			"name":                 {Type: schema.TypeString, Required: true, Description: "Name"},
 		},
 	}
 }

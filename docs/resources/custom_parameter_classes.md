@@ -17,15 +17,15 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Custom Parameter Class Name
 
 ### Optional
 
-- **blocked_attack_types** (String)
-- **custom_blocked_attack_types** (String)
-- **custom_input_type_validation** (String)
-- **denied_metacharacters** (String)
+- **blocked_attack_types** (String) Blocked Attack Types
+- **custom_blocked_attack_types** (String) Custom Blocked Attack Types
+- **custom_input_type_validation** (String) Custom Input Type Validation
+- **denied_metacharacters** (String) Denied Metacharacters
 - **id** (String) The ID of this resource.
-- **input_type_validation** (String)
+- **input_type_validation** (String) Input Type Validation
 
 

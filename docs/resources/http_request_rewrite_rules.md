@@ -17,19 +17,19 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Rule Name
 - **parent** (List of String)
-- **sequence_number** (String)
+- **sequence_number** (String) Sequence Number
 
 ### Optional
 
-- **action** (String)
-- **comments** (String)
-- **condition** (String)
-- **continue_processing** (String)
-- **header** (String)
+- **action** (String) Action
+- **comments** (String) Comments
+- **condition** (String) Rewrite Condition
+- **continue_processing** (String) Continue Processing
+- **header** (String) Header Name
 - **id** (String) The ID of this resource.
-- **old_value** (String)
-- **rewrite_value** (String)
+- **old_value** (String) Old Value
+- **rewrite_value** (String) Rewrite Value
 
 

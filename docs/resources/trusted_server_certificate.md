@@ -18,11 +18,11 @@ description: |-
 ### Optional
 
 - **certificate** (String)
-- **common_name** (String)
-- **download_type** (String)
+- **common_name** (String) Common Name
+- **download_type** (String) A Certificate Signing Request (CSR) and/or Certificate can be downloaded.
 - **expiry** (String)
 - **id** (String) The ID of this resource.
-- **name** (String)
+- **name** (String) Certificate Name
 - **serial** (String)
 
 

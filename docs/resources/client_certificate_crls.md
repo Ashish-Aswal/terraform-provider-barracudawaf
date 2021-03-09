@@ -17,19 +17,19 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) CRL Name
 - **parent** (List of String)
-- **url** (String)
+- **url** (String) CRL URL
 
 ### Optional
 
-- **auto_update** (String)
-- **auto_update_type** (String)
-- **date_of_month** (String)
-- **day_of_week** (String)
-- **enable** (String)
+- **auto_update** (String) CRL Auto Update
+- **auto_update_type** (String) Auto Update Type
+- **date_of_month** (String) Date Of Month
+- **day_of_week** (String) Day Of Week
+- **enable** (String) Enable CRL
 - **id** (String) The ID of this resource.
-- **number_of_retries** (String)
-- **time_of_day** (String)
+- **number_of_retries** (String) Number of Retries
+- **time_of_day** (String) Time Of Day
 
 

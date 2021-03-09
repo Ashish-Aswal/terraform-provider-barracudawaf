@@ -20,12 +20,12 @@ func resourceCudaWAFExportConfiguration() *schema.Resource {
 		Delete: resourceCudaWAFExportConfigurationDelete,
 
 		Schema: map[string]*schema.Schema{
-			"backup_type":    {Type: schema.TypeString, Optional: true},
-			"name":           {Type: schema.TypeString, Optional: true},
-			"destination":    {Type: schema.TypeString, Optional: true},
-			"day_of_week":    {Type: schema.TypeString, Optional: true},
-			"hour_of_day":    {Type: schema.TypeString, Optional: true},
-			"minute_of_hour": {Type: schema.TypeString, Optional: true},
+			"backup_type":    {Type: schema.TypeString, Optional: true, Description: "Select the type of JSON export."},
+			"name":           {Type: schema.TypeString, Optional: true, Description: "Changes After"},
+			"destination":    {Type: schema.TypeString, Optional: true, Description: "Amazon S3 Bucket Name"},
+			"day_of_week":    {Type: schema.TypeString, Optional: true, Description: "days"},
+			"hour_of_day":    {Type: schema.TypeString, Optional: true, Description: "hour"},
+			"minute_of_hour": {Type: schema.TypeString, Optional: true, Description: "minute"},
 		},
 	}
 }

@@ -17,20 +17,20 @@ description: |-
 
 ### Required
 
-- **name** (String)
-- **report_types** (String)
+- **name** (String) None
+- **report_types** (String) Report Type
 
 ### Optional
 
-- **delivery_options** (String)
-- **email_id** (String)
-- **frequency** (String)
-- **ftp_directory** (String)
-- **ftp_ip_address** (String)
-- **ftp_password** (String)
-- **ftp_port** (String)
-- **ftp_username** (String)
+- **delivery_options** (String) Chart Type
+- **email_id** (String) Email Report to:
+- **frequency** (String) None
+- **ftp_directory** (String) Folder/Path
+- **ftp_ip_address** (String) Server Name/IP
+- **ftp_password** (String) Password
+- **ftp_port** (String) Port
+- **ftp_username** (String) Username
 - **id** (String) The ID of this resource.
-- **report_format** (String)
+- **report_format** (String) None
 
 

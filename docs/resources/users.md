@@ -17,14 +17,14 @@ description: |-
 
 ### Required
 
-- **email_address** (String)
-- **name** (String)
-- **role** (String)
+- **email_address** (String) Email Address
+- **name** (String) Username
+- **role** (String) Role
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **password** (String)
-- **re_enter_password** (String)
+- **password** (String) Password
+- **re_enter_password** (String) Re-enter Password
 
 

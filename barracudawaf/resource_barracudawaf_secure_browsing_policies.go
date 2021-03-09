@@ -20,14 +20,14 @@ func resourceCudaWAFSecureBrowsingPolicies() *schema.Resource {
 		Delete: resourceCudaWAFSecureBrowsingPoliciesDelete,
 
 		Schema: map[string]*schema.Schema{
-			"comments":                {Type: schema.TypeString, Optional: true},
-			"host":                    {Type: schema.TypeString, Optional: true},
-			"extended_match":          {Type: schema.TypeString, Optional: true},
-			"extended_match_sequence": {Type: schema.TypeString, Optional: true},
-			"name":                    {Type: schema.TypeString, Required: true},
-			"credential_server":       {Type: schema.TypeString, Required: true},
-			"status":                  {Type: schema.TypeString, Optional: true},
-			"url":                     {Type: schema.TypeString, Required: true},
+			"comments":                {Type: schema.TypeString, Optional: true, Description: "Comments"},
+			"host":                    {Type: schema.TypeString, Optional: true, Description: "Host Match"},
+			"extended_match":          {Type: schema.TypeString, Optional: true, Description: "Extended Match"},
+			"extended_match_sequence": {Type: schema.TypeString, Optional: true, Description: "Extended Match Sequence"},
+			"name":                    {Type: schema.TypeString, Required: true, Description: "Policy Name"},
+			"credential_server":       {Type: schema.TypeString, Required: true, Description: "Credential Server"},
+			"status":                  {Type: schema.TypeString, Optional: true, Description: "Status"},
+			"url":                     {Type: schema.TypeString, Required: true, Description: "URL Match"},
 			"parent": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},

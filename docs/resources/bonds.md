@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **bond_ports** (String)
-- **name** (String)
+- **bond_ports** (String) Ports
+- **name** (String) Name
 
 ### Optional
 
-- **duplexity** (String)
+- **duplexity** (String) None
 - **id** (String) The ID of this resource.
-- **min_link** (String)
-- **mode** (String)
-- **mtu** (String)
-- **speed** (String)
+- **min_link** (String) Minimum Links
+- **mode** (String) Cannot have VLAN(s) on LAN interface when enabling Network Port Configuration.
+- **mtu** (String) Maximum Transmission Unit (MTU)
+- **speed** (String) None
 
 
