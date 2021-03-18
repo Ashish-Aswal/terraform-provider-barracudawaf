@@ -12,83 +12,132 @@ A [Terraform](terraform.io) provider for Barracuda Web Application Firewall.
 
 **Use provider**
 ```hcl
+variable address {}
+variable username {}
+variable password {}
+variable port {}
+
 provider "barracudawaf" {
     address  = "x.x.x.x"
     username = "xxxxxxx"
     port     = "8443"
     password = "xxxxxxx"
 }
+
 ```
+**Create Self Signed Certificates**
+```hcl
+resource "barracudawaf_self_signed_certificate" "demo_self_signed_cert_1" {
+    name                     = "DemoSelfSignedCert1"
+    allow_private_key_export = "Yes"
+    city                     = "xxxxxx"
+    common_name              = "xxxxxx"
+    country_code             = "IN"
+    key_size                 = "1024"
+    key_type                 = "rsa"
+    organization_name        = "xxxxxx"
+    organizational_unit      = "xxxxxx"
+    state                    = "xxxxxx"
+}
+```
+
 **Create Service**
 ```hcl
-resource "barracudawaf_services" "DemoService1" {
-    name = "DemoService1"
-    ip_address = "x.x.x.x"
-    port = "80"
-    type = "HTTP"
-    vsite = "default"
+resource "barracudawaf_services" "demo_app_1" {
+    name            = "DemoApp1"
+    ip_address      = "x.x.x.x"
+    port            = "80"
+    type            = "HTTP"
+    vsite           = "default"
     address_version = "IPv4"
-    status = "On"
-    group = "default"
-    comments = "Demo Service with Terraform"
+    status          = "On"
+    group           = "default"
+    comments        = "Demo Service with Terraform"
+
+    basic_security {
+      mode = "Active"
+    }
+    
+    depends_on = [ barracudawaf_self_signed_certificate.demo_self_signed_cert_1 ]
+}
+
+resource "barracudawaf_services" "demo_app_2" {
+    name            = "DemoApp2"
+    ip_address      = "x.x.x.x"
+    port            = "443"
+    type            = "HTTPS"
+    vsite           = "default"
+    address_version = "IPv4"
+    status          = "On"
+    group           = "default"
+    comments        = "Demo Service with Terraform"
+    certificate     = barracudawaf_self_signed_certificate.demo_self_signed_cert_1.name
+
+    basic_security {
+      mode = "Active"
+    }
+
+    depends_on = [ barracudawaf_services.demo_app_1 ]
 }
 ```
 **Create Servers**
 ```hcl
-resource "barracudawaf_servers" "TestServer1" {
-    name = "TestServer1"
-    identifier= "IP Address"
+resource "barracudawaf_servers" "demo_server_1" {
+    name            = "DemoServer1"
+    identifier      = "IP Address"
     address_version = "IPv4"
-    status = "In Service"
-    ip_address = "x.x.x.x"
-    port = "80"
-    comments = "Creating the Demo Server"
-    parent = [ "DemoService1" ]
-    depends_on = [barracudawaf_services.DemoService1]
-}
-```
-**Create Self Signed Certificates**
-```hcl
-resource "barracudawaf_self_signed_certificate" "DemoSelfSignedCert1" {
-    name  = "DemoSelfSignedCert1"
-    allow_private_key_export = "Yes"
-    city   = "xxxx"
-    common_name = "xxxxx"
-    country_code = "xx"
-    key_size = "1024"
-    key_type = "rsa"
-    organization_name = "xxxxxxx"
-    organizational_unit = "xxxxxx"
-    state = "xxxxxxx"
-    depends_on = [barracudawaf_servers.TestServer1]
+    status          = "In Service"
+    ip_address      = "x.x.x.x"
+    port            = "80"
+    comments        = "Creating the Demo Server"
+    parent          = [ barracudawaf_services.demo_app_1.name ]
+    
+    out_of_band_health_checks {
+      enable_oob_health_checks = "Yes"
+      interval                 = "900"
+    }
+
+    depends_on      = [ barracudawaf_services.demo_app_2 ]
 }
 ```
 **Create Security Policies**
 ```hcl
-resource "barracudawaf_security_policies" "DemoPolicy1" {
-    name = "DemoPolicy1"
-    based_on = "Create New"
+resource "barracudawaf_security_policies" "demo_security_policy_1" {
+    name       = "DemoPolicy1"
+    based_on   = "Create New"
+    
+    depends_on = [ barracudawaf_servers.demo_server_1 ]
 }
 ```
 **Create Rule Groups**
 ```hcl
-resource "barracudawaf_content_rules" "DemoRuleGroup1" {
-    name = "DemoRuleGroup1"
-    url_match = "/xxxx.xxx"
-    host_match = "xxxxxx"
+resource "barracudawaf_content_rules" "demo_rule_group_1" {
+    name                = "DemoRuleGroup1"
+    url_match           = "/index.html"
+    host_match          = "www.example.com"
     web_firewall_policy = "DemoPolicy1"
-    parent = [ "DemoService1" ]
-    depends_on = [barracudawaf_security_policies.DemoPolicy1]
+    mode                = "Active"
+    parent              = [ barracudawaf_services.demo_app_1.name ]
+    
+    depends_on          = [ barracudawaf_security_policies.demo_security_policy_1 ]
 }
 ```
 **Create Rule Group Servers**
 ```hcl
-resource "barracudawaf_content_rule_servers" "DemoRgServer1" {
-    name = "DemoRgServer1"
-    identifier = "Hostname"
-    hostname = "xxxxxx"
-    parent = [ "DemoService1", "DemoRuleGroup1" ]
-    depends_on = [barracudawaf_content_rules.DemoRuleGroup1]
+resource "barracudawaf_content_rule_servers" "demo_rule_group_server_1" {
+    name        = "DemoRuleGroupServer1"
+    identifier  = "Hostname"
+    hostname    = "barracuda.com"
+    parent      = [ barracudawaf_services.demo_app_1.name, barracudawaf_content_rules.demo_rule_group_1.name ]
+    
+
+    application_layer_health_checks {
+        method               = "POST"
+        match_content_string = "index"
+        domain               = "example.com"
+    }
+
+    depends_on = [ barracudawaf_content_rules.demo_rule_group_1 ]
 }
 ```
 
@@ -149,14 +198,5 @@ $ $GOPATH/src/github.com/Ashish-Aswal/terraform-provider-barracudawaf
 
 Download the binary added under [releases](https://github.com/Ashish-Aswal/terraform-provider-barracudawaf/releases), and follow below :
 
+Copy the downloaded binary `terraform-provider-barracudawaf_v<tag>` into `plugins` Terraform directory.
 
-```shell
-$ git clone https://github.com/Ashish-Aswal/terraform-provider-barracudawaf.git
-
-```
-
-Copy the downloded binary into `terraform-provider-barracudawaf` directory created with abvoe git clone command.
-```shell
-cd terraform-provider-barracudawaf/
-make plugin
-```
